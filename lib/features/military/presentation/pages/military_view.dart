@@ -32,11 +32,11 @@ class MilitaryView extends StatelessWidget {
           SizedBox(height: ScreenSize.height * 0.05),
           CustomDataContainer(
             data: "12/12/2024",
-            textDecoration: TextDirection.ltr,
+            textDirection: TextDirection.ltr,
           ),
           CustomDataContainer(
             data: 'قام بأداء التربية العسكريه',
-            textDecoration: TextDirection.rtl,
+            textDirection: TextDirection.rtl,
           ),
         ],
       ),

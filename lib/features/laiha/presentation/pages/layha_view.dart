@@ -41,7 +41,7 @@ class _LayhaViewState extends State<LayhaView> {
           SliverToBoxAdapter(
             child: CustomDataContainer(
               data: studentHolyLaiha.department,
-              textDecoration: TextDirection.ltr,
+              textDirection: TextDirection.ltr,
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.05)),
@@ -69,7 +69,7 @@ class _LayhaViewState extends State<LayhaView> {
                       },
                       child: CustomDataContainer(
                         data: 'Semester ${index + 1}',
-                        textDecoration: TextDirection.ltr,
+                        textDirection: TextDirection.ltr,
                       ),
                     ),
                   ),
@@ -77,7 +77,7 @@ class _LayhaViewState extends State<LayhaView> {
               },
               child: CustomDataContainer(
                 data: selected,
-                textDecoration: TextDirection.ltr,
+                textDirection: TextDirection.ltr,
               ),
             ),
           ),
@@ -119,7 +119,7 @@ class _LayhaViewState extends State<LayhaView> {
                           .layhaSemesters[semesterNum]
                           .semesterMaterials[index]
                           .dependentMaterials[index2],
-                      textDecoration: TextDirection.ltr,
+                      textDirection: TextDirection.ltr,
                     ),
                   ),
                 ),
