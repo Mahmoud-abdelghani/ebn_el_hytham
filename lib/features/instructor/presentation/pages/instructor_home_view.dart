@@ -1,10 +1,14 @@
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
+import 'package:ebn_el_hytham/features/fees/presentation/pages/instructor_salary_screen.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/custom_alert_dialog.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_materials_screen.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/student_materials_list_view.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/pages/instructor_profile_screen.dart';
+import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_result_screen.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/feature_container.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading.dart';
+import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
 
 class InstructorHomeView extends StatefulWidget {
@@ -53,7 +57,12 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                   FeatureContainer(
                     iconPath: 'assets/atten.png',
                     title: ' Attendance',
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => CustomAlertDialog(),
+                      );
+                    },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/sylle.png',
@@ -79,18 +88,18 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                     iconPath: 'assets/timetable.png',
                     title: 'Time table',
                     onTap: () {
-                      // Navigator.of(
-                      //   context,
-                      // ).pushNamed(StudentFeesView.routeName);
+                      Navigator.of(
+                        context,
+                      ).pushNamed(InstructorTimetableScreen.routeName);
                     },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/Salary.png',
                     title: 'Salary',
                     onTap: () {
-                      // Navigator.of(
-                      //   context,
-                      // ).pushNamed(StudentExamsTable.routeName);
+                      Navigator.of(
+                        context,
+                      ).pushNamed(InstructorSalaryScreen.routeName);
                     },
                   ),
                   FeatureContainer(
@@ -105,7 +114,9 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                     iconPath: 'assets/results.png',
                     title: 'Results',
                     onTap: () {
-                      // Navigator.of(context).pushNamed(LayhaView.routename);
+                      Navigator.of(
+                        context,
+                      ).pushNamed(InstructorResultScreen.routeName);
                     },
                   ),
                   // FeatureContainer(

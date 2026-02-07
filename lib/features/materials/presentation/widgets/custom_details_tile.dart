@@ -3,10 +3,17 @@ import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
 class CustomDetailsTile extends StatelessWidget {
-  const CustomDetailsTile({super.key, required this.name, required this.id, required this.onTap});
+  const CustomDetailsTile({
+    super.key,
+    required this.name,
+    required this.id,
+    required this.onTap,
+    this.mark
+  });
   final String name;
   final String id;
   final VoidCallback onTap;
+  final String? mark;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -52,7 +59,7 @@ class CustomDetailsTile extends StatelessWidget {
               ),
             ),
             trailing: Text(
-              'Show',
+             mark?? 'Show',
               style: TextStyle(
                 color: ColorGuid.mainColor,
                 fontWeight: FontWeight.w500,

@@ -46,7 +46,8 @@ class CustomFields extends StatelessWidget {
                   ),
                 )
               : null,
-
+          filled: true,
+          fillColor: Colors.white,
           label: Text(label),
           hint: Text(hint, style: TextStyle(color: ColorGuid.mainColor)),
           enabledBorder: OutlineInputBorder(

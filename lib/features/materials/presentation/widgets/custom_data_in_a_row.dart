@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/widgets/custom_small_data_container.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +15,11 @@ class CustomDataInARow extends StatelessWidget {
       children: [
         CustomSmallDataContainer(
           data:txtLeft ,
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.ltr, virticalMargin: ScreenSize.height*0.01,
         ),
         CustomSmallDataContainer(
           data: txtRight,
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.ltr, virticalMargin: ScreenSize.height*0.01,  
         ),
       ],
     );

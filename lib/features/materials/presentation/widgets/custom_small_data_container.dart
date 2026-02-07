@@ -7,13 +7,15 @@ class CustomSmallDataContainer extends StatelessWidget {
     super.key,
     required this.data,
     required this.textDirection,
+    required this.virticalMargin,
   });
   final String data;
   final TextDirection textDirection;
+  final double virticalMargin;
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.01),
+      margin: EdgeInsets.symmetric(vertical: virticalMargin),
       padding: EdgeInsets.symmetric(
         vertical: ScreenSize.height * 0.01,
         horizontal: ScreenSize.width * 0.05,
@@ -32,7 +34,7 @@ class CustomSmallDataContainer extends StatelessWidget {
         style: TextStyle(
           color: ColorGuid.mainColor,
           fontWeight: FontWeight.w400,
-          fontSize: ScreenSize.height * 0.02,
+          fontSize: ScreenSize.height * 0.0175,
         ),
       ),
     );
