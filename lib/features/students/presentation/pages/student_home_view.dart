@@ -9,6 +9,8 @@ import 'package:ebn_el_hytham/features/profile/presentation/pages/student_profil
 import 'package:ebn_el_hytham/features/results/presentation/pages/student_results_view.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/feature_container.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading.dart';
+import 'package:ebn_el_hytham/features/timetable/data/models/time_table_model.dart';
+import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
 
 class StudentHomeView extends StatefulWidget {
@@ -67,7 +69,13 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                   FeatureContainer(
                     iconPath: 'assets/timetable.png',
                     title: 'Time table',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        InstructorTimetableScreen.routeName,
+                        arguments: timeTableDataStudent
+                      );
+                    },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/results.png',

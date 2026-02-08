@@ -9,6 +9,8 @@ class InstructorTimetableScreen extends StatelessWidget {
   static const String routeName = 'InstructorTimetableScreen';
   @override
   Widget build(BuildContext context) {
+    List<TimeTableModel> data =
+        ModalRoute.of(context)!.settings.arguments as List<TimeTableModel>;
     return Scaffold(
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -29,44 +31,38 @@ class InstructorTimetableScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverList.separated(
-            itemCount: timeTableData.length,
+            itemCount: data.length,
             itemBuilder: (context, index) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  ' ${timeTableData[index].day}',
+                  ' ${data[index].day}',
                   style: TextStyle(
                     fontSize: ScreenSize.height * 0.025,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                timeTableData[index].lectures.isNotEmpty
+                data[index].lectures.isNotEmpty
                     ? Column(
                         children: List.generate(
-                          timeTableData[index].lectures.length,
+                          data[index].lectures.length,
                           (index1) => Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Column(
                                 children: [
                                   CustomSmallDataContainer(
-                                    data: timeTableData[index]
-                                        .lectures[index1]
-                                        .fatra,
+                                    data: data[index].lectures[index1].fatra,
                                     textDirection: TextDirection.ltr,
                                     virticalMargin: ScreenSize.height * 0.001,
                                   ),
                                   CustomSmallDataContainer(
-                                    data: timeTableData[index]
-                                        .lectures[index1]
-                                        .time,
+                                    data: data[index].lectures[index1].time,
                                     textDirection: TextDirection.ltr,
                                     virticalMargin: ScreenSize.height * 0.001,
                                   ),
                                   CustomSmallDataContainer(
-                                    data: timeTableData[index]
-                                        .lectures[index1]
-                                        .location,
+                                    data: data[index].lectures[index1].location,
                                     textDirection: TextDirection.ltr,
                                     virticalMargin: ScreenSize.height * 0.001,
                                   ),
@@ -89,7 +85,7 @@ class InstructorTimetableScreen extends StatelessWidget {
                                 ),
                                 width: ScreenSize.width * 0.45,
                                 child: Text(
-                                  timeTableData[index].lectures[index1].title,
+                                  data[index].lectures[index1].title,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   textDirection: TextDirection.ltr,

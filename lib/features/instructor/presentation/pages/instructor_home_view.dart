@@ -8,6 +8,7 @@ import 'package:ebn_el_hytham/features/profile/presentation/pages/instructor_pro
 import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_result_screen.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/feature_container.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading.dart';
+import 'package:ebn_el_hytham/features/timetable/data/models/time_table_model.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +91,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                     onTap: () {
                       Navigator.of(
                         context,
-                      ).pushNamed(InstructorTimetableScreen.routeName);
+                      ).pushNamed(InstructorTimetableScreen.routeName,arguments: timeTableData);
                     },
                   ),
                   FeatureContainer(

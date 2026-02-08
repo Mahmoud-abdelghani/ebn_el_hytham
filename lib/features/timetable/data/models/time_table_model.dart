@@ -76,3 +76,104 @@ List<TimeTableModel> timeTableData = [
     lectures: [], // إجازة
   ),
 ];
+
+List<TimeTableModel> timeTableDataStudent = [
+  TimeTableModel(
+    day: 'Saturday',
+    lectures: [
+      TaskModel(
+        title: 'Signals & Systems',
+        location: 'Hall 3',
+        time: '08:30am - 10:10am',
+        fatra: 'Lecture',
+      ),
+      TaskModel(
+        title: 'Signals & Systems',
+        location: 'Section Room 2',
+        time: '10:20am - 12:10pm',
+        fatra: 'Section',
+      ),
+    ],
+  ),
+
+  TimeTableModel(
+    day: 'Sunday',
+    lectures: [
+      TaskModel(
+        title: 'Digital Communications',
+        location: 'Hall 2',
+        time: '08:30am - 10:10am',
+        fatra: 'Lecture',
+      ),
+      TaskModel(
+        title: 'Digital Communications',
+        location: 'Lab 5',
+        time: '10:20am - 12:10pm',
+        fatra: 'Lab',
+      ),
+      TaskModel(
+        title: 'Probability',
+        location: 'Room 104',
+        time: '12:20pm - 02:10pm',
+        fatra: 'Lecture',
+      ),
+    ],
+  ),
+
+  TimeTableModel(
+    day: 'Monday',
+    lectures: [
+      TaskModel(
+        title: 'Microprocessors',
+        location: 'Hall 1',
+        time: '08:30am - 10:10am',
+        fatra: 'Lecture',
+      ),
+      TaskModel(
+        title: 'Microprocessors',
+        location: 'Lab 4',
+        time: '10:20am - 01:10pm',
+        fatra: 'Lab',
+      ),
+    ],
+  ),
+
+  TimeTableModel(
+    day: 'Tuesday',
+    lectures: [], // إجازة
+  ),
+
+  TimeTableModel(
+    day: 'Wednesday',
+    lectures: [
+      TaskModel(
+        title: 'Control Systems',
+        location: 'Hall 4',
+        time: '10:20am - 12:10pm',
+        fatra: 'Lecture',
+      ),
+      TaskModel(
+        title: 'Control Systems',
+        location: 'Section Room 1',
+        time: '12:20pm - 02:10pm',
+        fatra: 'Section',
+      ),
+      TaskModel(
+        title: 'Embedded Systems',
+        location: 'Lab 1',
+        time: '02:20pm - 04:10pm',
+        fatra: 'Lab',
+      ),
+    ],
+  ),
+
+  TimeTableModel(
+    day: 'Thursday',
+    lectures: [], // إجازة
+  ),
+
+  TimeTableModel(
+    day: 'Friday',
+    lectures: [], // إجازة
+  ),
+];

@@ -62,7 +62,12 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                       ),
                     ),
                   )
-                : Image.file(pickedImage!),
+                : Image.file(
+                    pickedImage!,
+                    width: ScreenSize.width * 0.7,
+                    height: ScreenSize.height * 0.3,
+                    fit: BoxFit.fill,
+                  ),
           ),
           GestureDetector(
             onTap: () async {
@@ -205,7 +210,24 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         CustomElevatedButton(
           txt: 'Confirm',
           color: ColorGuid.mainColor,
-          onTap: () {},
+          onTap: () {
+            if (selectedDate == null ||
+                selectedMaterial == 'ShooseMaterial' ||
+                pickedImage == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'complete attendance information',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: Duration(milliseconds: 700),
+                ),
+              );
+            } else {
+              Navigator.maybePop(context);
+            }
+          },
         ),
       ],
     );
