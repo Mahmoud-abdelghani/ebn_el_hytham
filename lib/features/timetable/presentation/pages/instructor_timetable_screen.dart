@@ -69,8 +69,10 @@ class InstructorTimetableScreen extends StatelessWidget {
                                 ],
                               ),
                               Container(
+                                
                                 margin: EdgeInsets.symmetric(
                                   vertical: ScreenSize.height * 0.01,
+                                  
                                 ),
                                 padding: EdgeInsets.symmetric(
                                   vertical: ScreenSize.height * 0.058,
