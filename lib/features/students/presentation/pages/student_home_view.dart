@@ -24,25 +24,62 @@ class StudentHomeView extends StatefulWidget {
 class _StudentHomeViewState extends State<StudentHomeView> {
   @override
   Widget build(BuildContext context) {
+    ScreenSize.init(context);
     return Scaffold(
+      // [scaffoldBackgroundColor] — deep charcoal page bg
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
       body: Column(
         children: [
+          // Shared dark heading widget
           HomeHeading(
             email: 'mahmoudabdelghani0997@gmail.com',
             id: '21011276',
             imageUrl:
                 "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-
             name: 'Mahmoud Abdelghany',
           ),
+
+          // ── Section label with [amber] accent bar ────────────────
+          Padding(
+            padding: EdgeInsets.only(
+              left: ScreenSize.width * 0.05,
+              right: ScreenSize.width * 0.05,
+              top: ScreenSize.height * 0.025,
+              bottom: ScreenSize.height * 0.008,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: ColorGuid.amber, // [amber] accent bar
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Quick Access',
+                  style: TextStyle(
+                    color: ColorGuid.textSecondary, // [textSecondary]
+                    fontSize: ScreenSize.height * 0.018,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Feature grid ──────────────────────────────────────────
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: ScreenSize.width * 0.0486111111121238,
+                horizontal: ScreenSize.width * 0.04,
               ),
               child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                 ),
                 children: [
@@ -68,12 +105,12 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                   ),
                   FeatureContainer(
                     iconPath: 'assets/timetable.png',
-                    title: 'Time table',
+                    title: 'Time Table',
                     onTap: () {
                       Navigator.pushNamed(
                         context,
                         InstructorTimetableScreen.routeName,
-                        arguments: timeTableDataStudent
+                        arguments: timeTableDataStudent,
                       );
                     },
                   ),
@@ -91,18 +128,18 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                     iconPath: 'assets/Fee.png',
                     title: 'Fees',
                     onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(StudentFeesView.routeName);
+                      Navigator.of(context).pushNamed(
+                        StudentFeesView.routeName,
+                      );
                     },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/Exam.png',
                     title: 'Exams',
                     onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(StudentExamsTable.routeName);
+                      Navigator.of(context).pushNamed(
+                        StudentExamsTable.routeName,
+                      );
                     },
                   ),
                   FeatureContainer(
@@ -112,7 +149,6 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                       Navigator.of(context).pushNamed(MilitaryView.routeName);
                     },
                   ),
-
                   FeatureContainer(
                     iconPath: 'assets/sylle.png',
                     title: 'الايحه',
@@ -127,7 +163,7 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                   ),
                   FeatureContainer(
                     iconPath: 'assets/Support.png',
-                    title: 'messages',
+                    title: 'Messages',
                     onTap: () {},
                   ),
                 ],
@@ -139,6 +175,3 @@ class _StudentHomeViewState extends State<StudentHomeView> {
     );
   }
 }
-
-//height = 914.2857142857143
-//width =  411.42857142857144

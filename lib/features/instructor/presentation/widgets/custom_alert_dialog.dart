@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+/// Dark-themed attendance dialog — [surfaceColor] background, [amber] accents.
 class CustomAlertDialog extends StatefulWidget {
   const CustomAlertDialog({super.key});
 
@@ -22,21 +23,29 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   DateTime? selectedDate;
   String selectedMaterial = 'ShooseMaterial';
   File? pickedImage;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
+      // [surfaceColor] dark dialog background
+      backgroundColor: ColorGuid.surfaceColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: ColorGuid.glassBorder, width: 1.2),
+      ),
+      // Dialog title in [textPrimary]
       title: Text(
         'Attendance',
         style: TextStyle(
-          color: ColorGuid.mainColor,
-          fontWeight: FontWeight.w600,
-          fontSize: ScreenSize.height * 0.03,
+          color: ColorGuid.textPrimary,
+          fontWeight: FontWeight.w700,
+          fontSize: ScreenSize.height * 0.028,
         ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // ── Image upload zone — dotted border in [amber] ─────────
           GestureDetector(
             onTap: () async {
               pickedImage = await BlocProvider.of<ImageProcessingCubit>(
@@ -47,8 +56,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             child: pickedImage == null
                 ? DottedBorder(
                     options: RoundedRectDottedBorderOptions(
-                      radius: Radius.circular(10),
-                      color: ColorGuid.boardersColor,
+                      radius: const Radius.circular(10),
+                      // [amber] dotted border for upload area
+                      color: ColorGuid.amber,
                       padding: EdgeInsets.symmetric(
                         horizontal: ScreenSize.width * 0.1,
                         vertical: ScreenSize.height * 0.1,
@@ -57,85 +67,85 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     child: Text(
                       'Upload an image here',
                       style: TextStyle(
-                        color: ColorGuid.boardersColor,
+                        color: ColorGuid.textMuted, // [textMuted] placeholder
                         fontSize: ScreenSize.height * 0.015,
                       ),
                     ),
                   )
-                : Image.file(
-                    pickedImage!,
-                    width: ScreenSize.width * 0.7,
-                    height: ScreenSize.height * 0.3,
-                    fit: BoxFit.fill,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      pickedImage!,
+                      width: ScreenSize.width * 0.7,
+                      height: ScreenSize.height * 0.3,
+                      fit: BoxFit.fill,
+                    ),
                   ),
           ),
+          SizedBox(height: ScreenSize.height * 0.015),
+          // ── Date picker row — [surfaceColor] input ───────────────
           GestureDetector(
             onTap: () async {
               selectedDate = await showDatePicker(
                 context: context,
-                firstDate: DateTime.now().subtract(Duration(days: 365)),
+                firstDate: DateTime.now().subtract(const Duration(days: 365)),
                 lastDate: DateTime.now(),
                 onDatePickerModeChange: (value) {},
                 builder: (context, child) => Theme(
                   data: Theme.of(context).copyWith(
-                    colorScheme: ColorScheme.light(
-                      brightness: Brightness.light,
-                      primary: ColorGuid.mainColor,
+                    colorScheme: ColorScheme.dark(
+                      primary: ColorGuid.amber, // [amber] selected date highlight
+                      surface: ColorGuid.surfaceColor,
+                      onSurface: ColorGuid.textPrimary,
                     ),
                   ),
                   child: child!,
                 ),
               );
-
               setState(() {});
               log(selectedDate.toString());
             },
             child: Container(
               margin: EdgeInsets.symmetric(
                 horizontal: ScreenSize.width * 0.1,
-                vertical: ScreenSize.height * 0.02,
+                vertical: ScreenSize.height * 0.01,
               ),
-              padding: EdgeInsets.only(
-                top: ScreenSize.height * 0.01,
-                bottom: ScreenSize.height * 0.01,
+              padding: EdgeInsets.symmetric(
+                vertical: ScreenSize.height * 0.012,
               ),
-
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: ColorGuid.boardersColor,
-                  width: ScreenSize.width * .001,
-                ),
+                // [surfaceColor] input row
+                color: ColorGuid.scaffoldBackgroundColor,
+                border: Border.all(color: ColorGuid.boardersColor),
+                borderRadius: BorderRadius.circular(8),
               ),
-              width: ScreenSize.width,
               child: selectedDate == null
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           'YYYY/MM/dd',
-                          textAlign: TextAlign.right,
                           style: TextStyle(
-                            color: ColorGuid.boardersColor,
-                            fontSize: ScreenSize.height * 0.02,
-                            fontWeight: FontWeight.w400,
+                            color: ColorGuid.textMuted, // [textMuted] placeholder
+                            fontSize: ScreenSize.height * 0.018,
                           ),
                         ),
-                        Icon(Icons.calendar_month, color: Colors.grey),
+                        Icon(Icons.calendar_month, color: ColorGuid.textSecondary),
                       ],
                     )
                   : Center(
                       child: Text(
                         DateFormat('yyyy-MM-dd').format(selectedDate!),
                         style: TextStyle(
-                          color: ColorGuid.mainColor,
+                          color: ColorGuid.amber, // [amber] selected date
                           fontSize: ScreenSize.height * 0.02,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
             ),
           ),
+          // ── Material selector dropdown ────────────────────────────
           GestureDetector(
             onTap: () {
               showMenu(
@@ -146,11 +156,15 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   ScreenSize.width * 0.21,
                   0,
                 ),
-                color: Colors.white,
+                // [surfaceColor] popup background
+                color: ColorGuid.surfaceColor,
                 items: List.generate(
                   materials.length,
                   (index) => PopupMenuItem(
-                    child: Text(materials[index].name),
+                    child: Text(
+                      materials[index].name,
+                      style: TextStyle(color: ColorGuid.textPrimary),
+                    ),
                     onTap: () {
                       selectedMaterial = materials[index].name;
                       setState(() {});
@@ -162,37 +176,34 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             child: Container(
               margin: EdgeInsets.symmetric(
                 horizontal: ScreenSize.width * 0.1,
-                vertical: ScreenSize.height * 0.02,
+                vertical: ScreenSize.height * 0.01,
               ),
-              padding: EdgeInsets.only(
-                top: ScreenSize.height * 0.01,
-                bottom: ScreenSize.height * 0.01,
-              ),
-
+              padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.012),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: ColorGuid.boardersColor,
-                  width: ScreenSize.width * .001,
-                ),
+                color: ColorGuid.scaffoldBackgroundColor,
+                border: Border.all(color: ColorGuid.boardersColor),
+                borderRadius: BorderRadius.circular(8),
               ),
-              width: ScreenSize.width,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   selectedMaterial == 'ShooseMaterial'
                       ? Text(
-                          'Shoose Material',
-                          style: TextStyle(color: Colors.grey),
+                          'Choose Material',
+                          style: TextStyle(color: ColorGuid.textMuted),
                         )
                       : Text(
                           selectedMaterial,
                           style: TextStyle(
-                            color: ColorGuid.mainColor,
-                            fontSize: ScreenSize.height * 0.015,
+                            color: ColorGuid.amber, // [amber] selected material
+                            fontSize: ScreenSize.height * 0.016,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                  Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+                  Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: ColorGuid.textSecondary,
+                  ),
                 ],
               ),
             ),
@@ -200,28 +211,31 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         ],
       ),
       actions: [
+        // Cancel button — [surfaceColor] themed
         CustomElevatedButton(
           txt: 'Cancel',
-          color: ColorGuid.scaffoldBackgroundColor,
+          color: ColorGuid.surfaceColor, // maps to secondary styling
           onTap: () {
             Navigator.maybePop(context);
           },
         ),
+        // Confirm button — [amber] themed
         CustomElevatedButton(
           txt: 'Confirm',
-          color: ColorGuid.mainColor,
+          color: ColorGuid.amber, // [amber] primary action
           onTap: () {
             if (selectedDate == null ||
                 selectedMaterial == 'ShooseMaterial' ||
                 pickedImage == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'complete attendance information',
-                    style: TextStyle(color: Colors.white),
+                  content: const Text(
+                    'Complete attendance information',
+                    style: TextStyle(color: Color(0xFF161B22)),
                   ),
-                  backgroundColor: Colors.red,
-                  duration: Duration(milliseconds: 700),
+                  // [error] snackbar for incomplete form
+                  backgroundColor: ColorGuid.error,
+                  duration: const Duration(milliseconds: 700),
                 ),
               );
             } else {
