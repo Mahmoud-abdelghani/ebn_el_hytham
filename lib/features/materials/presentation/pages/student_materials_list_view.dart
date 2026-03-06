@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/material_model.dart';
@@ -12,42 +13,24 @@ class StudentMaterialsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: ColorGuid.mainColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        shadowColor: ColorGuid.mainColor,
-        elevation: 8,
-        title: Text(
-          "Materials",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: ScreenSize.height * 0.025,
-          ),
+      appBar: buildDarkAppBar('Materials'),
+      body: ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.012),
+        itemBuilder: (context, index) => CustomMaterialContainer(
+          txt1: mechanicalMaterials[index].name,
+          ontap: () {
+            Navigator.pushNamed(
+              context,
+              StudentMaterialDetailsView.routeName,
+              arguments: mechanicalMaterials[index],
+            );
+          },
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) => CustomMaterialContainer(
-                txt1: mechanicalMaterials[index].name,
-                ontap: () {
-                  Navigator.pushNamed(
-                    context,
-                    StudentMaterialDetailsView.routeName,
-                    arguments: mechanicalMaterials[index],
-                  );
-                },
-              ),
-              separatorBuilder: (context, index) =>
-                  SizedBox(height: ScreenSize.height * 0.01),
-              itemCount: mechanicalMaterials.length,
-            ),
-          ),
-        ],
+        separatorBuilder: (context, index) =>
+            SizedBox(height: ScreenSize.height * 0.006),
+        itemCount: mechanicalMaterials.length,
       ),
     );
   }

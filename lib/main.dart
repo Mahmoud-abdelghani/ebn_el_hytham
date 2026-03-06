@@ -47,6 +47,44 @@ class MyApp extends StatelessWidget {
       ],
 
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        /// Global dark theme — ensures all default Flutter widgets adopt
+        /// the dark charcoal + amber accent design spirit
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          // [scaffoldBackgroundColor] — deep charcoal as global page bg
+          scaffoldBackgroundColor: const Color(0xFF161B22),
+          // [surfaceColor] — dark card as global card/canvas bg
+          cardColor: const Color(0xFF1F2630),
+          // [amber] as the primary swatch across the app
+          colorScheme: const ColorScheme.dark(
+            primary: Color(0xFFFFC94A),
+            secondary: Color(0xFFFFC94A),
+            surface: Color(0xFF1F2630),
+            onSurface: Color(0xFFFFFFFF),
+            onPrimary: Color(0xFF161B22),
+          ),
+          // Dark AppBar by default
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF1F2630),
+            foregroundColor: Color(0xFFFFFFFF),
+            elevation: 0,
+          ),
+          // Icon color defaults to amber
+          iconTheme: const IconThemeData(color: Color(0xFFFFC94A)),
+          // Typography — white text on dark
+          textTheme: const TextTheme(
+            bodyLarge: TextStyle(color: Color(0xFFFFFFFF)),
+            bodyMedium: TextStyle(color: Color(0xFFB0BAC8)),
+          ),
+          // FAB amber
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFFFFC94A),
+            foregroundColor: Color(0xFF161B22),
+          ),
+          // Dialog dark
+          dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF1F2630)),
+        ),
         routes: {
           LoginView.routeName: (context) => LoginView(),
           StudentHomeView.routeName: (context) => StudentHomeView(),

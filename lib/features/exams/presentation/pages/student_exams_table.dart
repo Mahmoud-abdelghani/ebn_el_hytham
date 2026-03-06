@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/exams/data/models/exam_table.dart';
@@ -15,31 +16,20 @@ class StudentExamsTable extends StatefulWidget {
 
 class _StudentExamsTableState extends State<StudentExamsTable> {
   String nextName = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: ColorGuid.mainColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        shadowColor: ColorGuid.mainColor,
-        elevation: 8,
-        title: Text(
-          'Exams Table',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: ScreenSize.height * 0.025,
-          ),
-        ),
-      ),
+      appBar: buildDarkAppBar('Exams Table'),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
               height: ScreenSize.height * 0.135,
               child: Padding(
+                // "Next Exam" feature container in the corner
                 padding: EdgeInsets.only(right: ScreenSize.width * 0.67),
                 child: FeatureContainer(
                   iconPath: 'assets/Time table.png',
@@ -52,7 +42,7 @@ class _StudentExamsTableState extends State<StudentExamsTable> {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.02)),
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.015)),
           SliverList.separated(
             itemBuilder: (context, index) => ExamWidget(
               next: nextName == civilExamTable.exams[index].name,
@@ -65,6 +55,7 @@ class _StudentExamsTableState extends State<StudentExamsTable> {
                 SizedBox(height: ScreenSize.height * 0.01),
             itemCount: civilExamTable.exams.length,
           ),
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.02)),
         ],
       ),
     );

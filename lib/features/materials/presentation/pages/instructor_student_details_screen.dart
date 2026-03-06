@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
@@ -8,49 +9,37 @@ import 'package:flutter/material.dart';
 class InstructorStudentDetailsScreen extends StatelessWidget {
   const InstructorStudentDetailsScreen({super.key});
   static const String routeName = 'InstructorStudentDetailsScreen';
+
   @override
   Widget build(BuildContext context) {
     StudentMaterialModel materialModel =
         ModalRoute.of(context)!.settings.arguments as StudentMaterialModel;
     return Scaffold(
+      // [amber] FAB
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: ColorGuid.mainColor,
-        child: Icon(Icons.edit, color: Colors.white),
+        backgroundColor: ColorGuid.amber, // [amber] FAB replaces old mainColor
+        child: const Icon(Icons.edit, color: Color(0xFF161B22)),
       ),
+      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: ColorGuid.mainColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        shadowColor: ColorGuid.mainColor,
-        elevation: 8,
-        title: Text(
-          materials[0].name,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: ScreenSize.height * 0.025,
-          ),
-        ),
-      ),
-      body: Padding(
+      appBar: buildDarkAppBar(materials[0].name),
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-          horizontal: ScreenSize.width * 0.0486111111121238,
-          vertical: ScreenSize.height * 0.0555625000239258,
+          horizontal: ScreenSize.width * 0.05,
+          vertical: ScreenSize.height * 0.025,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            spacing: ScreenSize.height * 0.01,
-            children: [
-              Container(
-                width: ScreenSize.width * 0.65,
-                height: ScreenSize.height * 0.3,
+        child: Column(
+          children: [
+            // ── Avatar with amber border ──────────────────────────
+            Center(
+              child: Container(
+                width: ScreenSize.width * 0.55,
+                height: ScreenSize.height * 0.25,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(ScreenSize.height * 0.05),
-                  color: Colors.white,
-
-                  image: DecorationImage(
+                  borderRadius: BorderRadius.circular(ScreenSize.height * 0.04),
+                  border: Border.all(color: ColorGuid.amber, width: 2.5),
+                  image: const DecorationImage(
                     image: NetworkImage(
                       "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
                     ),
@@ -58,41 +47,69 @@ class InstructorStudentDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              StudentProfileStringsHelper(
-                firstTxt: 'Name: ${materialModel.studentName}',
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.02),
+              child: Divider(color: ColorGuid.boardersColor),
+            ),
+            // ── Student details card [surfaceColor] ───────────────
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(ScreenSize.width * 0.045),
+              decoration: BoxDecoration(
+                color: ColorGuid.surfaceColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
               ),
-              StudentProfileStringsHelper(
-                firstTxt: 'ID: ${materialModel.studentId}',
-                secondTxt: 'Section: ${materialModel.materialDetails.section}',
+              child: Column(
+                children: [
+                  StudentProfileStringsHelper(
+                    firstTxt: 'Name',
+                    secondTxt: materialModel.studentName,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: 'ID',
+                    secondTxt: materialModel.studentId,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: 'Section',
+                    secondTxt: materialModel.materialDetails.section,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Material Code",
+                    secondTxt: materialModel.materialDetails.code,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Hours",
+                    secondTxt: materialModel.materialDetails.numberOfHours,
+                  ),
+                  StudentProfileStringsHelper(firstTxt: 'Date of Lectures'),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Lecture Date",
+                    secondTxt: materialModel.materialDetails.lectureDate,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Location",
+                    secondTxt: materialModel.materialDetails.lectureLocation,
+                  ),
+                  StudentProfileStringsHelper(firstTxt: 'Degree Details'),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Mid",
+                    secondTxt: materialModel.materialDetails.midDegree,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Attendance",
+                    secondTxt: materialModel.materialDetails.attendanceDegree,
+                  ),
+                  StudentProfileStringsHelper(
+                    firstTxt: "Labs",
+                    secondTxt: materialModel.materialDetails.labsDegree,
+                  ),
+                ],
               ),
-
-              StudentProfileStringsHelper(
-                firstTxt:
-                    "Material Code: ${materialModel.materialDetails.code}",
-                secondTxt:
-                    "Hours: ${materialModel.materialDetails.numberOfHours}",
-              ),
-              StudentProfileStringsHelper(firstTxt: 'Date of Lectures'),
-
-              StudentProfileStringsHelper(
-                firstTxt:
-                    "Lecture Date: ${materialModel.materialDetails.lectureDate}",
-              ),
-              StudentProfileStringsHelper(
-                firstTxt:
-                    "Location: ${materialModel.materialDetails.lectureLocation}",
-              ),
-              StudentProfileStringsHelper(firstTxt: 'Degrees details'),
-              StudentProfileStringsHelper(
-                firstTxt: "mid: ${materialModel.materialDetails.midDegree}",
-                secondTxt:
-                    "attendance: ${materialModel.materialDetails.attendanceDegree}",
-              ),
-              StudentProfileStringsHelper(
-                firstTxt: "Labs: ${materialModel.materialDetails.labsDegree}",
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: ScreenSize.height * 0.08),
+          ],
         ),
       ),
     );

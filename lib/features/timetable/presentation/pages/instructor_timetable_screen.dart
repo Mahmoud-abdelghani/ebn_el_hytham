@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/widgets/custom_small_data_container.dart';
@@ -7,41 +8,52 @@ import 'package:flutter/material.dart';
 class InstructorTimetableScreen extends StatelessWidget {
   const InstructorTimetableScreen({super.key});
   static const String routeName = 'InstructorTimetableScreen';
+
   @override
   Widget build(BuildContext context) {
     List<TimeTableModel> data =
         ModalRoute.of(context)!.settings.arguments as List<TimeTableModel>;
     return Scaffold(
+      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: ColorGuid.mainColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        shadowColor: ColorGuid.mainColor,
-        elevation: 8,
-        title: Text(
-          'Timetable',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: ScreenSize.height * 0.025,
-          ),
-        ),
-      ),
+      appBar: buildDarkAppBar('Timetable'),
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.015)),
           SliverList.separated(
             itemCount: data.length,
             itemBuilder: (context, index) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  ' ${data[index].day}',
-                  style: TextStyle(
-                    fontSize: ScreenSize.height * 0.025,
-                    fontWeight: FontWeight.bold,
+                // ── Day header with [amber] accent bar ─────────────
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: ScreenSize.width * 0.04,
+                    bottom: ScreenSize.height * 0.008,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: ColorGuid.amber, // [amber] day label bar
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        data[index].day,
+                        style: TextStyle(
+                          fontSize: ScreenSize.height * 0.022,
+                          fontWeight: FontWeight.bold,
+                          color: ColorGuid.textPrimary, // [textPrimary] white
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                // ── Lecture rows ────────────────────────────────────
                 data[index].lectures.isNotEmpty
                     ? Column(
                         children: List.generate(
@@ -68,21 +80,21 @@ class InstructorTimetableScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              // Lecture title on the right
                               Container(
-                                
                                 margin: EdgeInsets.symmetric(
                                   vertical: ScreenSize.height * 0.01,
-                                  
                                 ),
                                 padding: EdgeInsets.symmetric(
                                   vertical: ScreenSize.height * 0.058,
                                   horizontal: ScreenSize.width * 0.05,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  // [surfaceColor] replaces old white
+                                  color: ColorGuid.surfaceColor,
                                   border: Border.all(
-                                    color: ColorGuid.boardersColor,
+                                    color: ColorGuid.boardersColor, // [boardersColor]
                                   ),
                                 ),
                                 width: ScreenSize.width * 0.45,
@@ -92,7 +104,7 @@ class InstructorTimetableScreen extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   textDirection: TextDirection.ltr,
                                   style: TextStyle(
-                                    color: ColorGuid.mainColor,
+                                    color: ColorGuid.textPrimary, // [textPrimary]
                                     fontWeight: FontWeight.w400,
                                     fontSize: ScreenSize.height * 0.02,
                                   ),
@@ -103,15 +115,15 @@ class InstructorTimetableScreen extends StatelessWidget {
                         ),
                       )
                     : SizedBox(
-                        height: ScreenSize.height * 0.15,
-                        width: ScreenSize.width,
+                        height: ScreenSize.height * 0.12,
+                        width: double.infinity,
                         child: Center(
                           child: Text(
                             'No Lectures',
                             style: TextStyle(
-                              color: ColorGuid.mainColor,
+                              color: ColorGuid.textMuted, // [textMuted]
                               fontWeight: FontWeight.w400,
-                              fontSize: ScreenSize.height * 0.022,
+                              fontSize: ScreenSize.height * 0.02,
                             ),
                           ),
                         ),
@@ -119,8 +131,9 @@ class InstructorTimetableScreen extends StatelessWidget {
               ],
             ),
             separatorBuilder: (context, index) =>
-                SizedBox(height: ScreenSize.height * 0.01),
+                Divider(color: ColorGuid.boardersColor, height: ScreenSize.height * 0.03),
           ),
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.02)),
         ],
       ),
     );

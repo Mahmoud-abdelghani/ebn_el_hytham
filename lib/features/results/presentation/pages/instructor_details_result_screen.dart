@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/widgets/custom_button.dart';
@@ -23,38 +24,22 @@ class InstructorDetailsResultScreen extends StatefulWidget {
 class _InstructorDetailsResultScreenState
     extends State<InstructorDetailsResultScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     int index = ModalRoute.of(context)!.settings.arguments as int;
-    final grades = listOfResults[index].listStudentMark
-        .map((e) => e.mark)
-        .toList();
-
+    final grades = listOfResults[index].listStudentMark.map((e) => e.mark).toList();
     final mu = mean(grades);
     final sigma = stdDeviation(grades, mu);
 
     return Scaffold(
+      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: ColorGuid.mainColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        shadowColor: ColorGuid.mainColor,
-        elevation: 8,
-        title: Text(
-          listOfResults[index].materialName,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: ScreenSize.height * 0.025,
-          ),
-        ),
-      ),
+      appBar: buildDarkAppBar(listOfResults[index].materialName),
       body: CustomScrollView(
         slivers: [
+          // ── Info rows ──────────────────────────────────────────
           SliverToBoxAdapter(
             child: CustomDataInARow(
               txtLeft: listOfResults[index].department,
@@ -64,22 +49,22 @@ class _InstructorDetailsResultScreenState
           SliverToBoxAdapter(
             child: CustomDataInARow(
               txtLeft: listOfResults[index].examDate,
-              txtRight: 'Totla students ${listOfResults[index].totalStrudent}',
+              txtRight: 'Total students ${listOfResults[index].totalStrudent}',
             ),
           ),
           SliverToBoxAdapter(
             child: CustomDataContainer(
-              data:
-                  'number of success : ${listOfResults[index].totalNumberSuccess}',
+              data: 'Number of success: ${listOfResults[index].totalNumberSuccess}',
               textDirection: TextDirection.ltr,
             ),
           ),
           SliverToBoxAdapter(
             child: CustomDataContainer(
-              data: 'number of fails : ${listOfResults[index].totalNumberFail}',
+              data: 'Number of fails: ${listOfResults[index].totalNumberFail}',
               textDirection: TextDirection.ltr,
             ),
           ),
+          // ── Bonus field ────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -89,13 +74,11 @@ class _InstructorDetailsResultScreenState
               child: CustomFields(
                 fieldKey: formKey,
                 fieldValidator: (value) {
-                  if (value!.isEmpty) {
-                    return 'fill that field to add a bonus';
-                  } else if (int.parse(value) > 5 || int.parse(value) < 2) {
+                  if (value!.isEmpty) return 'fill that field to add a bonus';
+                  if (int.parse(value) > 5 || int.parse(value) < 2) {
                     return 'bonus should be between 5 ~ 2';
-                  } else {
-                    return null;
                   }
+                  return null;
                 },
                 textEditingController: textEditingController,
                 label: 'Bonus',
@@ -108,10 +91,7 @@ class _InstructorDetailsResultScreenState
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenSize.height * 0.02,
-                vertical: ScreenSize.height * 0.00,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.height * 0.02),
               child: CustomButton(
                 onTap: () {
                   if (formKey.currentState!.validate()) {
@@ -126,37 +106,57 @@ class _InstructorDetailsResultScreenState
               ),
             ),
           ),
+          // ── Gaussian chart label ───────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
                 left: ScreenSize.width * 0.1,
-                bottom: ScreenSize.height * 0.02,
+                top: ScreenSize.height * 0.025,
+                bottom: ScreenSize.height * 0.01,
               ),
               child: Text(
                 'Gaussian Distribution',
-                textAlign: TextAlign.start,
                 style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: ScreenSize.height * 0.025,
+                  color: ColorGuid.textSecondary, // [textSecondary] chart label
+                  fontWeight: FontWeight.w500,
+                  fontSize: ScreenSize.height * 0.022,
                 ),
               ),
             ),
           ),
+          // ── Gaussian line chart — dark themed ──────────────────
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenSize.height * 0.03,
-              ),
-              child: SizedBox(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.height * 0.03),
+              child: Container(
                 height: ScreenSize.height * 0.4,
+                padding: EdgeInsets.all(ScreenSize.width * 0.03),
+                decoration: BoxDecoration(
+                  // [surfaceColor] chart container
+                  color: ColorGuid.surfaceColor,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+                ),
                 child: LineChart(
                   LineChartData(
-                    backgroundColor: Colors.white,
+                    // [surfaceColor] chart background
+                    backgroundColor: ColorGuid.surfaceColor,
                     minX: 0,
                     maxX: 100,
                     minY: 0,
                     maxY: gaussian(mu, mu, sigma) * 1.2,
+                    gridData: FlGridData(
+                      show: true,
+                      // [boardersColor] grid lines
+                      getDrawingHorizontalLine: (_) =>
+                          FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                      getDrawingVerticalLine: (_) =>
+                          FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: ColorGuid.boardersColor),
+                    ),
                     titlesData: FlTitlesData(
                       rightTitles: AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
@@ -168,28 +168,36 @@ class _InstructorDetailsResultScreenState
                         sideTitles: SideTitles(
                           showTitles: true,
                           interval: 10,
-                          getTitlesWidget: (value, meta) {
-                            return Text(value.toInt().toString());
-                          },
+                          getTitlesWidget: (value, meta) => Text(
+                            value.toInt().toString(),
+                            // [textMuted] axis labels
+                            style: TextStyle(color: ColorGuid.textMuted, fontSize: 10),
+                          ),
                         ),
                       ),
-
                       leftTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
                           interval: gaussian(mu, mu, sigma) / 5,
-                          getTitlesWidget: (value, meta) {
-                            return Text(value.toStringAsFixed(2));
-                          },
+                          getTitlesWidget: (value, meta) => Text(
+                            value.toStringAsFixed(2),
+                            style: TextStyle(color: ColorGuid.textMuted, fontSize: 9),
+                          ),
                         ),
                       ),
                     ),
                     lineBarsData: [
                       LineChartBarData(
-                        color: ColorGuid.mainColor,
+                        // [amber] Gaussian curve line
+                        color: ColorGuid.amber,
                         spots: gaussianSpots(mu, sigma),
                         isCurved: true,
                         dotData: FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                          // Subtle amber fill beneath the curve
+                          show: true,
+                          color: ColorGuid.amber.withOpacity(0.08),
+                        ),
                       ),
                     ],
                   ),
@@ -197,32 +205,32 @@ class _InstructorDetailsResultScreenState
               ),
             ),
           ),
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.02)),
+          // ── Student marks list ─────────────────────────────────
           SliverList.separated(
             itemCount: listOfResults[index].listStudentMark.length,
             itemBuilder: (context, index2) => CustomDetailsTile(
               name: listOfResults[index].listStudentMark[index2].studentName,
               id: listOfResults[index].listStudentMark[index2].studentId,
               onTap: () {},
-              mark: listOfResults[index].listStudentMark[index2].mark
-                  .toString(),
+              mark: listOfResults[index].listStudentMark[index2].mark.toString(),
             ),
             separatorBuilder: (context, index) =>
                 SizedBox(height: ScreenSize.height * 0.01),
           ),
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.02)),
         ],
       ),
     );
   }
 
-  double mean(List<double> grades) {
-    return grades.reduce((a, b) => a + b) / grades.length;
-  }
+  double mean(List<double> grades) =>
+      grades.reduce((a, b) => a + b) / grades.length;
 
   double stdDeviation(List<double> grades, double mean) {
     final variance =
         grades.map((g) => (g - mean) * (g - mean)).reduce((a, b) => a + b) /
-        grades.length;
-
+            grades.length;
     return sqrt(variance);
   }
 
@@ -233,7 +241,6 @@ class _InstructorDetailsResultScreenState
 
   List<FlSpot> gaussianSpots(double mean, double std) {
     final spots = <FlSpot>[];
-
     for (double x = 0; x <= 100; x += 1) {
       spots.add(FlSpot(x, gaussian(x, mean, std)));
     }

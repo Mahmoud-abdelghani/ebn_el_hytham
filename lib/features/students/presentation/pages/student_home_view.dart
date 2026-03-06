@@ -60,7 +60,7 @@ class _StudentHomeViewState extends State<StudentHomeView> {
             state.toLowerCase().contains('l') &&
             state.toLowerCase().contains('t') &&
             state.toLowerCase().contains('s')) {
-          await VoiceService.speak('Results');
+          await VoiceService.speak('results');
           Navigator.pushNamed(context, StudentResultsView.routeName);
         }
       },
