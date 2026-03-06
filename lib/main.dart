@@ -1,7 +1,10 @@
+import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
+import 'package:ebn_el_hytham/core/services/voice_service.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/pages/login_view.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/instructor_salary_screen.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/student_fees_view.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/pages/instructor_home_view.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/pages/layha_view.dart';
@@ -20,8 +23,14 @@ import 'package:ebn_el_hytham/features/students/presentation/pages/student_home_
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  await Supabase.initialize(
+    url: 'https://gbgbgrtfcmcoggvjbmrx.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiZ2JncnRmY21jb2dndmpibXJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTkwMzYsImV4cCI6MjA4NjY3NTAzNn0.MKOTWFaDuopE25-tVZMoAJaFiVfKM1-CauPBbWI89Pk',
+  );
   runApp(MyApp());
 }
 
@@ -31,7 +40,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => ImageProcessingCubit())],
+      providers: [
+        BlocProvider(create: (context) => ImageProcessingCubit()),
+        BlocProvider(create: (context) => AttendanceCubit()),
+        BlocProvider(create: (context) => VoiceHelperCubit(VoiceService()),)
+      ],
 
       child: MaterialApp(
         routes: {

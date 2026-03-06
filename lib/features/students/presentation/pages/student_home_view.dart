@@ -1,3 +1,5 @@
+import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
+import 'package:ebn_el_hytham/core/services/voice_service.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
@@ -12,6 +14,7 @@ import 'package:ebn_el_hytham/features/students/presentation/widgets/home_headin
 import 'package:ebn_el_hytham/features/timetable/data/models/time_table_model.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentHomeView extends StatefulWidget {
   const StudentHomeView({super.key});
@@ -23,118 +26,156 @@ class StudentHomeView extends StatefulWidget {
 
 class _StudentHomeViewState extends State<StudentHomeView> {
   @override
+  void initState() {
+    super.initState();
+    context.read<VoiceHelperCubit>().start();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          HomeHeading(
-            email: 'mahmoudabdelghani0997@gmail.com',
-            id: '21011276',
-            imageUrl:
-                "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
+    return BlocListener<VoiceHelperCubit, String>(
+      listener: (context, state) async {
+        if (state.toLowerCase().contains('p') &&
+            state.toLowerCase().contains('r') &&
+            state.toLowerCase().contains('o') &&
+            state.toLowerCase().contains('f') &&
+            state.toLowerCase().contains('i') &&
+            state.toLowerCase().contains('e')) {
+          await VoiceService.speak('Profile');
+          Navigator.pushNamed(context, StudentProfileView.routeName);
+        } else if (state.toLowerCase().contains('m') &&
+            state.toLowerCase().contains('a') &&
+            state.toLowerCase().contains('t') &&
+            state.toLowerCase().contains('e') &&
+            state.toLowerCase().contains('r') &&
+            state.toLowerCase().contains('i') &&
+            state.toLowerCase().contains('l') &&
+            state.toLowerCase().contains('s')) {
+          await VoiceService.speak('materials');
+          Navigator.pushNamed(context, StudentMaterialsListView.routeName);
+        } else if (state.toLowerCase().contains('r') &&
+            state.toLowerCase().contains('e') &&
+            state.toLowerCase().contains('s') &&
+            state.toLowerCase().contains('u') &&
+            state.toLowerCase().contains('l') &&
+            state.toLowerCase().contains('t') &&
+            state.toLowerCase().contains('s')) {
+          await VoiceService.speak('Results');
+          Navigator.pushNamed(context, StudentResultsView.routeName);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: ColorGuid.scaffoldBackgroundColor,
+        body: Column(
+          children: [
+            HomeHeading(
+              email: 'mahmoudabdelghani0997@gmail.com',
+              id: '21011276',
+              imageUrl:
+                  "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
 
-            name: 'Mahmoud Abdelghany',
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenSize.width * 0.0486111111121238,
-              ),
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+              name: 'Mahmoud Abdelghany',
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSize.width * 0.0486111111121238,
                 ),
-                children: [
-                  FeatureContainer(
-                    iconPath: 'assets/Faculties.png',
-                    title: 'Profile',
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        StudentProfileView.routeName,
-                      );
-                    },
+                child: GridView(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
                   ),
-                  FeatureContainer(
-                    iconPath: 'assets/Group.png',
-                    title: 'Materials',
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        StudentMaterialsListView.routeName,
-                      );
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/timetable.png',
-                    title: 'Time table',
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        InstructorTimetableScreen.routeName,
-                        arguments: timeTableDataStudent
-                      );
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/results.png',
-                    title: 'Results',
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        StudentResultsView.routeName,
-                      );
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/Fee.png',
-                    title: 'Fees',
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(StudentFeesView.routeName);
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/Exam.png',
-                    title: 'Exams',
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(StudentExamsTable.routeName);
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/Icard.png',
-                    title: 'العسكرية',
-                    onTap: () {
-                      Navigator.of(context).pushNamed(MilitaryView.routeName);
-                    },
-                  ),
+                  children: [
+                    FeatureContainer(
+                      iconPath: 'assets/Faculties.png',
+                      title: 'Profile',
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          StudentProfileView.routeName,
+                        );
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/Group.png',
+                      title: 'Materials',
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          StudentMaterialsListView.routeName,
+                        );
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/timetable.png',
+                      title: 'Time table',
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          InstructorTimetableScreen.routeName,
+                          arguments: timeTableDataStudent,
+                        );
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/results.png',
+                      title: 'Results',
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          StudentResultsView.routeName,
+                        );
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/Fee.png',
+                      title: 'Fees',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(StudentFeesView.routeName);
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/Exam.png',
+                      title: 'Exams',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(StudentExamsTable.routeName);
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/Icard.png',
+                      title: 'العسكرية',
+                      onTap: () {
+                        Navigator.of(context).pushNamed(MilitaryView.routeName);
+                      },
+                    ),
 
-                  FeatureContainer(
-                    iconPath: 'assets/sylle.png',
-                    title: 'الايحه',
-                    onTap: () {
-                      Navigator.of(context).pushNamed(LayhaView.routename);
-                    },
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/atten.png',
-                    title: 'التسجيل',
-                    onTap: () {},
-                  ),
-                  FeatureContainer(
-                    iconPath: 'assets/Support.png',
-                    title: 'messages',
-                    onTap: () {},
-                  ),
-                ],
+                    FeatureContainer(
+                      iconPath: 'assets/sylle.png',
+                      title: 'الايحه',
+                      onTap: () {
+                        Navigator.of(context).pushNamed(LayhaView.routename);
+                      },
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/atten.png',
+                      title: 'التسجيل',
+                      onTap: () {},
+                    ),
+                    FeatureContainer(
+                      iconPath: 'assets/Support.png',
+                      title: 'messages',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
