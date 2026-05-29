@@ -1,9 +1,10 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
-import 'package:ebn_el_hytham/features/materials/data/models/material_model.dart';
-import 'package:ebn_el_hytham/features/profile/presentation/widgets/student_profile_strings_helper.dart';
+import 'package:ebn_el_hytham/features/materials/data/models/assigned_material_model.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/email_handler_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentMaterialDetailsView extends StatelessWidget {
   const StudentMaterialDetailsView({super.key});
@@ -11,89 +12,349 @@ class StudentMaterialDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MaterialModel materialModel =
-        ModalRoute.of(context)!.settings.arguments as MaterialModel;
+    final model =
+        ModalRoute.of(context)!.settings.arguments as AssignedMaterialModel;
+
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar(materialModel.name),
+      appBar: buildDarkAppBar(model.name),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSize.width * 0.05,
           vertical: ScreenSize.height * 0.025,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Material banner image with amber border ───────────
-            Center(
-              child: Container(
-                width: ScreenSize.width * 0.65,
-                height: ScreenSize.height * 0.25,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(ScreenSize.height * 0.04),
-                  border: Border.all(color: ColorGuid.amber, width: 2),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://cdn.mos.cms.futurecdn.net/MFpjqdSZhjvUZNWyeo52x6-1200-80.jpg',
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+            // ── Header Card (code + hours + grade) ───────────────
+            _HeaderCard(model: model),
+            SizedBox(height: ScreenSize.height * 0.018),
+
+            // ── Schedule Section ──────────────────────────────────
+            _SectionTitle(
+              title: 'Schedule',
+              icon: Icons.calendar_today_rounded,
+            ),
+            SizedBox(height: ScreenSize.height * 0.010),
+            _InfoCard(
+              children: [
+                _InfoRow(
+                  icon: Icons.wb_sunny_outlined,
+                  label: 'Day',
+                  value: model.day,
                 ),
-              ),
+                _InfoRow(
+                  icon: Icons.access_time_rounded,
+                  label: 'Time',
+                  value: model.lectureTime,
+                ),
+                _InfoRow(
+                  icon: Icons.looks_one_outlined,
+                  label: 'Period',
+                  value: model.startingPeriod,
+                ),
+                _InfoRow(
+                  icon: Icons.location_on_outlined,
+                  label: 'Location',
+                  value: model.lectureLocation,
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.02),
-              child: Divider(color: ColorGuid.boardersColor),
+            SizedBox(height: ScreenSize.height * 0.018),
+
+            // ── Instructor Section ────────────────────────────────
+            _SectionTitle(
+              title: 'Instructor',
+              icon: Icons.person_outline_rounded,
             ),
-            // ── Details card ──────────────────────────────────────
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(ScreenSize.width * 0.045),
-              decoration: BoxDecoration(
-                // [surfaceColor] dark info card
-                color: ColorGuid.surfaceColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
-              ),
-              child: Column(
-                children: [
-                  StudentProfileStringsHelper(
-                    firstTxt: "Material Code",
-                    secondTxt: materialModel.code,
-                  ),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Credit Hours",
-                    secondTxt: materialModel.numberOfHours,
-                  ),
-                  StudentProfileStringsHelper(firstTxt: materialModel.doctorName),
-                  StudentProfileStringsHelper(firstTxt: "Email"),
-                  StudentProfileStringsHelper(firstTxt: materialModel.doctorEmail),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Lecture Date",
-                    secondTxt: materialModel.lectureDate,
-                  ),
-                  StudentProfileStringsHelper(firstTxt: "Location"),
-                  StudentProfileStringsHelper(firstTxt: materialModel.lectureLocation),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Section",
-                    secondTxt: materialModel.section,
-                  ),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Mid Degree",
-                    secondTxt: materialModel.midDegree,
-                  ),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Attendance",
-                    secondTxt: materialModel.attendanceDegree,
-                  ),
-                  StudentProfileStringsHelper(
-                    firstTxt: "Labs",
-                    secondTxt: materialModel.labsDegree,
-                  ),
-                ],
-              ),
+            SizedBox(height: ScreenSize.height * 0.010),
+            _InfoCard(
+              children: [
+                _InfoRow(
+                  icon: Icons.badge_outlined,
+                  label: 'Name',
+                  value: model.instructorName,
+                ),
+                _InfoRow(
+                  icon: Icons.email_outlined,
+                  label: 'Email',
+                  value: model.instructorEmail,
+                ),
+              ],
             ),
+            SizedBox(height: ScreenSize.height * 0.018),
+
+            // ── Results Section ───────────────────────────────────
+            _SectionTitle(title: 'Results', icon: Icons.bar_chart_rounded),
+            SizedBox(height: ScreenSize.height * 0.010),
+            _ResultsCard(model: model),
+            SizedBox(height: ScreenSize.height * 0.03),
+
+            // ── Email Button ──────────────────────────────────────
+            _EmailButton(email: model.instructorEmail),
+            SizedBox(height: ScreenSize.height * 0.02),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Header Card ───────────────────────────────────────────────────────────────
+class _HeaderCard extends StatelessWidget {
+  final AssignedMaterialModel model;
+  const _HeaderCard({required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(ScreenSize.width * 0.05),
+      decoration: BoxDecoration(
+        color: ColorGuid.surfaceColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: ColorGuid.amber.withOpacity(0.4), width: 1.5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _HeaderStat(label: 'Code', value: model.code),
+          _Divider(),
+          _HeaderStat(label: 'Hours', value: '${model.hours} hrs'),
+          _Divider(),
+          _HeaderStat(
+            label: 'Grade',
+            value: model.grade,
+            valueColor: _gradeColor(model.grade),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _gradeColor(String grade) {
+    if (grade == 'No data yet') return Colors.grey;
+    if (grade == 'F') return Colors.redAccent;
+    if (grade.startsWith('A')) return Colors.greenAccent;
+    return ColorGuid.amber;
+  }
+}
+
+class _HeaderStat extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color? valueColor;
+  const _HeaderStat({
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            color: valueColor ?? ColorGuid.amber,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(label, style: TextStyle(color: Colors.grey, fontSize: 12)),
+      ],
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenSize.height * 0.045,
+      width: 1,
+      color: ColorGuid.glassBorder,
+    );
+  }
+}
+
+// ── Section Title ─────────────────────────────────────────────────────────────
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const _SectionTitle({required this.title, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: ColorGuid.amber, size: 18),
+        SizedBox(width: 8),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Info Card ─────────────────────────────────────────────────────────────────
+class _InfoCard extends StatelessWidget {
+  final List<Widget> children;
+  const _InfoCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenSize.width * 0.045,
+        vertical: ScreenSize.height * 0.012,
+      ),
+      decoration: BoxDecoration(
+        color: ColorGuid.surfaceColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+      ),
+      child: Column(
+        children: List.generate(children.length, (i) {
+          return Column(
+            children: [
+              children[i],
+              if (i != children.length - 1)
+                Divider(color: ColorGuid.glassBorder, height: 1),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}
+
+// ── Info Row ──────────────────────────────────────────────────────────────────
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.012),
+      child: Row(
+        children: [
+          Icon(icon, color: ColorGuid.amber, size: 18),
+          SizedBox(width: ScreenSize.width * 0.03),
+          Text(label, style: TextStyle(color: Colors.grey, fontSize: 13)),
+          const Spacer(),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Results Card ──────────────────────────────────────────────────────────────
+class _ResultsCard extends StatelessWidget {
+  final AssignedMaterialModel model;
+  const _ResultsCard({required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(ScreenSize.width * 0.045),
+      decoration: BoxDecoration(
+        color: ColorGuid.surfaceColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _ResultStat(label: 'Year Work', value: model.yearWork),
+          _ResultStat(label: 'Final Exam', value: model.finalDegree),
+          _ResultStat(label: 'Total', value: model.total),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResultStat extends StatelessWidget {
+  final String label;
+  final String value;
+  const _ResultStat({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(label, style: TextStyle(color: Colors.grey, fontSize: 11)),
+      ],
+    );
+  }
+}
+
+// ── Email Button ──────────────────────────────────────────────────────────────
+class _EmailButton extends StatelessWidget {
+  final String email;
+  const _EmailButton({required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: ScreenSize.height * 0.062,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          BlocProvider.of<EmailHandlerCubit>(context).sendEmail(email);
+        }, // فاضي دلوقتي
+        icon: const Icon(Icons.email_outlined),
+        label: const Text(
+          'Email Instructor',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ColorGuid.amber,
+          foregroundColor: Colors.black,
+          disabledBackgroundColor: ColorGuid.amber.withOpacity(0.5),
+          disabledForegroundColor: Colors.black54,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );

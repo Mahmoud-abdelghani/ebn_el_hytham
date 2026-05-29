@@ -5,7 +5,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class VoiceService {
   final stt.SpeechToText speech = stt.SpeechToText();
- static FlutterTts flutterTts = FlutterTts();
+  static FlutterTts flutterTts = FlutterTts();
 
   Future<bool> init(Function(String state) onState) async {
     return await speech.initialize(
@@ -15,20 +15,27 @@ class VoiceService {
     );
   }
 
-  void startListening(Function(String text) onResult) async {
-    speech.listen(
+  Future<void> startListening(Function(String text) onResult) async {
+    await speech.listen(
       onResult: (result) {
-        onResult(result.recognizedWords);
-        log(result.recognizedWords);
+        if (!result.finalResult) return;
+        final text = result.recognizedWords.trim();
+        if (text.isEmpty) return;
+        onResult(text);
+        log(text);
       },
     );
   }
 
-  void stopListening() {
-    speech.stop();
+  Future<void> stopListening() async {
+    log('off or ');
+    await speech.cancel();
+    await speech.stop();
+    await flutterTts.stop();
   }
 
   static Future<void> speak(String text) async {
+    await flutterTts.awaitSpeakCompletion(true);
     await flutterTts.speak(text);
   }
 }

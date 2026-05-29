@@ -1,17 +1,49 @@
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
+import 'package:ebn_el_hytham/features/students/presentation/cubit/profile_cubit.dart';
+import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Dark-themed profile header shared by Student and Instructor home screens.
-/// Uses [surfaceColor] card with amber ring avatar and amber faculty pill.
 class HomeHeading extends StatelessWidget {
-  const HomeHeading({
-    super.key,
+  const HomeHeading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        // ── Loading → shimmer ──────────────────────────────────────
+        if (state is ProfileLoading || state is ProfileInitial) {
+          return const HomeHeadingShimmer();
+        }
+
+        // ── Error → minimal error banner ──────────────────────────
+        if (state is ProfileError) {
+          return _ErrorBanner(message: state.message);
+        }
+
+        // ── Success → full header ──────────────────────────────────
+        final profile = (state as ProfileSuccess).profile;
+        return _HomeHeadingContent(
+          imageUrl: profile.photo,
+          name: profile.name,
+          id: profile.id,
+          email: profile.email,
+        );
+      },
+    );
+  }
+}
+
+// ── Actual header UI (only rendered on success) ───────────────────────────
+class _HomeHeadingContent extends StatelessWidget {
+  const _HomeHeadingContent({
     required this.imageUrl,
     required this.name,
     required this.id,
     required this.email,
   });
+
   final String imageUrl;
   final String name;
   final String id;
@@ -21,7 +53,6 @@ class HomeHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // [surfaceColor] replaces the old PNG background asset
       decoration: BoxDecoration(
         color: ColorGuid.surfaceColor,
         borderRadius: const BorderRadius.only(
@@ -45,11 +76,10 @@ class HomeHeading extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Top row: avatar + faculty chip + bell ──────────
+          // ── Top row: avatar + faculty chip + bell ──────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Avatar with [amber] ring border
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -60,30 +90,26 @@ class HomeHeading extends StatelessWidget {
                   backgroundImage: NetworkImage(imageUrl),
                 ),
               ),
-              // Faculty [amber] pill badge
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorGuid.amberSubtle, // [amberSubtle] tinted fill
+                  color: ColorGuid.amberSubtle,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: ColorGuid.amberBorder, // [amberBorder]
-                  ),
+                  border: Border.all(color: ColorGuid.amberBorder),
                 ),
                 child: Text(
                   'Faculty of Engineering',
                   style: TextStyle(
-                    color: ColorGuid.amber, // [amber] text on pill
+                    color: ColorGuid.amber,
                     fontSize: ScreenSize.height * 0.014,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
                   ),
                 ),
               ),
-              // Notification bell with amber dot indicator
               Stack(
                 alignment: Alignment.topRight,
                 children: [
@@ -91,7 +117,7 @@ class HomeHeading extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.notifications_outlined,
-                      color: ColorGuid.textSecondary, // [textSecondary]
+                      color: ColorGuid.textSecondary,
                       size: ScreenSize.height * 0.033,
                     ),
                   ),
@@ -101,7 +127,6 @@ class HomeHeading extends StatelessWidget {
                     child: Container(
                       width: 9,
                       height: 9,
-                      // [amber] notification dot
                       decoration: BoxDecoration(
                         color: ColorGuid.amber,
                         shape: BoxShape.circle,
@@ -113,17 +138,16 @@ class HomeHeading extends StatelessWidget {
             ],
           ),
           SizedBox(height: ScreenSize.height * 0.022),
-          // ── Greeting ───────────────────────────────────────
+
           Text(
             'Welcome back 👋',
             style: TextStyle(
-              color: ColorGuid.textSecondary, // [textSecondary] subtle greeting
+              color: ColorGuid.textSecondary,
               fontSize: ScreenSize.height * 0.016,
               fontWeight: FontWeight.w400,
             ),
           ),
           SizedBox(height: ScreenSize.height * 0.005),
-          // Name in [textPrimary] white bold
           Text(
             name,
             style: TextStyle(
@@ -134,7 +158,6 @@ class HomeHeading extends StatelessWidget {
             ),
           ),
           SizedBox(height: ScreenSize.height * 0.006),
-          // ID + Email as info pills
           Row(
             children: [
               _InfoPill(icon: Icons.badge_outlined, label: id),
@@ -150,7 +173,48 @@ class HomeHeading extends StatelessWidget {
   }
 }
 
-/// Small amber-icon + muted-text pill used for metadata fields
+// ── Error banner ──────────────────────────────────────────────────────────
+class _ErrorBanner extends StatelessWidget {
+  const _ErrorBanner({required this.message});
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + ScreenSize.height * 0.02,
+        left: ScreenSize.width * 0.05,
+        right: ScreenSize.width * 0.05,
+        bottom: ScreenSize.height * 0.03,
+      ),
+      decoration: BoxDecoration(
+        color: ColorGuid.surfaceColor,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: ColorGuid.error, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: ColorGuid.error,
+                fontSize: ScreenSize.height * 0.015,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Info pill ─────────────────────────────────────────────────────────────
 class _InfoPill extends StatelessWidget {
   const _InfoPill({required this.icon, required this.label});
   final IconData icon;
@@ -161,7 +225,7 @@ class _InfoPill extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: ColorGuid.amber, size: 13), // [amber] icon
+        Icon(icon, color: ColorGuid.amber, size: 13),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
@@ -169,7 +233,7 @@ class _InfoPill extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: ColorGuid.textMuted, // [textMuted]
+              color: ColorGuid.textMuted,
               fontSize: ScreenSize.height * 0.013,
             ),
           ),

@@ -28,7 +28,7 @@ class StudentProfileStringsHelper extends StatelessWidget {
               // [textSecondary] for label — visible but not dominant
               color: ColorGuid.textSecondary,
               fontWeight: FontWeight.w400,
-              fontSize: ScreenSize.height * 0.02,
+              fontSize: ScreenSize.height * 0.015,
             ),
           ),
           secondTxt != null
@@ -38,7 +38,7 @@ class StudentProfileStringsHelper extends StatelessWidget {
                     // [amber] for value — draws attention to key data
                     color: ColorGuid.amber,
                     fontWeight: FontWeight.w500,
-                    fontSize: ScreenSize.height * 0.02,
+                    fontSize: ScreenSize.height * 0.015,
                   ),
                 )
               : const SizedBox(),

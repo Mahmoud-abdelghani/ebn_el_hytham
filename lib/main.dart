@@ -1,13 +1,21 @@
+import 'package:dio/dio.dart';
+import 'package:ebn_el_hytham/core/api/dio_consumer.dart';
+import 'package:ebn_el_hytham/core/api/end_points.dart';
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
 import 'package:ebn_el_hytham/core/services/voice_service.dart';
+import 'package:ebn_el_hytham/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/pages/login_view.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/instructor_salary_screen.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/student_fees_view.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/cubit/instructor_profile_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/pages/instructor_home_view.dart';
+import 'package:ebn_el_hytham/features/laiha/presentation/cubit/layha_cubit.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/pages/layha_view.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/email_handler_cubit.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_material_details_screen.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_materials_screen.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_student_details_screen.dart';
@@ -16,11 +24,15 @@ import 'package:ebn_el_hytham/features/materials/presentation/pages/student_mate
 import 'package:ebn_el_hytham/features/military/presentation/pages/military_view.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/pages/instructor_profile_screen.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/pages/student_profile_view.dart';
+import 'package:ebn_el_hytham/features/results/presentation/cubit/results_cubit.dart';
 import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_details_result_screen.dart';
 import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_result_screen.dart';
 import 'package:ebn_el_hytham/features/results/presentation/pages/student_results_view.dart';
+import 'package:ebn_el_hytham/features/students/presentation/cubit/profile_cubit.dart';
+import 'package:ebn_el_hytham/features/students/presentation/pages/settings.dart';
 import 'package:ebn_el_hytham/features/students/presentation/pages/student_home_view.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
+import 'package:ebn_el_hytham/features/timetable/presentation/pages/student_schedule_view%20.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -43,11 +55,32 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => ImageProcessingCubit()),
         BlocProvider(create: (context) => AttendanceCubit()),
-        BlocProvider(create: (context) => VoiceHelperCubit(VoiceService()),)
+        BlocProvider(create: (context) => VoiceHelperCubit(VoiceService())),
+        BlocProvider(
+          create: (context) =>
+              AuthCubit(DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl)),
+        ),
+        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(
+          create: (context) =>
+              ResultsCubit(DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl)),
+        ),
+        BlocProvider(
+          create: (context) => AssignedMaterialsCubit(
+            DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl),
+          ),
+        ),
+        BlocProvider(create: (context) => EmailHandlerCubit()),
+        BlocProvider(
+          create: (context) =>
+              LayhaCubit(DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl)),
+        ),
+        BlocProvider(create: (context) => InstructorProfileCubit()),
       ],
 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+
         /// Global dark theme — ensures all default Flutter widgets adopt
         /// the dark charcoal + amber accent design spirit
         theme: ThemeData(
@@ -83,7 +116,9 @@ class MyApp extends StatelessWidget {
             foregroundColor: Color(0xFF161B22),
           ),
           // Dialog dark
-          dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF1F2630)),
+          dialogTheme: const DialogThemeData(
+            backgroundColor: Color(0xFF1F2630),
+          ),
         ),
         routes: {
           LoginView.routeName: (context) => LoginView(),
@@ -115,6 +150,8 @@ class MyApp extends StatelessWidget {
               InstructorResultScreen(),
           InstructorDetailsResultScreen.routeName: (context) =>
               InstructorDetailsResultScreen(),
+          Settings.routeName: (context) => Settings(),
+          StudentScheduleView.routeName: (context) => StudentScheduleView(),
         },
         initialRoute: LoginView.routeName,
       ),

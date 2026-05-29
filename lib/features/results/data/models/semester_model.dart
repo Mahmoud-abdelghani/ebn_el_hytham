@@ -1,9 +1,16 @@
-import 'package:ebn_el_hytham/features/results/data/models/material_result_model.dart';
+
+
+import 'package:ebn_el_hytham/features/results/data/models/material_model.dart';
 
 class SemesterModel {
-  final String semesterGpa;
-  final List<MaterialResultModel> listMaterialsResults;
-
-  SemesterModel({required this.semesterGpa, required this.listMaterialsResults});
-  
+  final String semesterName;
+  final List<MaterialModel> listOfMaterials;
+  SemesterModel({required this.semesterName, required this.listOfMaterials});
+  factory SemesterModel.fromJson(
+    List<Map<String, dynamic>> json,
+    String studentId,
+  ) => SemesterModel(
+    semesterName: studentId,
+    listOfMaterials: json.map((e) => MaterialModel.fromJson(e)).toList(),
+  );
 }

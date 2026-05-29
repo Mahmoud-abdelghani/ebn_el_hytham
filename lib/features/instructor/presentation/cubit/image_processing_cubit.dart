@@ -30,13 +30,16 @@ class ImageProcessingCubit extends Cubit<ImageProcessingState> {
     try {
       emit(ImageProcessingLoading());
       DateTime dateTime = DateTime.now();
+      log(dateTime.toString());
       String path = basename(pickedImage!.path);
       await SupabaseService.supabase.storage
           .from('attendance_holder')
           .upload('${dateTime}_$path', pickedImage!);
+      log('1');
       final String url = SupabaseService.supabase.storage
           .from('attendance_holder')
           .getPublicUrl('${dateTime}_$path');
+      log(2.toString());
       iamgeUrl = url;
       emit(ImageProcessingSuccess());
     } on Exception catch (e) {

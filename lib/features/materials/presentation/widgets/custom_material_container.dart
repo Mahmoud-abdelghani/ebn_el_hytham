@@ -45,12 +45,15 @@ class CustomMaterialContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              txt1,
-              style: TextStyle(
-                color: ColorGuid.textPrimary, // [textPrimary] white
-                fontWeight: FontWeight.w500,
-                fontSize: ScreenSize.height * 0.022,
+            SizedBox(
+              width: ScreenSize.width * 0.6,
+              child: Text(
+                txt1,
+                style: TextStyle(
+                  color: ColorGuid.textPrimary, // [textPrimary] white
+                  fontWeight: FontWeight.w500,
+                  fontSize: ScreenSize.height * 0.019,
+                ),
               ),
             ),
             Text(
