@@ -1,304 +1,78 @@
-import 'package:ebn_el_hytham/features/materials/data/models/material_model.dart';
-import 'package:ebn_el_hytham/features/materials/data/models/student_material_model.dart';
+import 'package:ebn_el_hytham/features/materials/data/models/assigned_material_model.dart';
+import 'package:ebn_el_hytham/features/materials/data/models/enrolled_material_student_model.dart';
 
 class InstructorMaterialModel {
   final String name;
-  final String season;
+  final String code;
   final String day;
-  final String hall;
-  final String department;
+  final String departmentName;
+  final String level;
+  final String location;
+  final String startingPeriod;
   final String time;
-  final int totlaNumberOfStrudents;
-  final List<StudentMaterialModel> students;
+
+  List <EnrolledMaterialStudentModel> assignedMaterials ;
 
   InstructorMaterialModel({
     required this.name,
-    required this.season,
+    required this.code,
     required this.day,
-    required this.hall,
-    required this.department,
+    required this.departmentName,
+    required this.level,
+    required this.location,
+    required this.startingPeriod,
     required this.time,
-    required this.totlaNumberOfStrudents,
-    required this.students,
+    required this.assignedMaterials,
   });
+
+
+   factory InstructorMaterialModel.fromJson({
+    required Map<String, dynamic> teacherCourse,   // من /teacher/{id}
+    required Map<String, dynamic> dashboardCourse, // من /instructor/dashboard/{id}
+  }) {
+    final period = teacherCourse['period'] as Map<String, dynamic>? ?? {};
+
+    final students = (dashboardCourse['enrolled_students'] as List<dynamic>? ?? [])
+        .map((s) => EnrolledMaterialStudentModel.fromJson(s as Map<String, dynamic>))
+        .toList();
+
+    return InstructorMaterialModel(
+      name: teacherCourse['course_name'] as String? ?? '',
+      code: teacherCourse['course_code'] as String? ?? '',
+      day: teacherCourse['day'] as String? ?? '',
+      departmentName: teacherCourse['dept_name'] as String? ?? '',
+      level: teacherCourse['level'] as String? ?? '',
+      location: teacherCourse['location'] as String? ?? '',
+      startingPeriod: '${period['from']} → ${period['to']}',
+      time: teacherCourse['time'] as String? ?? '',
+      assignedMaterials: students,
+    );
+  }
+
+  /// بيعمل match بين الـ courses من الـ API الاتنين عن طريق course_code
+  static List<InstructorMaterialModel> fromBothApis({
+    required Map<String, dynamic> teacherResponse,
+    required Map<String, dynamic> dashboardResponse,
+  }) {
+    final teacherCourses = teacherResponse['assigned_courses'] as List<dynamic>? ?? [];
+    final dashboardCourses = dashboardResponse['courses'] as List<dynamic>? ?? [];
+
+    // بنعمل map من course_code → dashboard course عشان الـ lookup يبقى O(1)
+    final dashboardMap = {
+      for (final c in dashboardCourses)
+        (c as Map<String, dynamic>)['course_code'] as String: c
+    };
+
+    return teacherCourses.map((tc) {
+      final teacherCourse = tc as Map<String, dynamic>;
+      final code = teacherCourse['course_code'] as String;
+      final dashboardCourse = dashboardMap[code] ?? {};
+
+      return InstructorMaterialModel.fromJson(
+        teacherCourse: teacherCourse,
+        dashboardCourse: dashboardCourse,
+      );
+    }).toList();
+  }
 }
 
-List<InstructorMaterialModel> materials = [
-  InstructorMaterialModel(
-    name: 'Digital communication',
-    season: 'خريف',
-    day: 'Sat',
-    hall: 'ك 2',
-    department: 'Communications and electronics',
-    time: 'فترة تالته',
-    totlaNumberOfStrudents: 135,
-    students: [
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-      StudentMaterialModel(
-        studentName: 'mahmoud abdelghani',
-        studentId: '21011276',
-        urlImage:
-            "https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg",
-        materialDetails: MaterialModel(
-          name: 'Digital communication',
-          code: 'EEC42',
-          doctorName: 'Mohamed Salah',
-          doctorEmail: 'mohamedsalah0997@gmail.com',
-          lectureDate: 'Sat فترة تالته',
-          attendanceDegree: '8',
-          midDegree: '25',
-          labsDegree: '20',
-          section: '2',
-          lectureLocation: 'ك 2',
-          numberOfHours: '3',
-        ),
-      ),
-    ],
-  ),
-];

@@ -5,7 +5,25 @@ class EndPoints {
   static const String fetchAcademic = 'view_academic/';
   static const String fetchAssignedMaterials = 'student_academic_last/';
   static const String studentProgress = 'student_progress/';
+  static const String teacher = 'teacher/';
+  static const String dashboard = 'instructor/dashboard/';
+  static const String updateGrades = 'update_grades/';
 }
+/*{
+    "year_work": 19.5
+}
+
+JSON
+{
+    "final_exam": 55
+}
+
+
+JSON
+{
+    "year_work": 18,
+    "final_exam": 52
+} */
 
 class ApiKeys {
   static const String name = 'name';

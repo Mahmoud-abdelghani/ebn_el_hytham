@@ -16,6 +16,9 @@ import 'package:ebn_el_hytham/features/laiha/presentation/cubit/layha_cubit.dart
 import 'package:ebn_el_hytham/features/laiha/presentation/pages/layha_view.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/email_handler_cubit.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/excel_handler_cubit.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/instructor_materials_cubit.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/pdf_helper_cubit.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_material_details_screen.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_materials_screen.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_student_details_screen.dart';
@@ -33,6 +36,7 @@ import 'package:ebn_el_hytham/features/students/presentation/pages/settings.dart
 import 'package:ebn_el_hytham/features/students/presentation/pages/student_home_view.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/student_schedule_view%20.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -76,6 +80,13 @@ class MyApp extends StatelessWidget {
               LayhaCubit(DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl)),
         ),
         BlocProvider(create: (context) => InstructorProfileCubit()),
+        BlocProvider(
+          create: (context) => InstructorMaterialsCubit(
+            DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl),
+          ),
+        ),
+        BlocProvider(create: (context) => PdfHelperCubit()),
+        BlocProvider(create: (context) => ExcelHandlerCubit()),
       ],
 
       child: MaterialApp(

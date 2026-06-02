@@ -6,6 +6,7 @@ class InstructorModel {
   final String nationalId;
   final String createdAt;
   final String totalAssignedCourses;
+  final List<String> assignedMaterials;
 
   InstructorModel({
     required this.name,
@@ -15,6 +16,7 @@ class InstructorModel {
     required this.nationalId,
     required this.createdAt,
     required this.totalAssignedCourses,
+    required this.assignedMaterials,
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,10 @@ class InstructorModel {
       createdAt: json['created_at'] ?? '',
       totalAssignedCourses:
           (json['assigned_courses'] as List?)?.length.toString() ?? '0',
+      assignedMaterials: List.generate(
+        (json['assigned_courses'] as List? ?? []).length,
+        (index) => json['assigned_courses'][index]['course_name'],
+      ),
     );
   }
 }

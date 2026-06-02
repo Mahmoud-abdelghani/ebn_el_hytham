@@ -8,6 +8,7 @@ import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/custom_elevated_button.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/instructor_materials_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 /// Dark-themed attendance dialog — [surfaceColor] background, [amber] accents.
 class CustomAlertDialog extends StatefulWidget {
-  const CustomAlertDialog({super.key});
+  const CustomAlertDialog({super.key, required this.assignedMaterials});
+  final List<String> assignedMaterials;
 
   @override
   State<CustomAlertDialog> createState() => _CustomAlertDialogState();
@@ -208,11 +210,15 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                           ),
                           color: Colors.white,
                           items: List.generate(
-                            materials.length,
+                            widget.assignedMaterials.length,
                             (index) => PopupMenuItem(
-                              child: Text(materials[index].name),
+                              child: Text(
+                                widget.assignedMaterials[index],
+                                style: TextStyle(color: ColorGuid.mainColor),
+                              ),
                               onTap: () {
-                                selectedMaterial = materials[index].name;
+                                selectedMaterial =
+                                    widget.assignedMaterials[index];
                                 setState(() {});
                               },
                             ),
@@ -245,11 +251,14 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                                     'Shoose Material',
                                     style: TextStyle(color: Colors.grey),
                                   )
-                                : Text(
-                                    selectedMaterial,
-                                    style: TextStyle(
-                                      color: ColorGuid.mainColor,
-                                      fontSize: ScreenSize.height * 0.015,
+                                : SizedBox(
+                                    width: ScreenSize.width * 0.2,
+                                    child: Text(
+                                      selectedMaterial,
+                                      style: TextStyle(
+                                        color: ColorGuid.mainColor,
+                                        fontSize: ScreenSize.height * 0.015,
+                                      ),
                                     ),
                                   ),
                             Icon(

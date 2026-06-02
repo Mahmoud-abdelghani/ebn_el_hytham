@@ -1,6 +1,8 @@
 import 'package:ebn_el_hytham/features/fees/presentation/pages/instructor_salary_screen.dart';
+import 'package:ebn_el_hytham/features/instructor/data/models/instructor_model.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/custom_alert_dialog.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/success_header.dart';
+import 'package:ebn_el_hytham/features/materials/presentation/cubit/instructor_materials_cubit.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_materials_screen.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/pages/instructor_profile_screen.dart';
 import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_result_screen.dart';
@@ -26,6 +28,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
   static const Color _bgDark = Color(0xFF161B22);
   static const Color _bgCard = Color(0xFF1F2630);
   static const Color _amber = Color(0xFFFFC94A);
+  InstructorModel? _profile;
 
   @override
   void initState() {
@@ -65,6 +68,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
 
               if (state is InstructorProfileSuccess) {
                 final profile = state.profile;
+                _profile = profile;
                 return SuccessHeader(
                   bgCard: _bgCard,
                   amber: _amber,
@@ -132,18 +136,29 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                   FeatureContainer(
                     iconPath: 'assets/atten.png',
                     title: 'Attendance',
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (_) => CustomAlertDialog(),
-                    ),
+                    onTap: () {
+                      if (_profile == null) return;
+                      showDialog(
+                        context: context,
+                        builder: (_) => CustomAlertDialog(
+                          assignedMaterials: _profile!.assignedMaterials,
+                        ),
+                      );
+                    },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/sylle.png',
                     title: 'Materials',
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      InstructorMaterialsScreen.routeName,
-                    ),
+                    onTap: () {
+                      if (_profile == null) return;
+                      BlocProvider.of<InstructorMaterialsCubit>(
+                        context,
+                      ).fetchInstructorMaterials(instructorId: _profile!.id);
+                      Navigator.pushNamed(
+                        context,
+                        InstructorMaterialsScreen.routeName,
+                      );
+                    },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/Group.png',
