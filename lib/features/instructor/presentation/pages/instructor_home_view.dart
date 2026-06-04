@@ -7,7 +7,7 @@ import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_m
 import 'package:ebn_el_hytham/features/profile/presentation/pages/instructor_profile_screen.dart';
 import 'package:ebn_el_hytham/features/results/presentation/pages/instructor_result_screen.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/feature_container.dart';
-import 'package:ebn_el_hytham/features/timetable/data/models/time_table_model.dart';
+import 'package:ebn_el_hytham/features/timetable/presentation/cubit/instructor_timetable_cubit.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,10 +168,14 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                   FeatureContainer(
                     iconPath: 'assets/timetable.png',
                     title: 'Time Table',
-                    onTap: () => Navigator.of(context).pushNamed(
-                      InstructorTimetableScreen.routeName,
-                      arguments: timeTableData,
-                    ),
+                    onTap: () {
+                      BlocProvider.of<InstructorTimetableCubit>(
+                        context,
+                      ).fetchTable(id: id);
+                      Navigator.of(
+                        context,
+                      ).pushNamed(InstructorTimetableScreen.routeName);
+                    },
                   ),
                   FeatureContainer(
                     iconPath: 'assets/Salary.png',

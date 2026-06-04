@@ -34,6 +34,7 @@ import 'package:ebn_el_hytham/features/results/presentation/pages/student_result
 import 'package:ebn_el_hytham/features/students/presentation/cubit/profile_cubit.dart';
 import 'package:ebn_el_hytham/features/students/presentation/pages/settings.dart';
 import 'package:ebn_el_hytham/features/students/presentation/pages/student_home_view.dart';
+import 'package:ebn_el_hytham/features/timetable/presentation/cubit/instructor_timetable_cubit.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/student_schedule_view%20.dart';
 import 'package:excel/excel.dart';
@@ -87,6 +88,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => PdfHelperCubit()),
         BlocProvider(create: (context) => ExcelHandlerCubit()),
+        BlocProvider(
+          create: (context) => InstructorTimetableCubit(
+            DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl),
+          ),
+        ),
       ],
 
       child: MaterialApp(

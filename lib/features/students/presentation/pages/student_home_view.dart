@@ -17,7 +17,6 @@ import 'package:ebn_el_hytham/features/students/presentation/pages/settings.dart
 import 'package:ebn_el_hytham/features/students/presentation/widgets/feature_container.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_grid_shimmer.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading.dart';
-import 'package:ebn_el_hytham/features/timetable/data/models/time_table_model.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/instructor_timetable_screen.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/pages/student_schedule_view%20.dart';
 import 'package:flutter/material.dart';
