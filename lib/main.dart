@@ -12,6 +12,7 @@ import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/instructor_profile_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/pages/instructor_home_view.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/pages/instructor_settings_screen.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/cubit/layha_cubit.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/pages/layha_view.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
@@ -167,8 +168,10 @@ class MyApp extends StatelessWidget {
               InstructorResultScreen(),
           InstructorDetailsResultScreen.routeName: (context) =>
               InstructorDetailsResultScreen(),
-          Settings.routeName: (context) => Settings(),
+          StudentSettingsScreen.routeName: (context) => StudentSettingsScreen(),
           StudentScheduleView.routeName: (context) => StudentScheduleView(),
+          InstructorSettingsScreen.routeName: (context) =>
+              InstructorSettingsScreen(),
         },
         initialRoute: LoginView.routeName,
       ),

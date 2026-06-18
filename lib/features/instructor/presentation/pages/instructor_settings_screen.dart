@@ -1,48 +1,34 @@
-import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/pages/login_view.dart';
+import 'package:ebn_el_hytham/features/instructor/data/models/instructor_model.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/settings_profile_card.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/settings_section_header.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/settings_tile.dart';
-import 'package:ebn_el_hytham/features/students/data/models/profile_model.dart';
-import 'package:ebn_el_hytham/features/students/presentation/widgets/student_settings_profile_card.dart';
-import 'package:ebn_el_hytham/features/students/presentation/widgets/student_settings_voice_tile.dart';
-
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/settings_toggle_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class StudentSettingsScreen extends StatefulWidget {
-  const StudentSettingsScreen({super.key});
-  static const String routeName = 'StudentSettingsScreen';
+class InstructorSettingsScreen extends StatefulWidget {
+  const InstructorSettingsScreen({super.key});
+  static const String routeName = 'InstructorSettingsScreen';
 
   @override
-  State<StudentSettingsScreen> createState() => _StudentSettingsScreenState();
+  State<InstructorSettingsScreen> createState() =>
+      _InstructorSettingsScreenState();
 }
 
-class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
-  // ── Toggle states (non-voice) ─────────────────────────────────
+class _InstructorSettingsScreenState extends State<InstructorSettingsScreen> {
+  // ── Toggle states ──────────────────────────────────────────────
   bool _notificationsEnabled = true;
   bool _darkMode = true;
-
-  // ── Voice assistant logic (kept here, away from the UI widget) ─
-  Future<void> _handleVoiceToggle() async {
-    final cubit = context.read<VoiceHelperCubit>();
-    if (cubit.isOn) {
-      await cubit.stop();
-    } else {
-      await cubit.start();
-    }
-    setState(() {});
-  }
+  bool _emailAlerts = false;
 
   @override
   Widget build(BuildContext context) {
     ScreenSize.init(context);
     final p = ScreenSize.width * 0.045;
-    final isStudentSession = context.watch<VoiceHelperCubit>().isStudentSession;
-    final isVoiceOn = context.watch<VoiceHelperCubit>().isOn;
-    final ProfileModel profile =
-        ModalRoute.of(context)?.settings.arguments as ProfileModel;
+    InstructorModel profile =
+        ModalRoute.of(context)!.settings.arguments as InstructorModel;
     return Scaffold(
       backgroundColor: ColorGuid.scaffoldBackgroundColor,
       body: Column(
@@ -59,11 +45,11 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Profile card ────────────────────────────
-                  StudentSettingsProfileCard(
+                  SettingsProfileCard(
                     name: profile.name,
                     email: profile.email,
-                    level: "Level ${profile.level}",
-                    photoUrl: '',
+                    department: profile.department,
+                    photoUrl: profile.photo,
                     onTap: () {},
                   ),
                   SizedBox(height: ScreenSize.height * 0.032),
@@ -85,9 +71,9 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
                         onTap: () {},
                       ),
                       SettingsTile(
-                        icon: Icons.school_outlined,
+                        icon: Icons.badge_outlined,
                         title: 'Academic Info',
-                        subtitle: 'Level & enrolled courses',
+                        subtitle: 'Department & courses',
                         onTap: () {},
                         showDivider: false,
                       ),
@@ -95,60 +81,66 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
                   ),
                   SizedBox(height: ScreenSize.height * 0.028),
 
-                  // ══ ASSISTANT section (voice tile lives here) ═
-                  if (isStudentSession) ...[
-                    SettingsSectionHeader(title: 'Assistant'),
-                    _SectionCard(
-                      children: [
-                        StudentSettingsVoiceTile(
-                          isOn: isVoiceOn,
-                          onToggle: _handleVoiceToggle,
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: ScreenSize.height * 0.028),
-                  ],
-
                   // ══ NOTIFICATIONS section ════════════════════
                   SettingsSectionHeader(title: 'Notifications'),
                   _SectionCard(
                     children: [
-                      SettingsTile(
+                      SettingsToggleTile(
                         icon: Icons.notifications_outlined,
                         title: 'Push Notifications',
                         subtitle: 'Alerts for new events',
-                        trailing: Transform.scale(
-                          scale: 0.85,
-                          child: Switch(
-                            value: _notificationsEnabled,
-                            onChanged: (v) =>
-                                setState(() => _notificationsEnabled = v),
-                            activeColor: ColorGuid.amber,
-                            activeTrackColor: ColorGuid.amber.withOpacity(0.3),
-                            inactiveThumbColor: Colors.white38,
-                            inactiveTrackColor: Colors.white12,
-                          ),
-                        ),
-                        onTap: () => setState(
-                          () => _notificationsEnabled = !_notificationsEnabled,
-                        ),
+                        value: _notificationsEnabled,
+                        onChanged: (v) =>
+                            setState(() => _notificationsEnabled = v),
                       ),
-                      SettingsTile(
+                      SettingsToggleTile(
+                        icon: Icons.email_outlined,
+                        title: 'Email Alerts',
+                        subtitle: 'Grade & attendance updates',
+                        value: _emailAlerts,
+                        onChanged: (v) => setState(() => _emailAlerts = v),
+                        showDivider: false,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: ScreenSize.height * 0.028),
+
+                  // ══ APPEARANCE section ═══════════════════════
+                  SettingsSectionHeader(title: 'Appearance'),
+                  _SectionCard(
+                    children: [
+                      SettingsToggleTile(
                         icon: Icons.dark_mode_outlined,
                         title: 'Dark Mode',
-                        trailing: Transform.scale(
-                          scale: 0.85,
-                          child: Switch(
-                            value: _darkMode,
-                            onChanged: (v) => setState(() => _darkMode = v),
-                            activeColor: ColorGuid.amber,
-                            activeTrackColor: ColorGuid.amber.withOpacity(0.3),
-                            inactiveThumbColor: Colors.white38,
-                            inactiveTrackColor: Colors.white12,
+                        value: _darkMode,
+                        onChanged: (v) => setState(() => _darkMode = v),
+                      ),
+                      SettingsTile(
+                        icon: Icons.language_outlined,
+                        title: 'Language',
+                        subtitle: 'Arabic / English',
+                        trailing: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: ColorGuid.amber.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: ColorGuid.amber.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            'AR',
+                            style: TextStyle(
+                              color: ColorGuid.amber,
+                              fontSize: ScreenSize.height * 0.012,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        onTap: () => setState(() => _darkMode = !_darkMode),
+                        onTap: () {},
                         showDivider: false,
                       ),
                     ],
@@ -237,6 +229,7 @@ class _SettingsTopBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
+          // Version chip
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
@@ -305,7 +298,7 @@ class _LogoutButtonState extends State<_LogoutButton> {
     const logoutRed = Color(0xFFE74C3C);
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacementNamed(context, LoginView.routeName);
+        Navigator.of(context).pushReplacementNamed(LoginView.routeName);
       },
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) {

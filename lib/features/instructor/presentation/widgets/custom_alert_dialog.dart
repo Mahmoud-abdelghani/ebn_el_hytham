@@ -1,20 +1,19 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
-import 'package:ebn_el_hytham/features/instructor/presentation/widgets/custom_elevated_button.dart';
-import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
-import 'package:ebn_el_hytham/features/materials/presentation/cubit/instructor_materials_cubit.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/attendance_action_buttons.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/attendance_date_picker.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/attendance_image_picker.dart';
+import 'package:ebn_el_hytham/features/instructor/presentation/widgets/attendance_material_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-/// Dark-themed attendance dialog — [surfaceColor] background, [amber] accents.
 class CustomAlertDialog extends StatefulWidget {
   const CustomAlertDialog({super.key, required this.assignedMaterials});
   final List<String> assignedMaterials;
@@ -28,282 +27,196 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   String selectedMaterial = 'ShooseMaterial';
   File? pickedImage;
 
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg, style: const TextStyle(color: Colors.white)),
+        backgroundColor: Colors.redAccent,
+        duration: const Duration(milliseconds: 800),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  void _showSuccess(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  Future<void> _onConfirm() async {
+    if (pickedImage == null ||
+        selectedDate == null ||
+        selectedMaterial == 'ShooseMaterial') {
+      _showError('Please complete all fields');
+      return;
+    }
+    await context.read<ImageProcessingCubit>().imageToUrl();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AttendanceCubit, AttendanceState>(
       listener: (context, state) {
         if (state is AttendanceSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Attendance submitted successfully'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 1),
-            ),
-          );
+          _showSuccess('Attendance submitted successfully');
           Navigator.pop(context);
         } else if (state is AttendanceError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          _showError(state.message);
         }
       },
-      builder: (context, state) {
+      builder: (context, attendanceState) {
         return BlocConsumer<ImageProcessingCubit, ImageProcessingState>(
           listener: (context, state) async {
             if (state is ImageProcessingSuccess) {
               log(context.read<ImageProcessingCubit>().iamgeUrl.toString());
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Image uploaded successfully'),
-                  duration: Duration(seconds: 1),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              await BlocProvider.of<AttendanceCubit>(context).getAttendance(
-                url: context.read<ImageProcessingCubit>().iamgeUrl!,
-                date: DateFormat('yyyy-MM-dd').format(selectedDate!),
-                materialName: selectedMaterial,
-              );
+              _showSuccess('Image uploaded successfully');
+              await context.read<AttendanceCubit>().getAttendance(
+                    url: context.read<ImageProcessingCubit>().iamgeUrl!,
+                    date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+                    materialName: selectedMaterial,
+                  );
             } else if (state is ImageProcessingError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              _showError(state.message);
             }
           },
-          builder: (context, state) {
+          builder: (context, imageState) {
+            final bool isLoading = imageState is ImageProcessingLoading ||
+                attendanceState is AttendanceLoading;
+
             return ModalProgressHUD(
-              inAsyncCall:
-                  state is ImageProcessingLoading || state is AttendanceLoading,
-              child: AlertDialog(
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Attendance',
-                  style: TextStyle(
-                    color: ColorGuid.mainColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: ScreenSize.height * 0.03,
+              inAsyncCall: isLoading,
+              color: Colors.black54,
+              child: Dialog(
+                backgroundColor: Colors.transparent,
+                insetPadding: EdgeInsets.symmetric(
+                  horizontal: ScreenSize.width * 0.05,
+                  vertical: ScreenSize.height * 0.08,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1C2330),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.08),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 32,
+                        offset: const Offset(0, 12),
+                      ),
+                      BoxShadow(
+                        color: ColorGuid.amber.withOpacity(0.06),
+                        blurRadius: 24,
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.all(ScreenSize.width * 0.05),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── Title row ────────────────────────────────
+                      Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 22,
+                            decoration: BoxDecoration(
+                              color: ColorGuid.amber,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Attendance',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ScreenSize.height * 0.026,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () => Navigator.maybePop(context),
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.06),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.close_rounded,
+                                  color: Colors.white54, size: 18),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: ScreenSize.height * 0.024),
+
+                      // ── Image picker ─────────────────────────────
+                      AttendanceImagePicker(
+                        pickedImage: pickedImage,
+                        onTap: () async {
+                          final image = await context
+                              .read<ImageProcessingCubit>()
+                              .getImage();
+                          setState(() => pickedImage = image);
+                        },
+                      ),
+                      SizedBox(height: ScreenSize.height * 0.016),
+
+                      // ── Date picker ──────────────────────────────
+                      AttendanceDatePicker(
+                        selectedDate: selectedDate,
+                        onTap: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime.now()
+                                .subtract(const Duration(days: 365)),
+                            lastDate: DateTime.now(),
+                            builder: (context, child) => Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.dark(
+                                  primary: ColorGuid.amber,
+                                  surface: const Color(0xFF1C2330),
+                                ),
+                              ),
+                              child: child!,
+                            ),
+                          );
+                          if (date != null) {
+                            setState(() => selectedDate = date);
+                          }
+                        },
+                      ),
+                      SizedBox(height: ScreenSize.height * 0.016),
+
+                      // ── Material dropdown ────────────────────────
+                      AttendanceMaterialDropdown(
+                        selectedMaterial: selectedMaterial,
+                        materials: widget.assignedMaterials,
+                        onSelected: (m) => setState(() => selectedMaterial = m),
+                      ),
+                      SizedBox(height: ScreenSize.height * 0.028),
+
+                      // ── Action buttons ───────────────────────────
+                      AttendanceActionButtons(
+                        onCancel: () => Navigator.maybePop(context),
+                        onConfirm: _onConfirm,
+                      ),
+                    ],
                   ),
                 ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        pickedImage =
-                            await BlocProvider.of<ImageProcessingCubit>(
-                              context,
-                            ).getImage();
-                        setState(() {});
-                      },
-                      child: pickedImage == null
-                          ? DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                radius: Radius.circular(10),
-                                color: ColorGuid.boardersColor,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenSize.width * 0.1,
-                                  vertical: ScreenSize.height * 0.1,
-                                ),
-                              ),
-                              child: Text(
-                                'Upload an image here',
-                                style: TextStyle(
-                                  color: ColorGuid.boardersColor,
-                                  fontSize: ScreenSize.height * 0.015,
-                                ),
-                              ),
-                            )
-                          : Image.file(
-                              pickedImage!,
-                              width: ScreenSize.width * 0.7,
-                              height: ScreenSize.height * 0.3,
-                              fit: BoxFit.fill,
-                            ),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        selectedDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now().subtract(
-                            Duration(days: 365),
-                          ),
-                          lastDate: DateTime.now(),
-                          onDatePickerModeChange: (value) {},
-                          builder: (context, child) => Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
-                                brightness: Brightness.light,
-                                primary: ColorGuid.mainColor,
-                              ),
-                            ),
-                            child: child!,
-                          ),
-                        );
-
-                        setState(() {});
-                        log(selectedDate.toString());
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.width * 0.1,
-                          vertical: ScreenSize.height * 0.02,
-                        ),
-                        padding: EdgeInsets.only(
-                          top: ScreenSize.height * 0.01,
-                          bottom: ScreenSize.height * 0.01,
-                        ),
-
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: ColorGuid.boardersColor,
-                            width: ScreenSize.width * .001,
-                          ),
-                        ),
-                        width: ScreenSize.width,
-                        child: selectedDate == null
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    'YYYY/MM/dd',
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: ColorGuid.boardersColor,
-                                      fontSize: ScreenSize.height * 0.02,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.calendar_month,
-                                    color: Colors.grey,
-                                  ),
-                                ],
-                              )
-                            : Center(
-                                child: Text(
-                                  DateFormat(
-                                    'yyyy-MM-dd',
-                                  ).format(selectedDate!),
-                                  style: TextStyle(
-                                    color: ColorGuid.mainColor,
-                                    fontSize: ScreenSize.height * 0.02,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showMenu(
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            ScreenSize.width * 0.22,
-                            ScreenSize.height * 0.7,
-                            ScreenSize.width * 0.21,
-                            0,
-                          ),
-                          color: Colors.white,
-                          items: List.generate(
-                            widget.assignedMaterials.length,
-                            (index) => PopupMenuItem(
-                              child: Text(
-                                widget.assignedMaterials[index],
-                                style: TextStyle(color: ColorGuid.mainColor),
-                              ),
-                              onTap: () {
-                                selectedMaterial =
-                                    widget.assignedMaterials[index];
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.width * 0.1,
-                          vertical: ScreenSize.height * 0.02,
-                        ),
-                        padding: EdgeInsets.only(
-                          top: ScreenSize.height * 0.01,
-                          bottom: ScreenSize.height * 0.01,
-                        ),
-
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: ColorGuid.boardersColor,
-                            width: ScreenSize.width * .001,
-                          ),
-                        ),
-                        width: ScreenSize.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            selectedMaterial == 'ShooseMaterial'
-                                ? Text(
-                                    'Shoose Material',
-                                    style: TextStyle(color: Colors.grey),
-                                  )
-                                : SizedBox(
-                                    width: ScreenSize.width * 0.2,
-                                    child: Text(
-                                      selectedMaterial,
-                                      style: TextStyle(
-                                        color: ColorGuid.mainColor,
-                                        fontSize: ScreenSize.height * 0.015,
-                                      ),
-                                    ),
-                                  ),
-                            Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  CustomElevatedButton(
-                    txt: 'Cancel',
-                    color: ColorGuid.scaffoldBackgroundColor,
-                    onTap: () {
-                      Navigator.maybePop(context);
-                    },
-                  ),
-                  CustomElevatedButton(
-                    txt: 'Confirm',
-                    color: ColorGuid.mainColor,
-                    onTap: () async {
-                      if (selectedDate == null ||
-                          selectedMaterial == 'ShooseMaterial' ||
-                          pickedImage == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'complete attendance information',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            backgroundColor: Colors.red,
-                            duration: Duration(milliseconds: 700),
-                          ),
-                        );
-                      } else {
-                        await BlocProvider.of<ImageProcessingCubit>(
-                          context,
-                        ).imageToUrl();
-                      }
-                    },
-                  ),
-                ],
               ),
             );
           },

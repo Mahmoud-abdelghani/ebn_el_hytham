@@ -1,6 +1,7 @@
 class InstructorModel {
   final String name;
   final String email;
+  final String photo;
   final String department;
   final String id;
   final String nationalId;
@@ -17,10 +18,13 @@ class InstructorModel {
     required this.createdAt,
     required this.totalAssignedCourses,
     required this.assignedMaterials,
+    required this.photo,
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {
     return InstructorModel(
+      photo:
+          'https://tse2.mm.bing.net/th/id/OIP.OPC0yG5gmciVcOl_Uruz-AHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       department: json['department'] ?? '',
