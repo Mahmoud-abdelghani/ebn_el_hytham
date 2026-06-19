@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class InfoPill extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                color: Colors.white38,
+                color: context.textMuted,
                 fontSize: ScreenSize.height * 0.013),
           ),
         ),

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/enrolled_material_student_model.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
@@ -149,20 +149,20 @@ class _InstructorStudentDetailsScreenState
       builder: (context, state) {
         if (state is InstructorMaterialsLoading) {
           return Scaffold(
-            backgroundColor: ColorGuid.scaffoldBackgroundColor,
-            appBar: buildDarkAppBar(''),
+            backgroundColor: context.scaffold,
+            appBar: buildDarkAppBar(context, ''),
             body: const _StudentDetailsShimmer(),
           );
         }
 
         if (state is InstructorMaterialsFailure) {
           return Scaffold(
-            backgroundColor: ColorGuid.scaffoldBackgroundColor,
-            appBar: buildDarkAppBar('Error'),
+            backgroundColor: context.scaffold,
+            appBar: buildDarkAppBar(context, 'Error'),
             body: Center(
               child: Text(
                 state.message,
-                style: TextStyle(color: ColorGuid.textSecondary),
+                style: TextStyle(color: context.onSurfaceMuted),
               ),
             ),
           );
@@ -191,8 +191,8 @@ class _InstructorStudentDetailsScreenState
         final isUpdating = state is InstructorMaterialsUpdatreLoading;
 
         return Scaffold(
-          backgroundColor: ColorGuid.scaffoldBackgroundColor,
-          appBar: buildDarkAppBar(material.name),
+          backgroundColor: context.scaffold,
+          appBar: buildDarkAppBar(context, material.name),
           floatingActionButton: _editMode ? null : _EmailFAB(student: student),
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
@@ -247,8 +247,8 @@ class _StudentDetailsShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: ColorGuid.surfaceColor,
-      highlightColor: ColorGuid.glassBorder,
+      baseColor: context.surface,
+      highlightColor: context.accent.withOpacity(0.15),
       child: Padding(
         padding: EdgeInsets.all(ScreenSize.width * 0.05),
         child: Column(
@@ -272,7 +272,7 @@ class _ShimmerBox extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     height: height,
     decoration: BoxDecoration(
-      color: ColorGuid.surfaceColor,
+      color: context.surface,
       borderRadius: BorderRadius.circular(20),
     ),
   );
@@ -285,21 +285,22 @@ class _IdentityCard extends StatelessWidget {
   final InstructorMaterialModel material;
   const _IdentityCard({required this.student, required this.material});
 
-  Color get _totalColor {
+  Color _totalColor(BuildContext context) {
     if (student.total >= 85) return const Color(0xFF81C784);
-    if (student.total >= 60) return ColorGuid.amber;
+    if (student.total >= 60) return context.accent;
     if (student.total >= 50) return const Color(0xFFFFB74D);
     return const Color(0xFFEF5350);
   }
 
   @override
   Widget build(BuildContext context) {
+    final totalColor = _totalColor(context);
     return Container(
       padding: EdgeInsets.all(ScreenSize.width * 0.05),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        border: Border.all(color: context.glassBorder, width: 1.2),
       ),
       child: Column(
         children: [
@@ -309,9 +310,9 @@ class _IdentityCard extends StatelessWidget {
                 width: ScreenSize.height * 0.075,
                 height: ScreenSize.height * 0.075,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.15),
+                  color: context.accent.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: ColorGuid.amber, width: 1.5),
+                  border: Border.all(color: context.accent, width: 1.5),
                 ),
                 child: Center(
                   child: Text(
@@ -319,7 +320,7 @@ class _IdentityCard extends StatelessWidget {
                         ? student.name.trim()[0].toUpperCase()
                         : '?',
                     style: TextStyle(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       fontSize: ScreenSize.height * 0.032,
                       fontWeight: FontWeight.w800,
                     ),
@@ -334,7 +335,7 @@ class _IdentityCard extends StatelessWidget {
                     Text(
                       student.name,
                       style: TextStyle(
-                        color: ColorGuid.textPrimary,
+                        color: context.onBackground,
                         fontSize: ScreenSize.height * 0.02,
                         fontWeight: FontWeight.w700,
                       ),
@@ -343,7 +344,7 @@ class _IdentityCard extends StatelessWidget {
                     Text(
                       'ID: ${student.id}',
                       style: TextStyle(
-                        color: ColorGuid.textMuted,
+                        color: context.textMuted,
                         fontSize: ScreenSize.height * 0.015,
                       ),
                     ),
@@ -363,9 +364,9 @@ class _IdentityCard extends StatelessWidget {
                 width: ScreenSize.height * 0.07,
                 height: ScreenSize.height * 0.07,
                 decoration: BoxDecoration(
-                  color: _totalColor.withOpacity(0.15),
+                  color: totalColor.withOpacity(0.15),
                   shape: BoxShape.circle,
-                  border: Border.all(color: _totalColor, width: 2),
+                  border: Border.all(color: totalColor, width: 2),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -373,7 +374,7 @@ class _IdentityCard extends StatelessWidget {
                     Text(
                       '${student.total}',
                       style: TextStyle(
-                        color: _totalColor,
+                        color: totalColor,
                         fontSize: ScreenSize.height * 0.02,
                         fontWeight: FontWeight.w900,
                       ),
@@ -381,7 +382,7 @@ class _IdentityCard extends StatelessWidget {
                     Text(
                       'Total',
                       style: TextStyle(
-                        color: _totalColor.withOpacity(0.8),
+                        color: totalColor.withOpacity(0.8),
                         fontSize: ScreenSize.height * 0.011,
                       ),
                     ),
@@ -391,7 +392,7 @@ class _IdentityCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: ScreenSize.height * 0.018),
-          Divider(color: ColorGuid.boardersColor, height: 1),
+          Divider(color: context.divider, height: 1),
           SizedBox(height: ScreenSize.height * 0.015),
           Row(
             children: [
@@ -450,7 +451,7 @@ class _MiniInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: ColorGuid.amber, size: ScreenSize.height * 0.018),
+        Icon(icon, color: context.accent, size: ScreenSize.height * 0.018),
         SizedBox(width: ScreenSize.width * 0.015),
         Expanded(
           child: Column(
@@ -459,7 +460,7 @@ class _MiniInfo extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: ColorGuid.textMuted,
+                  color: context.textMuted,
                   fontSize: ScreenSize.height * 0.012,
                 ),
               ),
@@ -467,7 +468,7 @@ class _MiniInfo extends StatelessWidget {
                 value,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: ColorGuid.textPrimary,
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.015,
                   fontWeight: FontWeight.w600,
                 ),
@@ -502,9 +503,9 @@ class _GradesCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ScreenSize.width * 0.05),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        border: Border.all(color: context.glassBorder, width: 1.2),
       ),
       child: Form(
         key: formKey,
@@ -524,7 +525,7 @@ class _GradesCard extends StatelessWidget {
               },
             ),
             SizedBox(height: ScreenSize.height * 0.018),
-            Divider(color: ColorGuid.boardersColor, height: 1),
+            Divider(color: context.divider, height: 1),
             SizedBox(height: ScreenSize.height * 0.018),
             _GradeRow(
               label: 'Final Exam',
@@ -540,20 +541,20 @@ class _GradesCard extends StatelessWidget {
               },
             ),
             SizedBox(height: ScreenSize.height * 0.018),
-            Divider(color: ColorGuid.boardersColor, height: 1),
+            Divider(color: context.divider, height: 1),
             SizedBox(height: ScreenSize.height * 0.018),
             Row(
               children: [
                 Icon(
                   Icons.calculate_rounded,
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   size: ScreenSize.height * 0.022,
                 ),
                 SizedBox(width: ScreenSize.width * 0.03),
                 Text(
                   'Total Score',
                   style: TextStyle(
-                    color: ColorGuid.textPrimary,
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w700,
                   ),
@@ -565,17 +566,17 @@ class _GradesCard extends StatelessWidget {
                     vertical: ScreenSize.height * 0.007,
                   ),
                   decoration: BoxDecoration(
-                    color: ColorGuid.amber.withOpacity(0.15),
+                    color: context.accent.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: ColorGuid.amber.withOpacity(0.4),
+                      color: context.accent.withOpacity(0.4),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     '${student.total} / 100',
                     style: TextStyle(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       fontSize: ScreenSize.height * 0.018,
                       fontWeight: FontWeight.w800,
                     ),
@@ -622,7 +623,7 @@ class _GradeRow extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: ColorGuid.textPrimary,
+                color: context.onBackground,
                 fontSize: ScreenSize.height * 0.017,
                 fontWeight: FontWeight.w600,
               ),
@@ -647,10 +648,10 @@ class _GradeRow extends StatelessWidget {
                           vertical: ScreenSize.height * 0.009,
                         ),
                         filled: true,
-                        fillColor: ColorGuid.scaffoldBackgroundColor,
+                        fillColor: context.scaffold,
                         hintText: '0 – 100',
                         hintStyle: TextStyle(
-                          color: ColorGuid.textMuted,
+                          color: context.textMuted,
                           fontSize: ScreenSize.height * 0.013,
                         ),
                         border: OutlineInputBorder(
@@ -707,7 +708,7 @@ class _GradeRow extends StatelessWidget {
           child: LinearProgressIndicator(
             value: (value / 100).clamp(0.0, 1.0),
             minHeight: ScreenSize.height * 0.006,
-            backgroundColor: ColorGuid.glassBorder,
+            backgroundColor: context.glassBorder,
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
@@ -741,8 +742,8 @@ class _ActionButtons extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.016),
             decoration: BoxDecoration(
               color: isLoading
-                  ? ColorGuid.amber.withOpacity(0.5)
-                  : ColorGuid.amber,
+                  ? context.accent.withOpacity(0.5)
+                  : context.accent,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -750,14 +751,14 @@ class _ActionButtons extends StatelessWidget {
               children: [
                 Icon(
                   Icons.edit_rounded,
-                  color: const Color(0xFF161B22),
+                  color: context.cs.onSecondary,
                   size: ScreenSize.height * 0.022,
                 ),
                 SizedBox(width: ScreenSize.width * 0.02),
                 Text(
                   'Edit Grades',
                   style: TextStyle(
-                    color: const Color(0xFF161B22),
+                    color: context.cs.onSecondary,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w800,
                   ),
@@ -774,10 +775,10 @@ class _ActionButtons extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.016),
             decoration: BoxDecoration(
-              color: ColorGuid.amber.withOpacity(0.08),
+              color: context.accent.withOpacity(0.08),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: ColorGuid.amber.withOpacity(isLoading ? 0.2 : 0.4),
+                color: context.accent.withOpacity(isLoading ? 0.2 : 0.4),
                 width: 1,
               ),
             ),
@@ -795,14 +796,14 @@ class _ActionButtons extends StatelessWidget {
                           child: CircularProgressIndicator(
                             strokeWidth: 2.2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              ColorGuid.amber,
+                              context.accent,
                             ),
                           ),
                         )
                       : Icon(
                           key: const ValueKey('icon'),
                           Icons.cloud_upload_rounded,
-                          color: ColorGuid.amber,
+                          color: context.accent,
                           size: ScreenSize.height * 0.022,
                         ),
                 ),
@@ -811,8 +812,8 @@ class _ActionButtons extends StatelessWidget {
                   isLoading ? 'Saving…' : 'Save to Server',
                   style: TextStyle(
                     color: isLoading
-                        ? ColorGuid.amber.withOpacity(0.6)
-                        : ColorGuid.amber,
+                        ? context.accent.withOpacity(0.6)
+                        : context.accent,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w700,
                   ),
@@ -843,15 +844,15 @@ class _EditActions extends StatelessWidget {
                 vertical: ScreenSize.height * 0.016,
               ),
               decoration: BoxDecoration(
-                color: ColorGuid.surfaceColor,
+                color: context.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: ColorGuid.glassBorder, width: 1),
+                border: Border.all(color: context.glassBorder, width: 1),
               ),
               child: Center(
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: ColorGuid.textSecondary,
+                    color: context.onSurfaceMuted,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w600,
                   ),
@@ -869,14 +870,14 @@ class _EditActions extends StatelessWidget {
                 vertical: ScreenSize.height * 0.016,
               ),
               decoration: BoxDecoration(
-                color: ColorGuid.amber,
+                color: context.accent,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
                 child: Text(
                   'Save Changes',
                   style: TextStyle(
-                    color: const Color(0xFF161B22),
+                    color: context.cs.onSecondary,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w800,
                   ),
@@ -902,12 +903,12 @@ class _EmailFAB extends StatelessWidget {
       onPressed: () {
         BlocProvider.of<EmailHandlerCubit>(context).sendEmail(student.email);
       },
-      backgroundColor: ColorGuid.amber,
-      icon: const Icon(Icons.email_rounded, color: Color(0xFF161B22)),
+      backgroundColor: context.accent,
+      icon: Icon(Icons.email_rounded, color: context.cs.onSecondary),
       label: Text(
         'Email Student',
         style: TextStyle(
-          color: const Color(0xFF161B22),
+          color: context.cs.onSecondary,
           fontWeight: FontWeight.w700,
           fontSize: ScreenSize.height * 0.015,
         ),
@@ -930,7 +931,7 @@ class _SectionLabel extends StatelessWidget {
           width: ScreenSize.width * 0.009,
           height: ScreenSize.height * 0.022,
           decoration: BoxDecoration(
-            color: ColorGuid.amber,
+            color: context.accent,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -938,7 +939,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: ColorGuid.textPrimary,
+            color: context.onBackground,
             fontSize: ScreenSize.height * 0.019,
             fontWeight: FontWeight.w700,
           ),

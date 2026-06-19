@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +23,9 @@ class BonusSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ScreenSize.width * 0.045),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,14 +34,14 @@ class BonusSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.add_circle_outline_rounded,
-                color: ColorGuid.amber,
+                color: context.accent,
                 size: ScreenSize.height * 0.024,
               ),
               SizedBox(width: ScreenSize.width * 0.025),
               Text(
                 'Apply Bonus to All Students',
                 style: TextStyle(
-                  color: ColorGuid.textPrimary,
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.018,
                   fontWeight: FontWeight.w700,
                 ),
@@ -54,13 +54,13 @@ class BonusSection extends StatelessWidget {
                     vertical: ScreenSize.height * 0.005,
                   ),
                   decoration: BoxDecoration(
-                    color: ColorGuid.amber.withOpacity(0.15),
+                    color: context.accent.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     '+$bonusApplied pts',
                     style: TextStyle(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       fontSize: ScreenSize.height * 0.014,
                       fontWeight: FontWeight.w700,
                     ),
@@ -78,17 +78,17 @@ class BonusSection extends StatelessWidget {
                     controller: controller,
                     keyboardType: TextInputType.number,
                     style: TextStyle(
-                      color: ColorGuid.textPrimary,
+                      color: context.onBackground,
                       fontSize: ScreenSize.height * 0.017,
                     ),
                     decoration: InputDecoration(
                       hintText: 'Enter bonus (2–5)',
                       hintStyle: TextStyle(
-                        color: ColorGuid.textMuted,
+                        color: context.textMuted,
                         fontSize: ScreenSize.height * 0.015,
                       ),
                       filled: true,
-                      fillColor: ColorGuid.scaffoldBackgroundColor,
+                      fillColor: context.scaffold,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: ScreenSize.width * 0.04,
                         vertical: ScreenSize.height * 0.013,
@@ -96,28 +96,28 @@ class BonusSection extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: ColorGuid.glassBorder,
+                          color: context.glassBorder,
                           width: 1,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: ColorGuid.glassBorder,
+                          color: context.glassBorder,
                           width: 1,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: ColorGuid.amber,
+                          color: context.accent,
                           width: 1.5,
                         ),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFEF5350),
+                        borderSide: BorderSide(
+                          color: context.cs.error,
                           width: 1,
                         ),
                       ),
@@ -144,13 +144,13 @@ class BonusSection extends StatelessWidget {
                       vertical: ScreenSize.height * 0.016,
                     ),
                     decoration: BoxDecoration(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Apply',
                       style: TextStyle(
-                        color: const Color(0xFF161B22),
+                        color: context.cs.onSecondary,
                         fontSize: ScreenSize.height * 0.016,
                         fontWeight: FontWeight.w800,
                       ),
@@ -161,7 +161,6 @@ class BonusSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: ScreenSize.height * 0.012),
-          // Send to server button
           GestureDetector(
             onTap: onSendToServer,
             child: Container(
@@ -170,10 +169,10 @@ class BonusSection extends StatelessWidget {
                 vertical: ScreenSize.height * 0.013,
               ),
               decoration: BoxDecoration(
-                color: ColorGuid.amber.withOpacity(0.08),
+                color: context.accent.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: ColorGuid.amber.withOpacity(0.4),
+                  color: context.accent.withOpacity(0.4),
                   width: 1,
                 ),
               ),
@@ -182,14 +181,14 @@ class BonusSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.cloud_upload_rounded,
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     size: ScreenSize.height * 0.02,
                   ),
                   SizedBox(width: ScreenSize.width * 0.02),
                   Text(
                     'Save Bonus to Server',
                     style: TextStyle(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       fontSize: ScreenSize.height * 0.016,
                       fontWeight: FontWeight.w600,
                     ),

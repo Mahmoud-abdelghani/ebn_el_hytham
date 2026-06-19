@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class HeaderShell extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: context.shadowColor,
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

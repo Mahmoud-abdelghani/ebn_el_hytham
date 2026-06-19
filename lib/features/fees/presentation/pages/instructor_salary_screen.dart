@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/fees/data/models/salary_model.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/widgets/salary_viewer.dart';
@@ -12,9 +12,8 @@ class InstructorSalaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Salary'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Salary'),
       body: ListView.separated(
         padding: EdgeInsets.symmetric(
           vertical: ScreenSize.height * 0.012,

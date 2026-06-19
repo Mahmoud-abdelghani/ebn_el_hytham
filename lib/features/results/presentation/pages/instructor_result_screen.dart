@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/widgets/custom_material_container.dart';
 import 'package:ebn_el_hytham/features/results/data/models/instructor_material_result.dart';
@@ -13,9 +13,8 @@ class InstructorResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Results'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Results'),
       body: ListView.separated(
         padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.012),
         itemBuilder: (context, index) => CustomMaterialContainer(

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/widgets/custom_button.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/widgets/custom_fields.dart';
@@ -35,8 +35,8 @@ class _InstructorDetailsResultScreenState
 
     return Scaffold(
       // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar(listOfResults[index].materialName),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, listOfResults[index].materialName),
       body: CustomScrollView(
         slivers: [
           // ── Info rows ──────────────────────────────────────────
@@ -117,7 +117,7 @@ class _InstructorDetailsResultScreenState
               child: Text(
                 'Gaussian Distribution',
                 style: TextStyle(
-                  color: ColorGuid.textSecondary, // [textSecondary] chart label
+                  color: context.onSurfaceMuted,
                   fontWeight: FontWeight.w500,
                   fontSize: ScreenSize.height * 0.022,
                 ),
@@ -133,14 +133,14 @@ class _InstructorDetailsResultScreenState
                 padding: EdgeInsets.all(ScreenSize.width * 0.03),
                 decoration: BoxDecoration(
                   // [surfaceColor] chart container
-                  color: ColorGuid.surfaceColor,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+                  border: Border.all(color: context.glassBorder, width: 1.2),
                 ),
                 child: LineChart(
                   LineChartData(
                     // [surfaceColor] chart background
-                    backgroundColor: ColorGuid.surfaceColor,
+                    backgroundColor: context.surface,
                     minX: 0,
                     maxX: 100,
                     minY: 0,
@@ -149,13 +149,13 @@ class _InstructorDetailsResultScreenState
                       show: true,
                       // [boardersColor] grid lines
                       getDrawingHorizontalLine: (_) =>
-                          FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                          FlLine(color: context.cardBorder, strokeWidth: 0.5),
                       getDrawingVerticalLine: (_) =>
-                          FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                          FlLine(color: context.cardBorder, strokeWidth: 0.5),
                     ),
                     borderData: FlBorderData(
                       show: true,
-                      border: Border.all(color: ColorGuid.boardersColor),
+                      border: Border.all(color: context.cardBorder),
                     ),
                     titlesData: FlTitlesData(
                       rightTitles: AxisTitles(
@@ -171,7 +171,7 @@ class _InstructorDetailsResultScreenState
                           getTitlesWidget: (value, meta) => Text(
                             value.toInt().toString(),
                             // [textMuted] axis labels
-                            style: TextStyle(color: ColorGuid.textMuted, fontSize: 10),
+                            style: TextStyle(color: context.textMuted, fontSize: 10),
                           ),
                         ),
                       ),
@@ -181,7 +181,7 @@ class _InstructorDetailsResultScreenState
                           interval: gaussian(mu, mu, sigma) / 5,
                           getTitlesWidget: (value, meta) => Text(
                             value.toStringAsFixed(2),
-                            style: TextStyle(color: ColorGuid.textMuted, fontSize: 9),
+                            style: TextStyle(color: context.textMuted, fontSize: 9),
                           ),
                         ),
                       ),
@@ -189,14 +189,14 @@ class _InstructorDetailsResultScreenState
                     lineBarsData: [
                       LineChartBarData(
                         // [amber] Gaussian curve line
-                        color: ColorGuid.amber,
+                        color: context.accent,
                         spots: gaussianSpots(mu, sigma),
                         isCurved: true,
                         dotData: FlDotData(show: false),
                         belowBarData: BarAreaData(
                           // Subtle amber fill beneath the curve
                           show: true,
-                          color: ColorGuid.amber.withOpacity(0.08),
+                          color: context.accentSubtle,
                         ),
                       ),
                     ],

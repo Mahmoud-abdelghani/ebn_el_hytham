@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -26,13 +26,11 @@ class CustomDetailsTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            // [surfaceColor] dark surface card
-            color: ColorGuid.surfaceColor,
-            // [glassBorder] glass effect border
-            border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+            color: context.surface,
+            border: Border.all(color: context.glassBorder, width: 1.2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: context.shadowColor,
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -42,7 +40,7 @@ class CustomDetailsTile extends StatelessWidget {
             title: Text(
               name,
               style: TextStyle(
-                color: ColorGuid.textPrimary, // [textPrimary] white name
+                color: context.onBackground,
                 fontWeight: FontWeight.w500,
                 fontSize: ScreenSize.height * 0.02,
               ),
@@ -50,13 +48,11 @@ class CustomDetailsTile extends StatelessWidget {
             leading: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                // [amber] avatar ring border
-                border: Border.all(color: ColorGuid.amberBorder, width: 1.5),
+                border: Border.all(color: context.accentBorder, width: 1.5),
               ),
               child: CircleAvatar(
                 radius: ScreenSize.height * 0.03,
-                // [scaffoldBackgroundColor] fallback bg
-                backgroundColor: ColorGuid.scaffoldBackgroundColor,
+                backgroundColor: context.scaffold,
                 backgroundImage: const NetworkImage(
                   'https://astra.edu.au/wp-content/uploads/2022/02/student-information-uai-1000x562.jpg',
                 ),
@@ -65,7 +61,7 @@ class CustomDetailsTile extends StatelessWidget {
             subtitle: Text(
               id,
               style: TextStyle(
-                color: ColorGuid.textMuted, // [textMuted] for subtitle
+                color: context.textMuted,
                 fontWeight: FontWeight.w300,
                 fontSize: ScreenSize.height * 0.015,
               ),
@@ -73,7 +69,7 @@ class CustomDetailsTile extends StatelessWidget {
             trailing: Text(
               mark ?? 'Show',
               style: TextStyle(
-                color: ColorGuid.amber, // [amber] trailing action/mark
+                color: context.accent,
                 fontWeight: FontWeight.w600,
                 fontSize: ScreenSize.height * 0.02,
               ),

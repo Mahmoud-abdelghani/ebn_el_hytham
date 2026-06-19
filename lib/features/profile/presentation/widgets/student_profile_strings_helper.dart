@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +26,7 @@ class StudentProfileStringsHelper extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               // [textSecondary] for label — visible but not dominant
-              color: ColorGuid.textSecondary,
+              color: context.onSurfaceMuted,
               fontWeight: FontWeight.w400,
               fontSize: ScreenSize.height * 0.015,
             ),
@@ -36,7 +36,7 @@ class StudentProfileStringsHelper extends StatelessWidget {
                   secondTxt!,
                   style: TextStyle(
                     // [amber] for value — draws attention to key data
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontWeight: FontWeight.w500,
                     fontSize: ScreenSize.height * 0.015,
                   ),

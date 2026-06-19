@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/material_model.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
@@ -16,9 +16,8 @@ class StudentMaterialsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Materials'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Materials'),
       body: BlocBuilder<AssignedMaterialsCubit, AssignedMaterialsState>(
         builder: (context, state) {
           if (state is AssignedMaterialsLoading) {

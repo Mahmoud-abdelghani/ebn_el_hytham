@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/instructor/data/models/instructor_model.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/instructor_profile_cubit.dart';
@@ -16,8 +16,8 @@ class InstructorProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String id = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Profile'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Profile'),
       body: BlocBuilder<InstructorProfileCubit, InstructorProfileState>(
         builder: (context, state) {
           if (state is InstructorProfileLoading ||
@@ -68,7 +68,7 @@ class _ProfileContent extends StatelessWidget {
               height: ScreenSize.height * 0.27,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(ScreenSize.height * 0.04),
-                border: Border.all(color: ColorGuid.amber, width: 2.5),
+                border: Border.all(color: context.accent, width: 2.5),
                 image: const DecorationImage(
                   image: NetworkImage(
                     "https://static.vecteezy.com/system/resources/previews/036/280/651/original/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg",
@@ -84,7 +84,7 @@ class _ProfileContent extends StatelessWidget {
           Text(
             profile.name,
             style: TextStyle(
-              color: ColorGuid.textPrimary,
+              color: context.onBackground,
               fontWeight: FontWeight.bold,
               fontSize: ScreenSize.height * 0.03,
             ),
@@ -95,7 +95,7 @@ class _ProfileContent extends StatelessWidget {
           Text(
             "ID: ${profile.id}",
             style: TextStyle(
-              color: ColorGuid.amber,
+              color: context.accent,
               fontWeight: FontWeight.w600,
               fontSize: ScreenSize.height * 0.022,
             ),
@@ -106,7 +106,7 @@ class _ProfileContent extends StatelessWidget {
           Text(
             profile.department,
             style: TextStyle(
-              color: ColorGuid.textSecondary,
+              color: context.onSurfaceMuted,
               fontWeight: FontWeight.w400,
               fontSize: ScreenSize.height * 0.018,
             ),
@@ -117,7 +117,7 @@ class _ProfileContent extends StatelessWidget {
           Text(
             profile.email,
             style: TextStyle(
-              color: ColorGuid.textMuted,
+              color: context.textMuted,
               fontWeight: FontWeight.w300,
               fontSize: ScreenSize.height * 0.015,
             ),
@@ -125,7 +125,7 @@ class _ProfileContent extends StatelessWidget {
 
           Padding(
             padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.02),
-            child: Divider(color: ColorGuid.boardersColor),
+            child: Divider(color: context.divider),
           ),
 
           // ── Info Card ──
@@ -133,9 +133,9 @@ class _ProfileContent extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(ScreenSize.width * 0.045),
             decoration: BoxDecoration(
-              color: ColorGuid.surfaceColor,
+              color: context.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+              border: Border.all(color: context.glassBorder, width: 1.2),
             ),
             child: Column(
               children: [
@@ -167,8 +167,8 @@ class _ProfileShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: const Color(0xFF2A3240),
-      highlightColor: const Color(0xFF3D4E61),
+      baseColor: context.surface,
+      highlightColor: context.accent.withOpacity(0.15),
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSize.width * 0.05,
@@ -182,7 +182,7 @@ class _ProfileShimmer extends StatelessWidget {
                 width: ScreenSize.width * 0.55,
                 height: ScreenSize.height * 0.27,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.onBackground.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(ScreenSize.height * 0.04),
                 ),
               ),
@@ -206,7 +206,7 @@ class _ProfileShimmer extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.02),
-              child: Divider(color: ColorGuid.boardersColor),
+              child: Divider(color: context.divider),
             ),
 
             // Info card placeholder
@@ -214,9 +214,9 @@ class _ProfileShimmer extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(ScreenSize.width * 0.045),
               decoration: BoxDecoration(
-                color: ColorGuid.surfaceColor,
+                color: context.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+                border: Border.all(color: context.glassBorder, width: 1.2),
               ),
               child: Column(
                 children: List.generate(
@@ -255,12 +255,12 @@ class _ProfileError extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.wifi_off_rounded, color: ColorGuid.amber, size: 52),
+            Icon(Icons.wifi_off_rounded, color: context.accent, size: 52),
             SizedBox(height: ScreenSize.height * 0.02),
             Text(
               'Failed to load profile',
               style: TextStyle(
-                color: ColorGuid.textPrimary,
+                color: context.onBackground,
                 fontSize: ScreenSize.height * 0.022,
                 fontWeight: FontWeight.w600,
               ),
@@ -272,7 +272,7 @@ class _ProfileError extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorGuid.textMuted,
+                color: context.textMuted,
                 fontSize: ScreenSize.height * 0.014,
               ),
             ),
@@ -281,13 +281,13 @@ class _ProfileError extends StatelessWidget {
               onPressed: onRetry,
               icon: Icon(
                 Icons.refresh_rounded,
-                color: ColorGuid.amber,
+                color: context.accent,
                 size: 20,
               ),
               label: Text(
                 'Try Again',
                 style: TextStyle(
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   fontSize: ScreenSize.height * 0.018,
                   fontWeight: FontWeight.w600,
                 ),
@@ -311,7 +311,7 @@ class _ShimmerBox extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.onBackground.withOpacity(0.08),
         borderRadius: BorderRadius.circular(6),
       ),
     );

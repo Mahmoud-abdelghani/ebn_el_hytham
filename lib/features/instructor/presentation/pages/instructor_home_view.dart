@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 
 // ════════════════════════════════════════════════════════
 //  INSTRUCTOR HOME VIEW
@@ -38,7 +38,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
     ScreenSize.init(context);
 
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
+      backgroundColor: context.scaffold,
       body: Column(
         children: [
           // ── Header ───────────────────────────────────────────────
@@ -128,14 +128,14 @@ class _InstructorHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
         boxShadow: [
           BoxShadow(
-            color: ColorGuid.amber.withOpacity(0.08),
+            color: context.accentSubtle,
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -158,24 +158,24 @@ class _InstructorHeader extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: ColorGuid.amber, width: 2),
+                  border: Border.all(color: context.accent, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: ColorGuid.amber.withOpacity(0.25),
+                      color: context.accent.withOpacity(0.25),
                       blurRadius: 12,
                     ),
                   ],
                 ),
                 child: CircleAvatar(
                   radius: ScreenSize.height * 0.032,
-                  backgroundColor: ColorGuid.scaffoldBackgroundColor,
+                  backgroundColor: context.scaffold,
                   backgroundImage: profile.photo.isNotEmpty
                       ? NetworkImage(profile.photo)
                       : null,
                   child: profile.photo.isEmpty
                       ? Icon(
                           Icons.person,
-                          color: ColorGuid.amber,
+                          color: context.accent,
                           size: ScreenSize.height * 0.032,
                         )
                       : null,
@@ -189,16 +189,16 @@ class _InstructorHeader extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.12),
+                  color: context.accentSubtle,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: ColorGuid.amber.withOpacity(0.35)),
+                  border: Border.all(color: context.accentBorder),
                 ),
                 child: Text(
                   profile.department.length > 22
                       ? '${profile.department.substring(0, 22)}…'
                       : profile.department,
                   style: TextStyle(
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontSize: ScreenSize.height * 0.013,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -214,7 +214,7 @@ class _InstructorHeader extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.notifications_outlined,
-                      color: ColorGuid.textSecondary,
+                      color: context.onSurfaceMuted,
                       size: ScreenSize.height * 0.031,
                     ),
                   ),
@@ -225,7 +225,7 @@ class _InstructorHeader extends StatelessWidget {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: ColorGuid.amber,
+                        color: context.accent,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -239,7 +239,7 @@ class _InstructorHeader extends StatelessWidget {
           Text(
             'Welcome back 👋',
             style: TextStyle(
-              color: ColorGuid.textSecondary,
+              color: context.onSurfaceMuted,
               fontSize: ScreenSize.height * 0.015,
             ),
           ),
@@ -247,7 +247,7 @@ class _InstructorHeader extends StatelessWidget {
           Text(
             profile.name,
             style: TextStyle(
-              color: ColorGuid.textPrimary,
+              color: context.onBackground,
               fontSize: ScreenSize.height * 0.025,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.2,
@@ -287,7 +287,7 @@ class _InfoPill extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: ColorGuid.amber, size: 13),
+        Icon(icon, color: context.accent, size: 13),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
@@ -295,7 +295,7 @@ class _InfoPill extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: ColorGuid.textMuted,
+              color: context.textMuted,
               fontSize: ScreenSize.height * 0.013,
             ),
           ),
@@ -314,7 +314,7 @@ class _ShimmerHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
@@ -327,8 +327,8 @@ class _ShimmerHeader extends StatelessWidget {
         bottom: ScreenSize.height * 0.028,
       ),
       child: Shimmer.fromColors(
-        baseColor: ColorGuid.surfaceColor,
-        highlightColor: ColorGuid.amber.withOpacity(0.15),
+        baseColor: context.surface,
+        highlightColor: context.accent.withOpacity(0.15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -382,7 +382,7 @@ class _ErrorHeader extends StatelessWidget {
         bottom: ScreenSize.height * 0.028,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
@@ -400,7 +400,7 @@ class _ErrorHeader extends StatelessWidget {
           ),
           TextButton(
             onPressed: onRetry,
-            child: Text('Retry', style: TextStyle(color: ColorGuid.amber)),
+            child: Text('Retry', style: TextStyle(color: context.accent)),
           ),
         ],
       ),
@@ -449,7 +449,7 @@ class _FeatureGrid extends StatelessWidget {
                 width: 4,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -457,7 +457,7 @@ class _FeatureGrid extends StatelessWidget {
               Text(
                 'Quick Access',
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.018,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.4,
@@ -662,7 +662,7 @@ class _WideCardState extends State<_WideCard>
                   Text(
                     widget.title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: context.onBackground,
                       fontSize: ScreenSize.height * 0.017,
                       fontWeight: FontWeight.w700,
                     ),
@@ -671,7 +671,7 @@ class _WideCardState extends State<_WideCard>
                   Text(
                     widget.subtitle,
                     style: TextStyle(
-                      color: Colors.white54,
+                      color: context.onSurfaceMuted,
                       fontSize: ScreenSize.height * 0.013,
                     ),
                   ),
@@ -736,15 +736,15 @@ class _SquareCardState extends State<_SquareCard>
         child: Container(
           height: ScreenSize.height * 0.12,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: context.surface,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: Colors.white.withOpacity(0.12),
+              color: context.cardBorder,
               width: 1.1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: context.shadowColor,
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -757,10 +757,10 @@ class _SquareCardState extends State<_SquareCard>
                 width: ScreenSize.width * 0.1,
                 height: ScreenSize.width * 0.1,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.14),
+                  color: context.accent.withOpacity(0.14),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: ColorGuid.amber.withOpacity(0.4),
+                    color: context.accentBorder,
                     width: 1.2,
                   ),
                 ),
@@ -768,7 +768,7 @@ class _SquareCardState extends State<_SquareCard>
                 child: Image.asset(
                   widget.iconPath,
                   fit: BoxFit.contain,
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   colorBlendMode: BlendMode.srcIn,
                 ),
               ),
@@ -779,7 +779,7 @@ class _SquareCardState extends State<_SquareCard>
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.88),
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.014,
                   fontWeight: FontWeight.w600,
                 ),
@@ -901,7 +901,7 @@ class _BannerCardState extends State<_BannerCard>
                     Text(
                       widget.title,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: context.onBackground,
                         fontSize: ScreenSize.height * 0.018,
                         fontWeight: FontWeight.w700,
                       ),
@@ -910,7 +910,7 @@ class _BannerCardState extends State<_BannerCard>
                     Text(
                       widget.subtitle,
                       style: TextStyle(
-                        color: Colors.white54,
+                        color: context.onSurfaceMuted,
                         fontSize: ScreenSize.height * 0.013,
                       ),
                     ),
@@ -942,7 +942,7 @@ class _SBox extends StatelessWidget {
     width: w,
     height: h,
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.08),
+      color: context.glassFill,
       borderRadius: BorderRadius.circular(r),
     ),
   );

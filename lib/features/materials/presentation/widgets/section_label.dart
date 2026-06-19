@@ -1,11 +1,11 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
 class SectionLabel extends StatelessWidget {
   final String label;
   const SectionLabel({required this.label});
- 
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -14,7 +14,7 @@ class SectionLabel extends StatelessWidget {
           width: ScreenSize.width * 0.008,
           height: ScreenSize.height * 0.022,
           decoration: BoxDecoration(
-            color: ColorGuid.amber,
+            color: context.accent,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -22,7 +22,7 @@ class SectionLabel extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: ColorGuid.textPrimary,
+            color: context.onBackground,
             fontSize: ScreenSize.height * 0.019,
             fontWeight: FontWeight.w700,
           ),

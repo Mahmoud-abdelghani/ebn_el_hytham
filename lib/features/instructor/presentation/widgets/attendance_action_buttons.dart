@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -35,15 +35,15 @@ class _CancelButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.016),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.06),
+          color: context.glassFill,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withOpacity(0.12)),
+          border: Border.all(color: context.glassBorder),
         ),
         child: Text(
           'Cancel',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white60,
+            color: context.onSurfaceMuted,
             fontSize: ScreenSize.height * 0.016,
             fontWeight: FontWeight.w600,
           ),
@@ -59,18 +59,20 @@ class _ConfirmButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = context.accent;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.016),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [ColorGuid.amber, ColorGuid.amber.withOpacity(0.75)],
+            colors: [accent, accent.withValues(alpha: 0.75)],
           ),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: ColorGuid.amber.withOpacity(0.35),
+              color: accent.withValues(alpha: 0.35),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),

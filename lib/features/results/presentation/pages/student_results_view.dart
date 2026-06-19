@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/results/presentation/cubit/results_cubit.dart';
 import 'package:ebn_el_hytham/features/results/presentation/widgets/custom_semester_widget.dart';
@@ -38,7 +38,8 @@ class _StudentResultsViewState extends State<StudentResultsView>
   }
 
   // ── Shimmer box ──────────────────────────────────────────────────────
-  Widget _shimmerBox({
+  Widget _shimmerBox(
+    BuildContext context, {
     required double width,
     required double height,
     double radius = 6,
@@ -54,11 +55,11 @@ class _StudentResultsViewState extends State<StudentResultsView>
             begin: Alignment(_shimmerAnim.value - 1, 0),
             end: Alignment(_shimmerAnim.value + 1, 0),
             colors: [
-              ColorGuid.surfaceColor,
-              ColorGuid.surfaceColor.withOpacity(0.5),
-              ColorGuid.amber.withOpacity(0.07),
-              ColorGuid.surfaceColor.withOpacity(0.5),
-              ColorGuid.surfaceColor,
+              context.surface,
+              context.surface.withOpacity(0.5),
+              context.accent.withOpacity(0.07),
+              context.surface.withOpacity(0.5),
+              context.surface,
             ],
           ),
         ),
@@ -67,7 +68,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
   }
 
   // ── Shimmer semester card ─────────────────────────────────────────────
-  Widget _shimmerCard() {
+  Widget _shimmerCard(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.04),
       padding: EdgeInsets.symmetric(
@@ -75,18 +76,20 @@ class _StudentResultsViewState extends State<StudentResultsView>
         vertical: ScreenSize.height * 0.02,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _shimmerBox(
+            context,
             width: ScreenSize.width * 0.32,
             height: ScreenSize.height * 0.02,
           ),
           _shimmerBox(
+            context,
             width: ScreenSize.width * 0.16,
             height: ScreenSize.height * 0.02,
             radius: 5,
@@ -97,7 +100,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
   }
 
   // ── Full shimmer layout ───────────────────────────────────────────────
-  Widget _buildShimmer() {
+  Widget _buildShimmer(BuildContext context) {
     return CustomScrollView(
       physics: const NeverScrollableScrollPhysics(),
       slivers: [
@@ -113,18 +116,20 @@ class _StudentResultsViewState extends State<StudentResultsView>
               vertical: ScreenSize.height * 0.022,
             ),
             decoration: BoxDecoration(
-              color: ColorGuid.surfaceColor,
+              color: context.surface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: ColorGuid.amber.withOpacity(0.25)),
+              border: Border.all(color: context.accentBorder),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _shimmerBox(
+                  context,
                   width: ScreenSize.width * 0.28,
                   height: ScreenSize.height * 0.024,
                 ),
                 _shimmerBox(
+                  context,
                   width: ScreenSize.width * 0.15,
                   height: ScreenSize.height * 0.028,
                 ),
@@ -137,7 +142,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
         SliverList.separated(
           separatorBuilder: (_, __) =>
               SizedBox(height: ScreenSize.height * 0.012),
-          itemBuilder: (_, __) => _shimmerCard(),
+          itemBuilder: (_, __) => _shimmerCard(context),
           itemCount: 4,
         ),
       ],
@@ -145,7 +150,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
   }
 
   // ── GPA banner ────────────────────────────────────────────────────────
-  Widget _buildGpaBanner(String gpa) {
+  Widget _buildGpaBanner(BuildContext context, String gpa) {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: ScreenSize.width * 0.04,
@@ -156,12 +161,12 @@ class _StudentResultsViewState extends State<StudentResultsView>
         vertical: ScreenSize.height * 0.02,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ColorGuid.amber.withOpacity(0.3)),
+        border: Border.all(color: context.accentBorder),
         boxShadow: [
           BoxShadow(
-            color: ColorGuid.amber.withOpacity(0.08),
+            color: context.accentSubtle,
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -177,7 +182,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
               Text(
                 'CUMULATIVE GPA',
                 style: TextStyle(
-                  color: ColorGuid.textSecondary,
+                  color: context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.014,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
@@ -187,7 +192,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
               Text(
                 'Academic Standing',
                 style: TextStyle(
-                  color: ColorGuid.textSecondary.withOpacity(0.5),
+                  color: context.onSurfaceMuted.withOpacity(0.5),
                   fontSize: ScreenSize.height * 0.013,
                   fontWeight: FontWeight.w400,
                 ),
@@ -198,7 +203,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
           Text(
             gpa,
             style: TextStyle(
-              color: ColorGuid.amber,
+              color: context.accent,
               fontWeight: FontWeight.w800,
               fontSize: ScreenSize.height * 0.038,
               letterSpacing: 1,
@@ -212,12 +217,12 @@ class _StudentResultsViewState extends State<StudentResultsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Results'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Results'),
       body: BlocBuilder<ResultsCubit, ResultsState>(
         builder: (context, state) {
           if (state is ResultsLoading || state is ResultsInitial) {
-            return _buildShimmer();
+            return _buildShimmer(context);
           }
 
           if (state is ResultsError) {
@@ -226,12 +231,12 @@ class _StudentResultsViewState extends State<StudentResultsView>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.error_outline,
-                      color: ColorGuid.amber, size: 44),
+                      color: context.accent, size: 44),
                   SizedBox(height: ScreenSize.height * 0.015),
                   Text(
                     state.message,
                     style: TextStyle(
-                      color: ColorGuid.textSecondary,
+                      color: context.onSurfaceMuted,
                       fontSize: ScreenSize.height * 0.018,
                     ),
                     textAlign: TextAlign.center,
@@ -245,7 +250,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
             return Center(
               child: Text(
                 'Unexpected error occurred.',
-                style: TextStyle(color: ColorGuid.textSecondary),
+                style: TextStyle(color: context.onSurfaceMuted),
               ),
             );
           }
@@ -255,6 +260,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
               // GPA banner
               SliverToBoxAdapter(
                 child: _buildGpaBanner(
+                  context,
                   state.model.cgba.toStringAsFixed(2),
                 ),
               ),
@@ -272,7 +278,7 @@ class _StudentResultsViewState extends State<StudentResultsView>
                   child: Text(
                     'SEMESTER RESULTS',
                     style: TextStyle(
-                      color: ColorGuid.textSecondary.withOpacity(0.6),
+                      color: context.onSurfaceMuted.withOpacity(0.6),
                       fontSize: ScreenSize.height * 0.013,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.4,

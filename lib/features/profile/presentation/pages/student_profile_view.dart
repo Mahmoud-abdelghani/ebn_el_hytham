@@ -1,7 +1,8 @@
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
 import 'package:ebn_el_hytham/core/services/voice_service.dart';
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
+import 'package:ebn_el_hytham/core/utils/color_guid.dart' show AppPalette;
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/widgets/student_profile_strings_helper.dart';
 import 'package:ebn_el_hytham/features/students/data/models/profile_model.dart';
@@ -109,8 +110,8 @@ class _StudentProfileViewState extends State<StudentProfileView> {
     if (profile == null) return const SizedBox.shrink();
 
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Profile'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Profile'),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSize.width * 0.05,
@@ -126,7 +127,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(ScreenSize.height * 0.04),
-                  border: Border.all(color: ColorGuid.amber, width: 2.5),
+                  border: Border.all(color: context.accent, width: 2.5),
                   image: DecorationImage(
                     image: NetworkImage(profile.photo),
                     fit: BoxFit.cover,
@@ -140,7 +141,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
             Text(
               profile.name,
               style: TextStyle(
-                color: ColorGuid.textPrimary,
+                color: context.onBackground,
                 fontWeight: FontWeight.bold,
                 fontSize: ScreenSize.height * 0.03,
               ),
@@ -149,7 +150,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
             Text(
               "ID: ${profile.id}",
               style: TextStyle(
-                color: ColorGuid.amber,
+                color: context.accent,
                 fontWeight: FontWeight.w600,
                 fontSize: ScreenSize.height * 0.022,
               ),
@@ -159,7 +160,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
               profile.department,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorGuid.textSecondary,
+                color: context.onSurfaceMuted,
                 fontWeight: FontWeight.w400,
                 fontSize: ScreenSize.height * 0.018,
               ),
@@ -168,7 +169,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
             Text(
               profile.email,
               style: TextStyle(
-                color: ColorGuid.textMuted,
+                color: context.textMuted,
                 fontWeight: FontWeight.w300,
                 fontSize: ScreenSize.height * 0.015,
               ),
@@ -178,7 +179,7 @@ class _StudentProfileViewState extends State<StudentProfileView> {
             Padding(
               padding:
                   EdgeInsets.symmetric(vertical: ScreenSize.height * 0.02),
-              child: Divider(color: ColorGuid.boardersColor),
+              child: Divider(color: context.divider),
             ),
 
             // ── Academic info card ────────────────────────────────
@@ -251,15 +252,15 @@ class _StudentProfileViewState extends State<StudentProfileView> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               decoration: BoxDecoration(
-                color: ColorGuid.success.withOpacity(0.12),
+                color: AppPalette.success.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
                 border:
-                    Border.all(color: ColorGuid.success.withOpacity(0.5)),
+                    Border.all(color: AppPalette.success.withValues(alpha: 0.5)),
               ),
               child: Text(
                 "✓  لا يوجد اى انذارات اكاديمية",
                 style: TextStyle(
-                  color: ColorGuid.success,
+                  color: AppPalette.success,
                   fontWeight: FontWeight.w600,
                   fontSize: ScreenSize.height * 0.018,
                 ),
@@ -291,9 +292,9 @@ class _SectionCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        border: Border.all(color: context.glassBorder, width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,23 +306,23 @@ class _SectionCard extends StatelessWidget {
               vertical: ScreenSize.height * 0.014,
             ),
             decoration: BoxDecoration(
-              color: ColorGuid.amberSubtle,
+              color: context.accentSubtle,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(13),
                 topRight: Radius.circular(13),
               ),
               border: Border(
-                bottom: BorderSide(color: ColorGuid.amberBorder),
+                bottom: BorderSide(color: context.accentBorder),
               ),
             ),
             child: Row(
               children: [
-                Icon(icon, color: ColorGuid.amber, size: 17),
+                Icon(icon, color: context.accent, size: 17),
                 const SizedBox(width: 8),
                 Text(
                   title,
                   style: TextStyle(
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontWeight: FontWeight.w700,
                     fontSize: ScreenSize.height * 0.016,
                     letterSpacing: 0.4,

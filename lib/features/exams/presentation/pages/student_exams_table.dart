@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/exams/data/models/exam_table.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/widgets/exam_widget.dart';
@@ -20,16 +20,14 @@ class _StudentExamsTableState extends State<StudentExamsTable> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Exams Table'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Exams Table'),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
               height: ScreenSize.height * 0.135,
               child: Padding(
-                // "Next Exam" feature container in the corner
                 padding: EdgeInsets.only(right: ScreenSize.width * 0.67),
                 child: FeatureContainer(
                   iconPath: 'assets/Time table.png',

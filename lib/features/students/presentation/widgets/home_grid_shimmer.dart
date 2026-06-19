@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,8 +19,8 @@ class HomeGridShimmer extends StatelessWidget {
           crossAxisCount: 3,
         ),
         itemBuilder: (context, index) => Shimmer.fromColors(
-          baseColor: ColorGuid.surfaceColor,
-          highlightColor: ColorGuid.amber.withOpacity(0.15),
+          baseColor: context.surface,
+          highlightColor: context.accent.withOpacity(0.15),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -31,7 +31,7 @@ class HomeGridShimmer extends StatelessWidget {
                   width: ScreenSize.width * 0.13,
                   height: ScreenSize.width * 0.13,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: context.onBackground.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
@@ -41,7 +41,7 @@ class HomeGridShimmer extends StatelessWidget {
                   width: ScreenSize.width * 0.14,
                   height: ScreenSize.height * 0.013,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: context.onBackground.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),

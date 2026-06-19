@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 
 /// Pure UI tile for the Voice Assistant row.
@@ -33,14 +33,14 @@ class StudentSettingsVoiceTile extends StatelessWidget {
                 width: ScreenSize.width * 0.1,
                 height: ScreenSize.width * 0.1,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.12),
+                  color: context.accentSubtle,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: ColorGuid.amber.withOpacity(0.3),
+                    color: context.accentBorder,
                     width: 1,
                   ),
                 ),
-                child: Icon(Icons.mic_rounded, color: ColorGuid.amber, size: 18),
+                child: Icon(Icons.mic_rounded, color: context.accent, size: 18),
               ),
               SizedBox(width: ScreenSize.width * 0.04),
 
@@ -52,7 +52,7 @@ class StudentSettingsVoiceTile extends StatelessWidget {
                     Text(
                       'Voice Assistant',
                       style: TextStyle(
-                        color: ColorGuid.textPrimary,
+                        color: context.onBackground,
                         fontSize: ScreenSize.height * 0.016,
                         fontWeight: FontWeight.w600,
                       ),
@@ -61,7 +61,7 @@ class StudentSettingsVoiceTile extends StatelessWidget {
                     Text(
                       'Enable or disable Voice Assistant',
                       style: TextStyle(
-                        color: ColorGuid.textMuted,
+                        color: context.textMuted,
                         fontSize: ScreenSize.height * 0.012,
                       ),
                     ),
@@ -74,7 +74,7 @@ class StudentSettingsVoiceTile extends StatelessWidget {
                 onPressed: onToggle,
                 icon: Icon(
                   isOn ? Icons.mic_off_outlined : Icons.mic_none_rounded,
-                  color: isOn ? ColorGuid.amberBorder : ColorGuid.amber,
+                  color: isOn ? context.accentBorder : context.accent,
                 ),
               ),
             ],
@@ -86,7 +86,7 @@ class StudentSettingsVoiceTile extends StatelessWidget {
             thickness: 0.5,
             indent: ScreenSize.width * 0.18,
             endIndent: ScreenSize.width * 0.04,
-            color: Colors.white.withOpacity(0.07),
+            color: context.divider,
           ),
       ],
     );

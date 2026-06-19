@@ -1,7 +1,7 @@
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
 import 'package:ebn_el_hytham/core/services/voice_service.dart';
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/laiha/data/models/final_layha_model.dart';
 import 'package:ebn_el_hytham/features/laiha/data/models/material_layha_model.dart';
@@ -179,17 +179,17 @@ class _LayhaViewState extends State<LayhaView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('اللايحة'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'اللايحة'),
       body: BlocBuilder<LayhaCubit, LayhaState>(
         builder: (context, state) {
           // Try to trigger voice once data arrives
           _maybeScheduleVoice(state);
 
           if (state is LayhaLoading || state is LayhaInitial) {
-            return _buildShimmer();
+            return _buildShimmer(context);
           } else if (state is LayhaError) {
-            return _buildError(state.message);
+            return _buildError(context, state.message);
           } else if (state is LayhaSuccess) {
             return _buildContent(state.finalLayhaModel);
           }
@@ -201,21 +201,21 @@ class _LayhaViewState extends State<LayhaView> {
 
   // ── Shimmer ───────────────────────────────────────────────────────────────
 
-  Widget _buildShimmer() {
+  Widget _buildShimmer(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: ColorGuid.surfaceColor,
-      highlightColor: ColorGuid.surfaceColor.withOpacity(0.4),
+      baseColor: context.surface,
+      highlightColor: context.surface.withOpacity(0.4),
       child: CustomScrollView(
         physics: const NeverScrollableScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(height: ScreenSize.height * 0.025),
           ),
-          SliverToBoxAdapter(child: _shimmerCard(height: 52)),
+          SliverToBoxAdapter(child: _shimmerCard(context, height: 52)),
           SliverToBoxAdapter(
             child: SizedBox(height: ScreenSize.height * 0.018),
           ),
-          SliverToBoxAdapter(child: _shimmerCard(height: 44)),
+          SliverToBoxAdapter(child: _shimmerCard(context, height: 44)),
           SliverToBoxAdapter(
             child: SizedBox(height: ScreenSize.height * 0.022),
           ),
@@ -223,19 +223,19 @@ class _LayhaViewState extends State<LayhaView> {
             itemCount: 6,
             separatorBuilder: (_, __) =>
                 SizedBox(height: ScreenSize.height * 0.012),
-            itemBuilder: (_, __) => _shimmerCard(height: 72),
+            itemBuilder: (_, __) => _shimmerCard(context, height: 72),
           ),
         ],
       ),
     );
   }
 
-  Widget _shimmerCard({required double height}) {
+  Widget _shimmerCard(BuildContext context, {required double height}) {
     return Container(
       height: height,
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.045),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
       ),
     );
@@ -243,7 +243,7 @@ class _LayhaViewState extends State<LayhaView> {
 
   // ── Error ─────────────────────────────────────────────────────────────────
 
-  Widget _buildError(String message) {
+  Widget _buildError(BuildContext context, String message) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.08),
@@ -252,14 +252,14 @@ class _LayhaViewState extends State<LayhaView> {
           children: [
             Icon(
               Icons.wifi_off_rounded,
-              color: ColorGuid.textSecondary,
+              color: context.onSurfaceMuted,
               size: ScreenSize.height * 0.07,
             ),
             SizedBox(height: ScreenSize.height * 0.02),
             Text(
               'حدث خطأ',
               style: TextStyle(
-                color: ColorGuid.textPrimary,
+                color: context.onBackground,
                 fontSize: ScreenSize.height * 0.024,
                 fontWeight: FontWeight.bold,
               ),
@@ -269,7 +269,7 @@ class _LayhaViewState extends State<LayhaView> {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorGuid.textSecondary,
+                color: context.onSurfaceMuted,
                 fontSize: ScreenSize.height * 0.017,
               ),
             ),
@@ -368,13 +368,13 @@ class _DepartmentBanner extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [ColorGuid.amber.withOpacity(0.18), ColorGuid.surfaceColor],
+          colors: [context.accent.withOpacity(0.18), context.surface],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: ColorGuid.amber.withOpacity(0.35),
+          color: context.accentBorder,
           width: 1.2,
         ),
       ),
@@ -383,12 +383,12 @@ class _DepartmentBanner extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: ColorGuid.amber.withOpacity(0.18),
+              color: context.accent.withOpacity(0.18),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               Icons.account_balance_rounded,
-              color: ColorGuid.amber,
+              color: context.accent,
               size: ScreenSize.height * 0.028,
             ),
           ),
@@ -400,7 +400,7 @@ class _DepartmentBanner extends StatelessWidget {
                 Text(
                   'القسم',
                   style: TextStyle(
-                    color: ColorGuid.textSecondary,
+                    color: context.onSurfaceMuted,
                     fontSize: ScreenSize.height * 0.014,
                     letterSpacing: 0.5,
                   ),
@@ -409,7 +409,7 @@ class _DepartmentBanner extends StatelessWidget {
                 Text(
                   department,
                   style: TextStyle(
-                    color: ColorGuid.textPrimary,
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.019,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.3,
@@ -460,10 +460,10 @@ class _LevelTabBar extends StatelessWidget {
                 horizontal: ScreenSize.width * 0.055,
               ),
               decoration: BoxDecoration(
-                color: isSelected ? ColorGuid.amber : ColorGuid.surfaceColor,
+                color: isSelected ? context.accent : context.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isSelected ? ColorGuid.amber : ColorGuid.glassBorder,
+                  color: isSelected ? context.accent : context.glassBorder,
                   width: 1.2,
                 ),
               ),
@@ -471,7 +471,7 @@ class _LevelTabBar extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? Colors.black : ColorGuid.textSecondary,
+                  color: isSelected ? context.scaffold : context.onSurfaceMuted,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   fontSize: ScreenSize.height * 0.016,
                 ),
@@ -598,9 +598,9 @@ class _MaterialCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.045),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        border: Border.all(color: context.glassBorder, width: 1.2),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -614,9 +614,9 @@ class _MaterialCard extends StatelessWidget {
           shape: const Border(),
           collapsedShape: const Border(),
           enabled: hasRequirements,
-          iconColor: hasRequirements ? ColorGuid.amber : Colors.transparent,
+          iconColor: hasRequirements ? context.accent : Colors.transparent,
           collapsedIconColor: hasRequirements
-              ? ColorGuid.textSecondary
+              ? context.onSurfaceMuted
               : Colors.transparent,
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -627,17 +627,17 @@ class _MaterialCard extends StatelessWidget {
                   vertical: ScreenSize.height * 0.005,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.12),
+                  color: context.accentSubtle,
                   borderRadius: BorderRadius.circular(7),
                   border: Border.all(
-                    color: ColorGuid.amber.withOpacity(0.3),
+                    color: context.accentBorder,
                     width: 1,
                   ),
                 ),
                 child: Text(
                   material.materialCode,
                   style: TextStyle(
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontSize: ScreenSize.height * 0.013,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
@@ -649,7 +649,7 @@ class _MaterialCard extends StatelessWidget {
                 child: Text(
                   material.materialName,
                   style: TextStyle(
-                    color: ColorGuid.textPrimary,
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.017,
                     fontWeight: FontWeight.w600,
                     height: 1.3,
@@ -702,7 +702,7 @@ class _MaterialCard extends StatelessWidget {
                   Text(
                     '${material.requires.length} متطلب',
                     style: TextStyle(
-                      color: ColorGuid.textSecondary,
+                      color: context.onSurfaceMuted,
                       fontSize: ScreenSize.height * 0.013,
                     ),
                   ),
@@ -713,7 +713,7 @@ class _MaterialCard extends StatelessWidget {
           children: hasRequirements
               ? [
                   Divider(
-                    color: ColorGuid.glassBorder,
+                    color: context.glassBorder,
                     height: 1,
                     thickness: 1,
                   ),
@@ -728,7 +728,7 @@ class _MaterialCard extends StatelessWidget {
                         Text(
                           'المتطلبات السابقة',
                           style: TextStyle(
-                            color: ColorGuid.textSecondary,
+                            color: context.onSurfaceMuted,
                             fontSize: ScreenSize.height * 0.014,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
@@ -746,7 +746,7 @@ class _MaterialCard extends StatelessWidget {
                                   width: 6,
                                   height: 6,
                                   decoration: BoxDecoration(
-                                    color: ColorGuid.amber,
+                                    color: context.accent,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -754,7 +754,7 @@ class _MaterialCard extends StatelessWidget {
                                 Text(
                                   req.code,
                                   style: TextStyle(
-                                    color: ColorGuid.amber,
+                                    color: context.accent,
                                     fontSize: ScreenSize.height * 0.014,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -764,7 +764,7 @@ class _MaterialCard extends StatelessWidget {
                                   child: Text(
                                     req.name,
                                     style: TextStyle(
-                                      color: ColorGuid.textPrimary.withOpacity(
+                                      color: context.onBackground.withOpacity(
                                         0.8,
                                       ),
                                       fontSize: ScreenSize.height * 0.015,

@@ -1,5 +1,5 @@
+import 'package:ebn_el_hytham/core/cubit/theme_cubit.dart';
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/pages/login_view.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/settings_section_header.dart';
@@ -22,7 +22,6 @@ class StudentSettingsScreen extends StatefulWidget {
 class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
   // ── Toggle states (non-voice) ─────────────────────────────────
   bool _notificationsEnabled = true;
-  bool _darkMode = true;
 
   // ── Voice assistant logic (kept here, away from the UI widget) ─
   Future<void> _handleVoiceToggle() async {
@@ -41,10 +40,12 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
     final p = ScreenSize.width * 0.045;
     final isStudentSession = context.watch<VoiceHelperCubit>().isStudentSession;
     final isVoiceOn = context.watch<VoiceHelperCubit>().isOn;
+    final isDarkMode = context.watch<ThemeCubit>().state == ThemeMode.dark;
+    final theme = Theme.of(context);
     final ProfileModel profile =
         ModalRoute.of(context)?.settings.arguments as ProfileModel;
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         children: [
           // ── Top bar ───────────────────────────────────────────
@@ -124,10 +125,6 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
                             value: _notificationsEnabled,
                             onChanged: (v) =>
                                 setState(() => _notificationsEnabled = v),
-                            activeColor: ColorGuid.amber,
-                            activeTrackColor: ColorGuid.amber.withOpacity(0.3),
-                            inactiveThumbColor: Colors.white38,
-                            inactiveTrackColor: Colors.white12,
                           ),
                         ),
                         onTap: () => setState(
@@ -140,15 +137,12 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
                         trailing: Transform.scale(
                           scale: 0.85,
                           child: Switch(
-                            value: _darkMode,
-                            onChanged: (v) => setState(() => _darkMode = v),
-                            activeColor: ColorGuid.amber,
-                            activeTrackColor: ColorGuid.amber.withOpacity(0.3),
-                            inactiveThumbColor: Colors.white38,
-                            inactiveTrackColor: Colors.white12,
+                            value: isDarkMode,
+                            onChanged: (_) =>
+                                context.read<ThemeCubit>().toggle(),
                           ),
                         ),
-                        onTap: () => setState(() => _darkMode = !_darkMode),
+                        onTap: () => context.read<ThemeCubit>().toggle(),
                         showDivider: false,
                       ),
                     ],
@@ -194,6 +188,8 @@ class _SettingsTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenSize.init(context);
+    final cs = Theme.of(context).colorScheme;
+    final accent = cs.secondary;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -203,14 +199,14 @@ class _SettingsTopBar extends StatelessWidget {
         bottom: ScreenSize.height * 0.018,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: cs.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
           bottomRight: Radius.circular(28),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -222,7 +218,7 @@ class _SettingsTopBar extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: ColorGuid.amber,
+              color: accent,
               size: 20,
             ),
           ),
@@ -230,7 +226,7 @@ class _SettingsTopBar extends StatelessWidget {
           Text(
             'Settings',
             style: TextStyle(
-              color: ColorGuid.textPrimary,
+              color: cs.onSurface,
               fontSize: ScreenSize.height * 0.022,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.2,
@@ -240,14 +236,14 @@ class _SettingsTopBar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: ColorGuid.amber.withOpacity(0.1),
+              color: accent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: ColorGuid.amber.withOpacity(0.25)),
+              border: Border.all(color: accent.withValues(alpha: 0.25)),
             ),
             child: Text(
               'v1.0.0',
               style: TextStyle(
-                color: ColorGuid.amber,
+                color: accent,
                 fontSize: ScreenSize.height * 0.012,
                 fontWeight: FontWeight.w600,
               ),
@@ -268,14 +264,21 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: cs.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.07), width: 1),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.07)
+              : cs.outlineVariant,
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -320,9 +323,9 @@ class _LogoutButtonState extends State<_LogoutButton> {
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.018),
           decoration: BoxDecoration(
-            color: logoutRed.withOpacity(0.1),
+            color: logoutRed.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: logoutRed.withOpacity(0.4), width: 1.2),
+            border: Border.all(color: logoutRed.withValues(alpha: 0.4), width: 1.2),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

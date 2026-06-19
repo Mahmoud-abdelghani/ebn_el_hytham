@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -50,15 +50,15 @@ class _StudentSquareCardState extends State<StudentSquareCard>
         child: Container(
           height: ScreenSize.height * 0.12,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: context.glassFill,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: Colors.white.withOpacity(0.12),
+              color: context.cardBorder,
               width: 1.1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: context.shadowColor,
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -71,10 +71,10 @@ class _StudentSquareCardState extends State<StudentSquareCard>
                 width: ScreenSize.width * 0.1,
                 height: ScreenSize.width * 0.1,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.14),
+                  color: context.accentSubtle,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: ColorGuid.amber.withOpacity(0.4),
+                    color: context.accentBorder,
                     width: 1.2,
                   ),
                 ),
@@ -82,7 +82,7 @@ class _StudentSquareCardState extends State<StudentSquareCard>
                 child: Image.asset(
                   widget.iconPath,
                   fit: BoxFit.contain,
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   colorBlendMode: BlendMode.srcIn,
                 ),
               ),
@@ -93,7 +93,7 @@ class _StudentSquareCardState extends State<StudentSquareCard>
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.88),
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.014,
                   fontWeight: FontWeight.w600,
                 ),

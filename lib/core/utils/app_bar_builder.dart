@@ -1,28 +1,25 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
-/// Reusable dark-themed AppBar matching the global design system.
-/// [title] — page title
-/// [surfaceColor] header, [amber] bottom border, white back arrow
-PreferredSizeWidget buildDarkAppBar(String title) => AppBar(
-      // [surfaceColor] — dark card appbar replaces old mainColor navy
-      backgroundColor: ColorGuid.surfaceColor,
+/// Reusable themed AppBar matching the global design system.
+PreferredSizeWidget buildDarkAppBar(BuildContext context, String title) =>
+    AppBar(
+      backgroundColor: context.surface,
       centerTitle: true,
       elevation: 0,
-      iconTheme: IconThemeData(color: ColorGuid.amber), // [amber] back arrow
+      iconTheme: IconThemeData(color: context.accent),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Container(
           height: 1,
-          // [amber] hairline separates appbar from page content
-          color: ColorGuid.amber.withOpacity(0.25),
+          color: context.accent.withValues(alpha: 0.25),
         ),
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: ColorGuid.textPrimary, // white title text
+          color: context.onBackground,
           fontWeight: FontWeight.bold,
           fontSize: ScreenSize.height * 0.024,
           letterSpacing: 0.3,

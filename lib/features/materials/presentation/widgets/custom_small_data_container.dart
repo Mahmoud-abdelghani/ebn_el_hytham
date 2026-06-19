@@ -1,9 +1,8 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
 /// Small paired data container used in row layouts (e.g., timetable, material details).
-/// Dark [surfaceColor] card with [boardersColor] border and [textPrimary] text.
 class CustomSmallDataContainer extends StatelessWidget {
   const CustomSmallDataContainer({
     super.key,
@@ -25,13 +24,11 @@ class CustomSmallDataContainer extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        // [surfaceColor] — dark card replaces old white bg
-        color: ColorGuid.surfaceColor,
-        // [boardersColor] border replaces old grey border
-        border: Border.all(color: ColorGuid.boardersColor),
+        color: context.surface,
+        border: Border.all(color: context.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: context.shadowColor,
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -44,7 +41,7 @@ class CustomSmallDataContainer extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         textDirection: textDirection,
         style: TextStyle(
-          color: ColorGuid.textPrimary, // [textPrimary] white
+          color: context.onBackground,
           fontWeight: FontWeight.w400,
           fontSize: ScreenSize.height * 0.0175,
         ),

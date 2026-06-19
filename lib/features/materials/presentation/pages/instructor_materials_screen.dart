@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/instructor_materials_cubit.dart';
@@ -7,7 +7,6 @@ import 'package:ebn_el_hytham/features/materials/presentation/pages/instructor_m
 import 'package:ebn_el_hytham/features/materials/presentation/widgets/materials_shimmer_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 
 class InstructorMaterialsScreen extends StatelessWidget {
   const InstructorMaterialsScreen({super.key});
@@ -16,8 +15,8 @@ class InstructorMaterialsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('My Courses'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'My Courses'),
       body: BlocBuilder<InstructorMaterialsCubit, InstructorMaterialsState>(
         builder: (context, state) {
           if (state is InstructorMaterialsLoading) {
@@ -34,10 +33,6 @@ class InstructorMaterialsScreen extends StatelessWidget {
   }
 }
 
-// ─── Shimmer Loading ──────────────────────────────────────────────────────────
-
-// ─── Error State ──────────────────────────────────────────────────────────────
-
 class _ErrorState extends StatelessWidget {
   final String message;
   const _ErrorState({required this.message});
@@ -52,14 +47,14 @@ class _ErrorState extends StatelessWidget {
           children: [
             Icon(
               Icons.wifi_off_rounded,
-              color: ColorGuid.amber,
+              color: context.accent,
               size: ScreenSize.height * 0.07,
             ),
             SizedBox(height: ScreenSize.height * 0.02),
             Text(
               'Failed to load courses',
               style: TextStyle(
-                color: ColorGuid.textPrimary,
+                color: context.onBackground,
                 fontSize: ScreenSize.height * 0.022,
                 fontWeight: FontWeight.w600,
               ),
@@ -69,7 +64,7 @@ class _ErrorState extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorGuid.textSecondary,
+                color: context.onSurfaceMuted,
                 fontSize: ScreenSize.height * 0.016,
               ),
             ),
@@ -79,8 +74,6 @@ class _ErrorState extends StatelessWidget {
     );
   }
 }
-
-// ─── Materials List ───────────────────────────────────────────────────────────
 
 class _MaterialsList extends StatelessWidget {
   final List<InstructorMaterialModel> materials;
@@ -101,20 +94,17 @@ class _MaterialsList extends StatelessWidget {
   }
 }
 
-// ─── Course Card ─────────────────────────────────────────────────────────────
-
 class _CourseCard extends StatelessWidget {
   final InstructorMaterialModel material;
   final int index;
   const _CourseCard({required this.material, required this.index});
 
-  // Rotates through subtle accent colors per card
   static const List<Color> _accents = [
-    Color(0xFFFFC107), // amber
-    Color(0xFF64B5F6), // soft blue
-    Color(0xFF81C784), // soft green
-    Color(0xFFBA68C8), // soft purple
-    Color(0xFFFF8A65), // soft orange
+    Color(0xFFFFC107),
+    Color(0xFF64B5F6),
+    Color(0xFF81C784),
+    Color(0xFFBA68C8),
+    Color(0xFFFF8A65),
   ];
 
   @override
@@ -131,13 +121,12 @@ class _CourseCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(ScreenSize.width * 0.048),
         decoration: BoxDecoration(
-          color: ColorGuid.surfaceColor,
+          color: context.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+          border: Border.all(color: context.glassBorder, width: 1.2),
         ),
         child: Row(
           children: [
-            // Left accent bar + icon
             Container(
               width: ScreenSize.width * 0.012,
               height: ScreenSize.height * 0.08,
@@ -161,8 +150,6 @@ class _CourseCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: ScreenSize.width * 0.04),
-
-            // Course info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +157,7 @@ class _CourseCard extends StatelessWidget {
                   Text(
                     material.name,
                     style: TextStyle(
-                      color: ColorGuid.textPrimary,
+                      color: context.onBackground,
                       fontSize: ScreenSize.height * 0.02,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.2,
@@ -191,21 +178,19 @@ class _CourseCard extends StatelessWidget {
                       _MiniChip(
                         icon: Icons.calendar_today_rounded,
                         label: material.day,
-                        color: ColorGuid.textMuted,
+                        color: context.textMuted,
                       ),
                       SizedBox(width: ScreenSize.width * 0.03),
                       _MiniChip(
                         icon: Icons.access_time_rounded,
                         label: material.time,
-                        color: ColorGuid.textMuted,
+                        color: context.textMuted,
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-
-            // Student count badge
             Column(
               children: [
                 Text(
@@ -219,7 +204,7 @@ class _CourseCard extends StatelessWidget {
                 Text(
                   'Students',
                   style: TextStyle(
-                    color: ColorGuid.textMuted,
+                    color: context.textMuted,
                     fontSize: ScreenSize.height * 0.013,
                   ),
                 ),

@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/enrolled_material_student_model.dart';
 import 'package:flutter/material.dart';
@@ -8,49 +8,51 @@ class StudentTile extends StatelessWidget {
   final int index;
   final int materialIndex;
   final VoidCallback onEdit;
- 
-  const StudentTile({super.key, 
+
+  const StudentTile({
+    super.key,
     required this.student,
     required this.index,
     required this.materialIndex,
     required this.onEdit,
   });
- 
-  Color get _gradeColor {
+
+  Color _gradeColor(BuildContext context) {
     if (student.total >= 85) return const Color(0xFF81C784);
-    if (student.total >= 60) return ColorGuid.amber;
+    if (student.total >= 60) return context.accent;
     if (student.total >= 50) return const Color(0xFFFFB74D);
     return const Color(0xFFEF5350);
   }
- 
+
   @override
   Widget build(BuildContext context) {
+    final gradeColor = _gradeColor(context);
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenSize.width * 0.04,
         vertical: ScreenSize.height * 0.013,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Row(
         children: [
-          // Rank circle
           Container(
             width: ScreenSize.height * 0.04,
             height: ScreenSize.height * 0.04,
             decoration: BoxDecoration(
-              color: ColorGuid.scaffoldBackgroundColor,
+              color: context.scaffold,
               shape: BoxShape.circle,
-              border: Border.all(color: ColorGuid.glassBorder),
+              border: Border.all(color: context.glassBorder),
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: TextStyle(
-                  color: ColorGuid.textMuted,
+                  color: context.textMuted,
                   fontSize: ScreenSize.height * 0.013,
                   fontWeight: FontWeight.w600,
                 ),
@@ -58,8 +60,6 @@ class StudentTile extends StatelessWidget {
             ),
           ),
           SizedBox(width: ScreenSize.width * 0.03),
- 
-          // Name + ID
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class StudentTile extends StatelessWidget {
                 Text(
                   student.name,
                   style: TextStyle(
-                    color: ColorGuid.textPrimary,
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.016,
                     fontWeight: FontWeight.w600,
                   ),
@@ -75,15 +75,13 @@ class StudentTile extends StatelessWidget {
                 Text(
                   student.id,
                   style: TextStyle(
-                    color: ColorGuid.textMuted,
+                    color: context.textMuted,
                     fontSize: ScreenSize.height * 0.013,
                   ),
                 ),
               ],
             ),
           ),
- 
-          // Grade chips
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -93,13 +91,13 @@ class StudentTile extends StatelessWidget {
                   vertical: ScreenSize.height * 0.004,
                 ),
                 decoration: BoxDecoration(
-                  color: _gradeColor.withOpacity(0.15),
+                  color: gradeColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   'Total: ${student.total}',
                   style: TextStyle(
-                    color: _gradeColor,
+                    color: gradeColor,
                     fontSize: ScreenSize.height * 0.013,
                     fontWeight: FontWeight.w700,
                   ),
@@ -109,16 +107,13 @@ class StudentTile extends StatelessWidget {
               Text(
                 'YW: ${student.yearWork}  |  Final: ${student.finalDegree}',
                 style: TextStyle(
-                  color: ColorGuid.textMuted,
+                  color: context.textMuted,
                   fontSize: ScreenSize.height * 0.012,
                 ),
               ),
             ],
           ),
- 
           SizedBox(width: ScreenSize.width * 0.025),
- 
-          // Action buttons (Email + Edit)
           Column(
             children: [
               GestureDetector(
@@ -133,7 +128,7 @@ class StudentTile extends StatelessWidget {
               GestureDetector(
                 onTap: onEdit,
                 child: Icon(Icons.edit_outlined,
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     size: ScreenSize.height * 0.022),
               ),
             ],
@@ -143,4 +138,3 @@ class StudentTile extends StatelessWidget {
     );
   }
 }
- 

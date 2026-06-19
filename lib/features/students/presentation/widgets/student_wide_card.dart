@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -104,7 +105,7 @@ class _StudentWideCardState extends State<StudentWideCard>
                   Text(
                     widget.title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: context.onBackground,
                       fontSize: ScreenSize.height * 0.017,
                       fontWeight: FontWeight.w700,
                     ),
@@ -113,7 +114,7 @@ class _StudentWideCardState extends State<StudentWideCard>
                   Text(
                     widget.subtitle,
                     style: TextStyle(
-                      color: Colors.white54,
+                      color: context.onSurfaceMuted,
                       fontSize: ScreenSize.height * 0.013,
                     ),
                   ),

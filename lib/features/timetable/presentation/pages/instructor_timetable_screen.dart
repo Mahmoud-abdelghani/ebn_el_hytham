@@ -1,7 +1,7 @@
 // lib/features/timetable/presentation/pages/instructor_schedule_view.dart
 
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/timetable/data/models/instructor_materia_table_model.dart';
 import 'package:ebn_el_hytham/features/timetable/presentation/cubit/instructor_timetable_cubit.dart';
@@ -16,8 +16,8 @@ class InstructorTimetableScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('My Schedule'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'My Schedule'),
       body: BlocBuilder<InstructorTimetableCubit, InstructorTimetableState>(
         builder: (context, state) {
           if (state is InstructorTimetableLoading ||
@@ -27,7 +27,7 @@ class InstructorTimetableScreen extends StatelessWidget {
             return Center(
               child: Text(
                 state.message,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.onSurfaceMuted),
               ),
             );
           } else if (state is! InstructorTimetableSuccess) {
@@ -95,13 +95,13 @@ class InstructorScheduleGrid extends StatelessWidget {
           SizedBox(height: ScreenSize.height * 0.018),
 
           // ── Grid ─────────────────────────────────────────────
-          _buildGrid(colorMap),
+          _buildGrid(context, colorMap),
         ],
       ),
     );
   }
 
-  Widget _buildGrid(Map<String, Color> colorMap) {
+  Widget _buildGrid(BuildContext context, Map<String, Color> colorMap) {
     // lookup key: "Day_periodNumber"  e.g. "Saturday_1"
     final lookup = <String, InstructorMateriaTableModel>{};
     for (final m in materials) {
@@ -115,7 +115,7 @@ class InstructorScheduleGrid extends StatelessWidget {
       child: SizedBox(
         width: 55 + (6 * 100.0),
         child: Table(
-          border: TableBorder.all(color: Colors.white10, width: 0.8),
+          border: TableBorder.all(color: context.cardBorder, width: 0.8),
           columnWidths: const {
             0: FixedColumnWidth(55),
             1: FixedColumnWidth(100),
@@ -128,9 +128,9 @@ class InstructorScheduleGrid extends StatelessWidget {
           children: [
             // ── Header row ──────────────────────────────────────
             TableRow(
-              decoration: const BoxDecoration(color: Color(0xFF1A1A2E)),
+              decoration: BoxDecoration(color: context.surface),
               children: [
-                const _HeaderCell(text: ''),
+                _HeaderCell(text: ''),
                 ..._days.map((d) => _HeaderCell(text: _shortDay(d))),
               ],
             ),
@@ -189,9 +189,9 @@ class _InstructorLegend extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ScreenSize.width * 0.04),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.cardBorder),
       ),
       child: Wrap(
         spacing: 10,
@@ -213,8 +213,8 @@ class _InstructorLegend extends StatelessWidget {
               // كود المادة + اسمها
               Text(
                 '${m.courseCode} · ${m.courseName}',
-                style: const TextStyle(
-                  color: Colors.white70,
+                style: TextStyle(
+                  color: context.onSurfaceMuted,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -240,7 +240,7 @@ class _HeaderCell extends StatelessWidget {
         text,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: ColorGuid.amber,
+          color: context.accent,
           fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
@@ -260,14 +260,14 @@ class _PeriodCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      color: const Color(0xFF1A1A2E),
+      color: context.surface,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'P$period',
             style: TextStyle(
-              color: ColorGuid.amber,
+              color: context.accent,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
@@ -275,7 +275,7 @@ class _PeriodCell extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             time,
-            style: const TextStyle(color: Colors.white38, fontSize: 10),
+            style: TextStyle(color: context.textMuted, fontSize: 10),
           ),
         ],
       ),
@@ -337,12 +337,12 @@ class _InstructorCourseCell extends StatelessWidget {
           // Location
           Row(
             children: [
-              const Icon(Icons.location_on, color: Colors.white38, size: 9),
+              Icon(Icons.location_on, color: context.textMuted, size: 9),
               const SizedBox(width: 2),
               Expanded(
                 child: Text(
                   material.lectureLocation,
-                  style: const TextStyle(color: Colors.white54, fontSize: 9),
+                  style: TextStyle(color: context.onSurfaceMuted, fontSize: 9),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

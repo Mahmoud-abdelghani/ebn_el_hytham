@@ -1,5 +1,4 @@
- 
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -8,32 +7,33 @@ class GaussianChart extends StatelessWidget {
   final double mu;
   final double sigma;
   final List<FlSpot> spots;
-  final double progress; // 0.0 → 1.0 animation
- 
-  const GaussianChart({super.key, 
+  final double progress;
+
+  const GaussianChart({
+    super.key,
     required this.mu,
     required this.sigma,
     required this.spots,
     required this.progress,
   });
- 
+
   @override
   Widget build(BuildContext context) {
     final peak = spots.isEmpty
         ? 0.01
         : spots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
- 
+
     return Container(
       height: ScreenSize.height * 0.28,
       padding: EdgeInsets.all(ScreenSize.width * 0.035),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: LineChart(
         LineChartData(
-          backgroundColor: ColorGuid.surfaceColor,
+          backgroundColor: context.surface,
           minX: 0,
           maxX: 100,
           minY: 0,
@@ -42,13 +42,13 @@ class GaussianChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             getDrawingHorizontalLine: (_) =>
-                FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                FlLine(color: context.divider, strokeWidth: 0.5),
             getDrawingVerticalLine: (_) =>
-                FlLine(color: ColorGuid.boardersColor, strokeWidth: 0.5),
+                FlLine(color: context.divider, strokeWidth: 0.5),
           ),
           borderData: FlBorderData(
             show: true,
-            border: Border.all(color: ColorGuid.boardersColor),
+            border: Border.all(color: context.cardBorder),
           ),
           titlesData: FlTitlesData(
             rightTitles:
@@ -62,7 +62,7 @@ class GaussianChart extends StatelessWidget {
                 getTitlesWidget: (v, _) => Text(
                   v.toInt().toString(),
                   style: TextStyle(
-                      color: ColorGuid.textMuted,
+                      color: context.textMuted,
                       fontSize: ScreenSize.height * 0.011),
                 ),
               ),
@@ -72,7 +72,7 @@ class GaussianChart extends StatelessWidget {
           ),
           lineBarsData: [
             LineChartBarData(
-              color: ColorGuid.amber,
+              color: context.accent,
               spots: spots
                   .map((s) => FlSpot(s.x, s.y * progress))
                   .toList(),
@@ -80,7 +80,7 @@ class GaussianChart extends StatelessWidget {
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: ColorGuid.amber.withOpacity(0.1),
+                color: context.accent.withOpacity(0.1),
               ),
             ),
           ],

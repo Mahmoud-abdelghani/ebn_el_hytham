@@ -56,6 +56,7 @@ dependencies:
   open_file: ^3.5.10
   file_selector: ^1.0.3
   flutter_launcher_icons: ^0.14.4
+  hydrated_bloc: ^11.0.0
 
 dev_dependencies:
   flutter_test:

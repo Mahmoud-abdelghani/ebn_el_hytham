@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +12,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: onTap,
-      // [amber] accent fill — replaces old mainColor blue
-      color: ColorGuid.amber,
+      color: context.accent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 6,
       padding: EdgeInsets.symmetric(
@@ -23,8 +22,7 @@ class CustomButton extends StatelessWidget {
       child: Text(
         txt,
         style: TextStyle(
-          // Dark text on amber for maximum contrast
-          color: Color(0xFF161B22),
+          color: context.cs.onSecondary,
           fontWeight: FontWeight.bold,
           fontSize: ScreenSize.height * 0.022,
         ),

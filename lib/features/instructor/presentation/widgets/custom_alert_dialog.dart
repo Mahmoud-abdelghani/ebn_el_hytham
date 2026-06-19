@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_cubit.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/image_processing_cubit.dart';
@@ -63,6 +63,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = context.accent;
+
     return BlocConsumer<AttendanceCubit, AttendanceState>(
       listener: (context, state) {
         if (state is AttendanceSuccess) {
@@ -102,20 +104,20 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1C2330),
+                    color: context.surface,
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.08),
+                      color: context.cardBorder,
                       width: 1.2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         blurRadius: 32,
                         offset: const Offset(0, 12),
                       ),
                       BoxShadow(
-                        color: ColorGuid.amber.withOpacity(0.06),
+                        color: accent.withValues(alpha: 0.06),
                         blurRadius: 24,
                       ),
                     ],
@@ -132,7 +134,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                             width: 4,
                             height: 22,
                             decoration: BoxDecoration(
-                              color: ColorGuid.amber,
+                              color: accent,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -140,7 +142,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                           Text(
                             'Attendance',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.onBackground,
                               fontSize: ScreenSize.height * 0.026,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.3,
@@ -152,11 +154,11 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.06),
+                                color: context.glassFill,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(Icons.close_rounded,
-                                  color: Colors.white54, size: 18),
+                              child: Icon(Icons.close_rounded,
+                                  color: context.onSurfaceMuted, size: 18),
                             ),
                           ),
                         ],
@@ -187,8 +189,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                             builder: (context, child) => Theme(
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.dark(
-                                  primary: ColorGuid.amber,
-                                  surface: const Color(0xFF1C2330),
+                                  primary: accent,
+                                  surface: context.surface,
                                 ),
                               ),
                               child: child!,

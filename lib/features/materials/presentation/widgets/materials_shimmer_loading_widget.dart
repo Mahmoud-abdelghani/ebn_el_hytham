@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -16,12 +16,12 @@ class MaterialsShimmerLoading extends StatelessWidget {
       itemCount: 5,
       separatorBuilder: (_, __) => SizedBox(height: ScreenSize.height * 0.016),
       itemBuilder: (_, __) => Shimmer.fromColors(
-        baseColor: ColorGuid.surfaceColor,
-        highlightColor: ColorGuid.glassBorder,
+        baseColor: context.surface,
+        highlightColor: context.accent.withOpacity(0.15),
         child: Container(
           height: ScreenSize.height * 0.14,
           decoration: BoxDecoration(
-            color: ColorGuid.surfaceColor,
+            color: context.surface,
             borderRadius: BorderRadius.circular(20),
           ),
         ),

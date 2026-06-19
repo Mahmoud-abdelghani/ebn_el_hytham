@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/widgets/custom_check_box.dart';
@@ -47,14 +47,14 @@ class _LoginViewState extends State<LoginView> {
     if (!studentChecker && !instructorChecker) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
+          content: Text(
             "Select The Account Type",
             style: TextStyle(
-              color: Color(0xFF161B22),
+              color: context.cs.onError,
               fontWeight: FontWeight.w600,
             ),
           ),
-          backgroundColor: ColorGuid.error,
+          backgroundColor: context.cs.error,
         ),
       );
       return;
@@ -72,7 +72,7 @@ class _LoginViewState extends State<LoginView> {
     ScreenSize.init(context);
 
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
+      backgroundColor: context.scaffold,
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) async {
           if (state is AuthSuccess) {
@@ -80,12 +80,12 @@ class _LoginViewState extends State<LoginView> {
               SnackBar(
                 content: Text(
                   instructorChecker ? "Welcome Instructor" : "Welcome Student",
-                  style: const TextStyle(
-                    color: Color(0xFF161B22),
+                  style: TextStyle(
+                    color: context.cs.onSecondary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor: ColorGuid.amber,
+                backgroundColor: context.accent,
               ),
             );
             instructorChecker
@@ -110,12 +110,12 @@ class _LoginViewState extends State<LoginView> {
               SnackBar(
                 content: Text(
                   state.message,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.cs.onError,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor: ColorGuid.error,
+                backgroundColor: context.cs.error,
               ),
             );
           }
@@ -128,14 +128,14 @@ class _LoginViewState extends State<LoginView> {
                 width: double.infinity,
                 height: ScreenSize.height * 0.35,
                 decoration: BoxDecoration(
-                  color: ColorGuid.surfaceColor,
+                  color: context.surface,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(36),
                     bottomRight: Radius.circular(36),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
+                      color: context.shadowColor,
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -149,12 +149,12 @@ class _LoginViewState extends State<LoginView> {
                       height: ScreenSize.width * 0.22,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ColorGuid.amberSubtle,
-                        border: Border.all(color: ColorGuid.amber, width: 2),
+                        color: context.accentSubtle,
+                        border: Border.all(color: context.accent, width: 2),
                       ),
                       child: Icon(
                         Icons.school_rounded,
-                        color: ColorGuid.amber,
+                        color: context.accent,
                         size: ScreenSize.width * 0.12,
                       ),
                     ),
@@ -162,7 +162,7 @@ class _LoginViewState extends State<LoginView> {
                     Text(
                       'ابن الهيثم',
                       style: TextStyle(
-                        color: ColorGuid.textPrimary,
+                        color: context.onBackground,
                         fontWeight: FontWeight.w700,
                         fontSize: ScreenSize.height * 0.032,
                         letterSpacing: 1.0,
@@ -172,7 +172,7 @@ class _LoginViewState extends State<LoginView> {
                     Text(
                       'Faculty of Engineering Portal',
                       style: TextStyle(
-                        color: ColorGuid.textSecondary,
+                        color: context.onSurfaceMuted,
                         fontWeight: FontWeight.w400,
                         fontSize: ScreenSize.height * 0.017,
                       ),
@@ -195,11 +195,11 @@ class _LoginViewState extends State<LoginView> {
                   borderRadius: BorderRadius.circular(
                     ScreenSize.height * 0.025,
                   ),
-                  color: ColorGuid.surfaceColor,
-                  border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+                  color: context.surface,
+                  border: Border.all(color: context.glassBorder, width: 1.2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.35),
+                      color: context.shadowColor,
                       blurRadius: 18,
                       offset: const Offset(0, 8),
                     ),
@@ -215,7 +215,7 @@ class _LoginViewState extends State<LoginView> {
                           width: 4,
                           height: 18,
                           decoration: BoxDecoration(
-                            color: ColorGuid.amber,
+                            color: context.accent,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -223,7 +223,7 @@ class _LoginViewState extends State<LoginView> {
                         Text(
                           'Sign In',
                           style: TextStyle(
-                            color: ColorGuid.textPrimary,
+                            color: context.onBackground,
                             fontWeight: FontWeight.w700,
                             fontSize: ScreenSize.height * 0.022,
                           ),
@@ -322,9 +322,10 @@ class _LoginViewState extends State<LoginView> {
                                 ? null
                                 : () => _handleLogin(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorGuid.amber,
-                              disabledBackgroundColor: ColorGuid.amber
-                                  .withOpacity(0.6),
+                              backgroundColor: context.accent,
+                              disabledBackgroundColor: context.accent
+                                  .withValues(alpha: 0.6),
+                              foregroundColor: context.cs.onSecondary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                   ScreenSize.height * 0.016,
@@ -339,14 +340,14 @@ class _LoginViewState extends State<LoginView> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2.5,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                        const Color(0xFF161B22),
+                                        context.cs.onSecondary,
                                       ),
                                     ),
                                   )
                                 : Text(
                                     'Login',
                                     style: TextStyle(
-                                      color: const Color(0xFF161B22),
+                                      color: context.cs.onSecondary,
                                       fontWeight: FontWeight.w700,
                                       fontSize: ScreenSize.height * 0.02,
                                     ),

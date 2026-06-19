@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/instructor/data/models/instructor_model.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/widgets/info_pill.dart';
@@ -41,9 +42,9 @@ class SuccessHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: amber.withOpacity(0.12),
+                  color: amber.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: amber.withOpacity(0.35)),
+                  border: Border.all(color: amber.withValues(alpha: 0.35)),
                 ),
                 child: Text(
                   profile.department,
@@ -60,7 +61,7 @@ class SuccessHeader extends StatelessWidget {
                   IconButton(
                     onPressed: () {},
                     icon: Icon(Icons.notifications_outlined,
-                        color: Colors.white70,
+                        color: context.onSurfaceMuted,
                         size: ScreenSize.height * 0.033),
                   ),
                   Positioned(
@@ -80,12 +81,12 @@ class SuccessHeader extends StatelessWidget {
           SizedBox(height: ScreenSize.height * 0.022),
           Text('Welcome back 👋',
               style: TextStyle(
-                  color: Colors.white54,
+                  color: context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.016)),
           SizedBox(height: ScreenSize.height * 0.005),
           Text(profile.name,
               style: TextStyle(
-                  color: Colors.white,
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.026,
                   fontWeight: FontWeight.w700)),
           SizedBox(height: ScreenSize.height * 0.006),
@@ -223,7 +224,8 @@ class ErrorHeader extends StatelessWidget {
           Text(
             'Failed to load profile',
             style: TextStyle(
-                color: Colors.white70, fontSize: ScreenSize.height * 0.016),
+                color: context.onSurfaceMuted,
+                fontSize: ScreenSize.height * 0.016),
           ),
           const SizedBox(height: 4),
           Text(
@@ -232,7 +234,8 @@ class ErrorHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.white38, fontSize: ScreenSize.height * 0.012),
+                color: context.textMuted,
+                fontSize: ScreenSize.height * 0.012),
           ),
           const SizedBox(height: 12),
           TextButton.icon(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 
 class SettingsToggleTile extends StatelessWidget {
@@ -24,7 +24,7 @@ class SettingsToggleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = accentColor ?? ColorGuid.amber;
+    final accent = accentColor ?? context.accent;
 
     return Column(
       children: [
@@ -40,10 +40,10 @@ class SettingsToggleTile extends StatelessWidget {
                 width: ScreenSize.width * 0.1,
                 height: ScreenSize.width * 0.1,
                 decoration: BoxDecoration(
-                  color: accent.withOpacity(0.12),
+                  color: accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: accent.withOpacity(0.3),
+                    color: accent.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -59,7 +59,7 @@ class SettingsToggleTile extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: ColorGuid.textPrimary,
+                        color: context.onBackground,
                         fontSize: ScreenSize.height * 0.016,
                         fontWeight: FontWeight.w600,
                       ),
@@ -69,7 +69,7 @@ class SettingsToggleTile extends StatelessWidget {
                       Text(
                         subtitle!,
                         style: TextStyle(
-                          color: ColorGuid.textMuted,
+                          color: context.textMuted,
                           fontSize: ScreenSize.height * 0.012,
                         ),
                       ),
@@ -85,9 +85,9 @@ class SettingsToggleTile extends StatelessWidget {
                   value: value,
                   onChanged: onChanged,
                   activeColor: accent,
-                  activeTrackColor: accent.withOpacity(0.3),
-                  inactiveThumbColor: Colors.white38,
-                  inactiveTrackColor: Colors.white12,
+                  activeTrackColor: accent.withValues(alpha: 0.3),
+                  inactiveThumbColor: context.onSurfaceMuted,
+                  inactiveTrackColor: context.divider,
                 ),
               ),
             ],
@@ -99,7 +99,7 @@ class SettingsToggleTile extends StatelessWidget {
             thickness: 0.5,
             indent: ScreenSize.width * 0.18,
             endIndent: ScreenSize.width * 0.04,
-            color: Colors.white.withOpacity(0.07),
+            color: context.cardBorder,
           ),
       ],
     );

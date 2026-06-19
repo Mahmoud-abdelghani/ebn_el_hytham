@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,14 +11,14 @@ class HomeHeadingShimmer extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: context.shadowColor,
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -31,8 +31,8 @@ class HomeHeadingShimmer extends StatelessWidget {
         bottom: ScreenSize.height * 0.03,
       ),
       child: Shimmer.fromColors(
-        baseColor: ColorGuid.surfaceColor,
-        highlightColor: ColorGuid.amber.withOpacity(0.15),
+        baseColor: context.surface,
+        highlightColor: context.accent.withOpacity(0.15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,7 +120,7 @@ class _ShimmerBox extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         // slightly lighter than surface so shimmer sweep is visible
-        color: Colors.white.withOpacity(0.08),
+        color: context.onBackground.withOpacity(0.08),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );

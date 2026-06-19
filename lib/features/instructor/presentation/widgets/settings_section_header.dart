@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
@@ -17,7 +17,7 @@ class SettingsSectionHeader extends StatelessWidget {
             width: 4,
             height: 16,
             decoration: BoxDecoration(
-              color: ColorGuid.amber,
+              color: context.accent,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -25,7 +25,7 @@ class SettingsSectionHeader extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: Colors.white70,
+              color: context.onBackground,
               fontSize: ScreenSize.height * 0.016,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.4,

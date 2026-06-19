@@ -1,3 +1,4 @@
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -64,15 +65,15 @@ class _FeatureContainerState extends State<FeatureContainer>
           padding: const EdgeInsets.all(7.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: context.glassFill,
               borderRadius: BorderRadius.circular(ScreenSize.height * 0.022),
               border: Border.all(
-                color: Colors.white.withOpacity(0.18),
+                color: context.glassBorder,
                 width: 1.2,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: context.shadowColor,
                   blurRadius: 12,
                   offset: const Offset(0, 5),
                 ),
@@ -85,10 +86,10 @@ class _FeatureContainerState extends State<FeatureContainer>
                   width: ScreenSize.width * 0.13,
                   height: ScreenSize.width * 0.13,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFC94A).withOpacity(0.15),
+                    color: context.accentSubtle,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFFFFC94A).withOpacity(0.5),
+                      color: context.accentBorder,
                       width: 1.4,
                     ),
                   ),
@@ -96,7 +97,7 @@ class _FeatureContainerState extends State<FeatureContainer>
                   child: Image.asset(
                     widget.iconPath,
                     fit: BoxFit.contain,
-                    color: const Color(0xFFFFC94A),
+                    color: context.accent,
                     colorBlendMode: BlendMode.srcIn,
                   ),
                 ),
@@ -107,7 +108,7 @@ class _FeatureContainerState extends State<FeatureContainer>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.90),
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.015,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,

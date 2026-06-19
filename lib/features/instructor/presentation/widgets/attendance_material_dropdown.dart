@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +19,7 @@ class AttendanceMaterialDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool hasSelection = selectedMaterial != _placeholder;
+    final accent = context.accent;
 
     return GestureDetector(
       onTap: () => _showMaterialMenu(context),
@@ -30,13 +31,13 @@ class AttendanceMaterialDropdown extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: hasSelection
-              ? ColorGuid.amber.withOpacity(0.08)
-              : Colors.white.withOpacity(0.05),
+              ? accent.withValues(alpha: 0.08)
+              : context.glassFill,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: hasSelection
-                ? ColorGuid.amber.withOpacity(0.5)
-                : Colors.white.withOpacity(0.12),
+                ? accent.withValues(alpha: 0.5)
+                : context.glassBorder,
             width: 1.2,
           ),
         ),
@@ -46,13 +47,13 @@ class AttendanceMaterialDropdown extends StatelessWidget {
               padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
                 color: hasSelection
-                    ? ColorGuid.amber.withOpacity(0.15)
-                    : Colors.white.withOpacity(0.06),
+                    ? accent.withValues(alpha: 0.15)
+                    : context.glassFill,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 Icons.menu_book_outlined,
-                color: hasSelection ? ColorGuid.amber : Colors.white38,
+                color: hasSelection ? accent : context.onSurfaceMuted,
                 size: ScreenSize.height * 0.022,
               ),
             ),
@@ -63,7 +64,9 @@ class AttendanceMaterialDropdown extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: hasSelection ? Colors.white : Colors.white38,
+                  color: hasSelection
+                      ? context.onBackground
+                      : context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.016,
                   fontWeight:
                       hasSelection ? FontWeight.w600 : FontWeight.w400,
@@ -72,8 +75,9 @@ class AttendanceMaterialDropdown extends StatelessWidget {
             ),
             Icon(
               Icons.keyboard_arrow_down_rounded,
-              color:
-                  hasSelection ? ColorGuid.amber.withOpacity(0.7) : Colors.white24,
+              color: hasSelection
+                  ? accent.withValues(alpha: 0.7)
+                  : context.chevronMuted,
               size: 22,
             ),
           ],
@@ -83,12 +87,13 @@ class AttendanceMaterialDropdown extends StatelessWidget {
   }
 
   void _showMaterialMenu(BuildContext context) {
+    final accent = context.accent;
     final RenderBox box = context.findRenderObject() as RenderBox;
     final Offset offset = box.localToGlobal(Offset.zero);
 
     showMenu<String>(
       context: context,
-      color: const Color(0xFF1F2630),
+      color: context.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       position: RelativeRect.fromLTRB(
         offset.dx,
@@ -104,12 +109,12 @@ class AttendanceMaterialDropdown extends StatelessWidget {
                 children: [
                   Icon(Icons.circle,
                       size: 7,
-                      color: ColorGuid.amber.withOpacity(0.7)),
+                      color: accent.withValues(alpha: 0.7)),
                   const SizedBox(width: 10),
                   Text(
                     m,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: context.onBackground,
                       fontSize: ScreenSize.height * 0.016,
                     ),
                   ),

@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/fees/data/models/student_fees_model.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/widgets/semester_fee_widget.dart';
@@ -18,12 +18,10 @@ class _StudentFeesViewState extends State<StudentFeesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // [scaffoldBackgroundColor] dark charcoal
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Fees'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Fees'),
       body: CustomScrollView(
         slivers: [
-          // ── Current fees banner ─────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
               margin: EdgeInsets.symmetric(
@@ -35,13 +33,12 @@ class _StudentFeesViewState extends State<StudentFeesView> {
                 vertical: ScreenSize.height * 0.02,
               ),
               decoration: BoxDecoration(
-                // [surfaceColor] banner card
-                color: ColorGuid.surfaceColor,
+                color: context.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+                border: Border.all(color: context.glassBorder, width: 1.2),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: context.shadowColor,
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -53,16 +50,15 @@ class _StudentFeesViewState extends State<StudentFeesView> {
                   Text(
                     "Current fees:",
                     style: TextStyle(
-                      color: ColorGuid.textSecondary, // [textSecondary] label
+                      color: context.onSurfaceMuted,
                       fontWeight: FontWeight.w500,
                       fontSize: ScreenSize.height * 0.022,
                     ),
                   ),
-                  // [amber] value for the amount
                   Text(
                     '${studentFees.currentAmount} EGP',
                     style: TextStyle(
-                      color: ColorGuid.amber,
+                      color: context.accent,
                       fontWeight: FontWeight.bold,
                       fontSize: ScreenSize.height * 0.022,
                     ),
@@ -74,7 +70,6 @@ class _StudentFeesViewState extends State<StudentFeesView> {
           SliverToBoxAdapter(
             child: SizedBox(height: ScreenSize.height * 0.01),
           ),
-          // ── Semester fee list ───────────────────────────────────
           SliverList.separated(
             itemCount: studentFees.semesterFees.length,
             itemBuilder: (context, index) => SemesterFeeWidget(

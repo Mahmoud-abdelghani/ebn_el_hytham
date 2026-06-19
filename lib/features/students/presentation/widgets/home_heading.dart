@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/students/presentation/cubit/profile_cubit.dart';
 import 'package:ebn_el_hytham/features/students/presentation/widgets/home_heading_shimmer.dart';
@@ -54,14 +54,14 @@ class _HomeHeadingContent extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: context.shadowColor,
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -83,7 +83,7 @@ class _HomeHeadingContent extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: ColorGuid.amber, width: 2.2),
+                  border: Border.all(color: context.accent, width: 2.2),
                 ),
                 child: CircleAvatar(
                   radius: ScreenSize.height * 0.033,
@@ -96,14 +96,14 @@ class _HomeHeadingContent extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorGuid.amberSubtle,
+                  color: context.accentSubtle,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: ColorGuid.amberBorder),
+                  border: Border.all(color: context.accentBorder),
                 ),
                 child: Text(
                   'Faculty of Engineering',
                   style: TextStyle(
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontSize: ScreenSize.height * 0.014,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -117,7 +117,7 @@ class _HomeHeadingContent extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.notifications_outlined,
-                      color: ColorGuid.textSecondary,
+                      color: context.onSurfaceMuted,
                       size: ScreenSize.height * 0.033,
                     ),
                   ),
@@ -128,7 +128,7 @@ class _HomeHeadingContent extends StatelessWidget {
                       width: 9,
                       height: 9,
                       decoration: BoxDecoration(
-                        color: ColorGuid.amber,
+                        color: context.accent,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -142,7 +142,7 @@ class _HomeHeadingContent extends StatelessWidget {
           Text(
             'Welcome back 👋',
             style: TextStyle(
-              color: ColorGuid.textSecondary,
+              color: context.onSurfaceMuted,
               fontSize: ScreenSize.height * 0.016,
               fontWeight: FontWeight.w400,
             ),
@@ -151,7 +151,7 @@ class _HomeHeadingContent extends StatelessWidget {
           Text(
             name,
             style: TextStyle(
-              color: ColorGuid.textPrimary,
+              color: context.onBackground,
               fontSize: ScreenSize.height * 0.026,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.3,
@@ -189,7 +189,7 @@ class _ErrorBanner extends StatelessWidget {
         bottom: ScreenSize.height * 0.03,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
@@ -197,13 +197,13 @@ class _ErrorBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline, color: ColorGuid.error, size: 20),
+          Icon(Icons.error_outline, color: context.cs.error, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
-                color: ColorGuid.error,
+                color: context.cs.error,
                 fontSize: ScreenSize.height * 0.015,
               ),
             ),
@@ -225,7 +225,7 @@ class _InfoPill extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: ColorGuid.amber, size: 13),
+        Icon(icon, color: context.accent, size: 13),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
@@ -233,7 +233,7 @@ class _InfoPill extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: ColorGuid.textMuted,
+              color: context.textMuted,
               fontSize: ScreenSize.height * 0.013,
             ),
           ),

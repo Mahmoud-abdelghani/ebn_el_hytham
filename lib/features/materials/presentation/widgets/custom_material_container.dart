@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -29,14 +29,12 @@ class CustomMaterialContainer extends StatelessWidget {
           horizontal: ScreenSize.width * 0.05,
         ),
         decoration: BoxDecoration(
-          // [surfaceColor] dark surface replaces white
-          color: ColorGuid.surfaceColor,
+          color: context.surface,
           borderRadius: BorderRadius.circular(12),
-          // [glassBorder] — subtle glass edge
-          border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+          border: Border.all(color: context.glassBorder, width: 1.2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: context.shadowColor,
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -50,7 +48,7 @@ class CustomMaterialContainer extends StatelessWidget {
               child: Text(
                 txt1,
                 style: TextStyle(
-                  color: ColorGuid.textPrimary, // [textPrimary] white
+                  color: context.onBackground,
                   fontWeight: FontWeight.w500,
                   fontSize: ScreenSize.height * 0.019,
                 ),
@@ -59,7 +57,7 @@ class CustomMaterialContainer extends StatelessWidget {
             Text(
               txt2 ?? "Show",
               style: TextStyle(
-                color: ColorGuid.amber, // [amber] "Show" action text
+                color: context.accent,
                 fontWeight: FontWeight.w600,
                 fontSize: ScreenSize.height * 0.018,
               ),

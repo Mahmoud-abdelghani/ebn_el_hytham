@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -16,18 +16,17 @@ class CustomSemesterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // elements[0..2] = header row, rest = data
     final int dataRowCount = ((elements.length - 3) / 3).ceil();
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.04),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
+            color: context.shadowColor,
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -36,12 +35,12 @@ class CustomSemesterWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: ExpansionTile(
-          backgroundColor: ColorGuid.scaffoldBackgroundColor,
-          collapsedBackgroundColor: ColorGuid.surfaceColor,
+          backgroundColor: context.scaffold,
+          collapsedBackgroundColor: context.surface,
           shape: const Border(),
           collapsedShape: const Border(),
-          iconColor: ColorGuid.amber,
-          collapsedIconColor: ColorGuid.textSecondary,
+          iconColor: context.accent,
+          collapsedIconColor: context.onSurfaceMuted,
           tilePadding: EdgeInsets.symmetric(
             horizontal: ScreenSize.width * 0.05,
             vertical: ScreenSize.height * 0.004,
@@ -49,7 +48,7 @@ class CustomSemesterWidget extends StatelessWidget {
           title: Text(
             'Semester $index',
             style: TextStyle(
-              color: ColorGuid.textPrimary,
+              color: context.onBackground,
               fontSize: ScreenSize.height * 0.021,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.4,
@@ -58,24 +57,23 @@ class CustomSemesterWidget extends StatelessWidget {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // GPA chip
               Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: ScreenSize.width * 0.03,
                   vertical: ScreenSize.height * 0.005,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber.withOpacity(0.12),
+                  color: context.accentSubtle,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(
-                    color: ColorGuid.amber.withOpacity(0.35),
+                    color: context.accentBorder,
                     width: 1,
                   ),
                 ),
                 child: Text(
                   gpa,
                   style: TextStyle(
-                    color: ColorGuid.amber,
+                    color: context.accent,
                     fontSize: ScreenSize.height * 0.02,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
@@ -86,13 +84,9 @@ class CustomSemesterWidget extends StatelessWidget {
             ],
           ),
           children: [
-            // ── Divider between header and grid ──────────────────
-            Divider(height: 1, thickness: 1, color: ColorGuid.glassBorder),
-            // ── Header row ────────────────────────────────────────
-            _buildHeaderRow(),
-            // ── Divider ───────────────────────────────────────────
-            Divider(height: 1, thickness: 1, color: ColorGuid.glassBorder),
-            // ── Data rows ─────────────────────────────────────────
+            Divider(height: 1, thickness: 1, color: context.glassBorder),
+            _buildHeaderRow(context),
+            Divider(height: 1, thickness: 1, color: context.glassBorder),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -100,14 +94,14 @@ class CustomSemesterWidget extends StatelessWidget {
               separatorBuilder: (_, __) => Divider(
                 height: 1,
                 thickness: 1,
-                color: ColorGuid.boardersColor.withOpacity(0.5),
+                color: context.cardBorder.withOpacity(0.5),
               ),
               itemBuilder: (context, rowIndex) {
-                final base = 3 + rowIndex * 3; // skip header
+                final base = 3 + rowIndex * 3;
                 final subject = elements[base];
                 final code = elements[base + 1];
                 final grade = elements[base + 2];
-                return _buildDataRow(subject, code, grade, rowIndex);
+                return _buildDataRow(context, subject, code, grade, rowIndex);
               },
             ),
             SizedBox(height: ScreenSize.height * 0.008),
@@ -117,15 +111,14 @@ class CustomSemesterWidget extends StatelessWidget {
     );
   }
 
-  // ── Header row widget ────────────────────────────────────────────────
-  Widget _buildHeaderRow() {
+  Widget _buildHeaderRow(BuildContext context) {
     const headers = ['Subject', 'Code', 'Grade'];
     return Container(
-      color: ColorGuid.scaffoldBackgroundColor,
+      color: context.scaffold,
       child: Row(
         children: List.generate(headers.length, (i) {
           return Expanded(
-            flex: i == 0 ? 4 : 3, // Subject column wider
+            flex: i == 0 ? 4 : 3,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: ScreenSize.height * 0.013,
@@ -135,7 +128,7 @@ class CustomSemesterWidget extends StatelessWidget {
                 headers[i],
                 textAlign: i == 0 ? TextAlign.left : TextAlign.center,
                 style: TextStyle(
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   fontSize: ScreenSize.height * 0.016,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.8,
@@ -148,8 +141,8 @@ class CustomSemesterWidget extends StatelessWidget {
     );
   }
 
-  // ── Data row widget ──────────────────────────────────────────────────
   Widget _buildDataRow(
+    BuildContext context,
     String subject,
     String code,
     String grade,
@@ -158,11 +151,10 @@ class CustomSemesterWidget extends StatelessWidget {
     final bool isAlt = rowIndex.isOdd;
     return Container(
       color: isAlt
-          ? ColorGuid.surfaceColor.withOpacity(0.6)
-          : ColorGuid.scaffoldBackgroundColor,
+          ? context.surface.withOpacity(0.6)
+          : context.scaffold,
       child: Row(
         children: [
-          // Subject
           Expanded(
             flex: 4,
             child: Padding(
@@ -173,16 +165,14 @@ class CustomSemesterWidget extends StatelessWidget {
               child: Text(
                 subject,
                 style: TextStyle(
-                  color: ColorGuid.textPrimary,
+                  color: context.onBackground,
                   fontSize: ScreenSize.height * 0.017,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           ),
-          // Vertical divider
-          _vDivider(),
-          // Code
+          _vDivider(context),
           Expanded(
             flex: 3,
             child: Padding(
@@ -193,7 +183,7 @@ class CustomSemesterWidget extends StatelessWidget {
                 code,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: ColorGuid.textSecondary,
+                  color: context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.016,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.3,
@@ -201,44 +191,40 @@ class CustomSemesterWidget extends StatelessWidget {
               ),
             ),
           ),
-          // Vertical divider
-          _vDivider(),
-          // Grade
-          Expanded(flex: 3, child: Center(child: _gradeChip(grade))),
+          _vDivider(context),
+          Expanded(flex: 3, child: Center(child: _gradeChip(context, grade))),
         ],
       ),
     );
   }
 
-  Widget _vDivider() => Container(
+  Widget _vDivider(BuildContext context) => Container(
     width: 1,
     height: ScreenSize.height * 0.055,
-    color: ColorGuid.boardersColor.withOpacity(0.5),
+    color: context.cardBorder.withOpacity(0.5),
   );
 
-  // Grade chip — colored by pass/fail/pending
-  Widget _gradeChip(String grade) {
+  Widget _gradeChip(BuildContext context, String grade) {
     final Color chipColor;
     final Color textColor;
 
     if (grade == 'N/A' || grade.isEmpty) {
-      chipColor = ColorGuid.textSecondary.withOpacity(0.1);
-      textColor = ColorGuid.textSecondary;
+      chipColor = context.onSurfaceMuted.withOpacity(0.1);
+      textColor = context.onSurfaceMuted;
     } else {
-      // A+/A/B → greenish, C/D → amber, F → red
       final upper = grade.toUpperCase();
       if (upper.startsWith('A') || upper.startsWith('B')) {
         chipColor = const Color(0xFF1A3A2A);
         textColor = const Color(0xFF4CAF50);
       } else if (upper.startsWith('C') || upper.startsWith('D')) {
-        chipColor = ColorGuid.amber.withOpacity(0.12);
-        textColor = ColorGuid.amber;
+        chipColor = context.accentSubtle;
+        textColor = context.accent;
       } else if (upper == 'F') {
         chipColor = const Color(0xFF3A1A1A);
         textColor = const Color(0xFFEF5350);
       } else {
-        chipColor = ColorGuid.amber.withOpacity(0.12);
-        textColor = ColorGuid.amber;
+        chipColor = context.accentSubtle;
+        textColor = context.accent;
       }
     }
 

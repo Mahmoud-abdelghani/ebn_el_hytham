@@ -1,5 +1,5 @@
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/assigned_material_model.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/email_handler_cubit.dart';
@@ -16,8 +16,8 @@ class StudentMaterialDetailsView extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as AssignedMaterialModel;
 
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar(model.name),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, model.name),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSize.width * 0.05,
@@ -26,11 +26,8 @@ class StudentMaterialDetailsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header Card (code + hours + grade) ───────────────
             _HeaderCard(model: model),
             SizedBox(height: ScreenSize.height * 0.018),
-
-            // ── Schedule Section ──────────────────────────────────
             _SectionTitle(
               title: 'Schedule',
               icon: Icons.calendar_today_rounded,
@@ -61,8 +58,6 @@ class StudentMaterialDetailsView extends StatelessWidget {
               ],
             ),
             SizedBox(height: ScreenSize.height * 0.018),
-
-            // ── Instructor Section ────────────────────────────────
             _SectionTitle(
               title: 'Instructor',
               icon: Icons.person_outline_rounded,
@@ -83,14 +78,10 @@ class StudentMaterialDetailsView extends StatelessWidget {
               ],
             ),
             SizedBox(height: ScreenSize.height * 0.018),
-
-            // ── Results Section ───────────────────────────────────
             _SectionTitle(title: 'Results', icon: Icons.bar_chart_rounded),
             SizedBox(height: ScreenSize.height * 0.010),
             _ResultsCard(model: model),
             SizedBox(height: ScreenSize.height * 0.03),
-
-            // ── Email Button ──────────────────────────────────────
             _EmailButton(email: model.instructorEmail),
             SizedBox(height: ScreenSize.height * 0.02),
           ],
@@ -100,7 +91,6 @@ class StudentMaterialDetailsView extends StatelessWidget {
   }
 }
 
-// ── Header Card ───────────────────────────────────────────────────────────────
 class _HeaderCard extends StatelessWidget {
   final AssignedMaterialModel model;
   const _HeaderCard({required this.model});
@@ -111,32 +101,35 @@ class _HeaderCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ScreenSize.width * 0.05),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ColorGuid.amber.withOpacity(0.4), width: 1.5),
+        border: Border.all(
+          color: context.accent.withOpacity(0.4),
+          width: 1.5,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _HeaderStat(label: 'Code', value: model.code),
-          _Divider(),
+          _HeaderDivider(),
           _HeaderStat(label: 'Hours', value: '${model.hours} hrs'),
-          _Divider(),
+          _HeaderDivider(),
           _HeaderStat(
             label: 'Grade',
             value: model.grade,
-            valueColor: _gradeColor(model.grade),
+            valueColor: _gradeColor(context, model.grade),
           ),
         ],
       ),
     );
   }
 
-  Color _gradeColor(String grade) {
-    if (grade == 'No data yet') return Colors.grey;
-    if (grade == 'F') return Colors.redAccent;
-    if (grade.startsWith('A')) return Colors.greenAccent;
-    return ColorGuid.amber;
+  Color _gradeColor(BuildContext context, String grade) {
+    if (grade == 'No data yet') return context.textMuted;
+    if (grade == 'F') return context.cs.error;
+    if (grade.startsWith('A')) return const Color(0xFF81C784);
+    return context.accent;
   }
 }
 
@@ -157,30 +150,32 @@ class _HeaderStat extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            color: valueColor ?? ColorGuid.amber,
+            color: valueColor ?? context.accent,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.grey, fontSize: 12)),
+        Text(
+          label,
+          style: TextStyle(color: context.textMuted, fontSize: 12),
+        ),
       ],
     );
   }
 }
 
-class _Divider extends StatelessWidget {
+class _HeaderDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       height: ScreenSize.height * 0.045,
       width: 1,
-      color: ColorGuid.glassBorder,
+      color: context.glassBorder,
     );
   }
 }
 
-// ── Section Title ─────────────────────────────────────────────────────────────
 class _SectionTitle extends StatelessWidget {
   final String title;
   final IconData icon;
@@ -190,12 +185,12 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: ColorGuid.amber, size: 18),
+        Icon(icon, color: context.accent, size: 18),
         SizedBox(width: 8),
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: context.onBackground,
             fontSize: 15,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
@@ -206,7 +201,6 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-// ── Info Card ─────────────────────────────────────────────────────────────────
 class _InfoCard extends StatelessWidget {
   final List<Widget> children;
   const _InfoCard({required this.children});
@@ -220,9 +214,9 @@ class _InfoCard extends StatelessWidget {
         vertical: ScreenSize.height * 0.012,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Column(
         children: List.generate(children.length, (i) {
@@ -230,7 +224,7 @@ class _InfoCard extends StatelessWidget {
             children: [
               children[i],
               if (i != children.length - 1)
-                Divider(color: ColorGuid.glassBorder, height: 1),
+                Divider(color: context.divider, height: 1),
             ],
           );
         }),
@@ -239,7 +233,6 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-// ── Info Row ──────────────────────────────────────────────────────────────────
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -256,16 +249,19 @@ class _InfoRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: ScreenSize.height * 0.012),
       child: Row(
         children: [
-          Icon(icon, color: ColorGuid.amber, size: 18),
+          Icon(icon, color: context.accent, size: 18),
           SizedBox(width: ScreenSize.width * 0.03),
-          Text(label, style: TextStyle(color: Colors.grey, fontSize: 13)),
+          Text(
+            label,
+            style: TextStyle(color: context.textMuted, fontSize: 13),
+          ),
           const Spacer(),
           Flexible(
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.onBackground,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -277,7 +273,6 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-// ── Results Card ──────────────────────────────────────────────────────────────
 class _ResultsCard extends StatelessWidget {
   final AssignedMaterialModel model;
   const _ResultsCard({required this.model});
@@ -288,9 +283,9 @@ class _ResultsCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ScreenSize.width * 0.045),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -315,20 +310,22 @@ class _ResultStat extends StatelessWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: context.onBackground,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.grey, fontSize: 11)),
+        Text(
+          label,
+          style: TextStyle(color: context.textMuted, fontSize: 11),
+        ),
       ],
     );
   }
 }
 
-// ── Email Button ──────────────────────────────────────────────────────────────
 class _EmailButton extends StatelessWidget {
   final String email;
   const _EmailButton({required this.email});
@@ -341,17 +338,17 @@ class _EmailButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: () {
           BlocProvider.of<EmailHandlerCubit>(context).sendEmail(email);
-        }, // فاضي دلوقتي
+        },
         icon: const Icon(Icons.email_outlined),
         label: const Text(
           'Email Instructor',
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: ColorGuid.amber,
-          foregroundColor: Colors.black,
-          disabledBackgroundColor: ColorGuid.amber.withOpacity(0.5),
-          disabledForegroundColor: Colors.black54,
+          backgroundColor: context.accent,
+          foregroundColor: context.cs.onSecondary,
+          disabledBackgroundColor: context.accent.withOpacity(0.5),
+          disabledForegroundColor: context.cs.onSecondary.withOpacity(0.54),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

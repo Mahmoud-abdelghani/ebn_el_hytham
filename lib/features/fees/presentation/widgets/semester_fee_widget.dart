@@ -1,11 +1,10 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/widgets/custom_button.dart';
 import 'package:ebn_el_hytham/features/profile/presentation/widgets/student_profile_strings_helper.dart';
 import 'package:flutter/material.dart';
 
-/// Expandable semester fee tile — dark [surfaceColor] card with amber accents.
-/// Expansion reveals payment details and action buttons.
+/// Expandable semester fee tile — themed card with accent accents.
 class SemesterFeeWidget extends StatelessWidget {
   const SemesterFeeWidget({
     super.key,
@@ -29,34 +28,31 @@ class SemesterFeeWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.width * 0.04),
       decoration: BoxDecoration(
-        // [surfaceColor] card replaces white
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          // [amber] border when paid, [boardersColor] when unpaid
           color: isPaid
-              ? ColorGuid.amber.withOpacity(0.4)
-              : ColorGuid.boardersColor,
+              ? context.accent.withOpacity(0.4)
+              : context.cardBorder,
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: context.shadowColor,
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: ExpansionTile(
-        // [scaffoldBackgroundColor] expanded bg
-        backgroundColor: ColorGuid.scaffoldBackgroundColor.withOpacity(0.6),
+        backgroundColor: context.scaffold.withOpacity(0.6),
         collapsedBackgroundColor: Colors.transparent,
         shape: const Border(),
         collapsedShape: const Border(),
         title: Text(
           'Semester $index',
           style: TextStyle(
-            color: ColorGuid.textPrimary, // [textPrimary] white
+            color: context.onBackground,
             fontSize: ScreenSize.height * 0.022,
             fontWeight: FontWeight.w600,
           ),
@@ -64,21 +60,20 @@ class SemesterFeeWidget extends StatelessWidget {
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            // [amber] pill for paid, [error] for unpaid status
             color: isPaid
-                ? ColorGuid.amber.withOpacity(0.15)
-                : ColorGuid.error.withOpacity(0.15),
+                ? context.accentSubtle
+                : context.cs.error.withOpacity(0.15),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isPaid
-                  ? ColorGuid.amber.withOpacity(0.5)
-                  : ColorGuid.error.withOpacity(0.5),
+                  ? context.accentBorder
+                  : context.cs.error.withOpacity(0.5),
             ),
           ),
           child: Text(
             status,
             style: TextStyle(
-              color: isPaid ? ColorGuid.amber : ColorGuid.error,
+              color: isPaid ? context.accent : context.cs.error,
               fontSize: ScreenSize.height * 0.015,
               fontWeight: FontWeight.w600,
             ),
@@ -98,13 +93,12 @@ class SemesterFeeWidget extends StatelessWidget {
                 ),
                 StudentProfileStringsHelper(firstTxt: 'Paid:', secondTxt: paid),
                 SizedBox(height: ScreenSize.height * 0.01),
-                // Section label
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Payment Details:',
                     style: TextStyle(
-                      color: ColorGuid.textSecondary,
+                      color: context.onSurfaceMuted,
                       fontSize: ScreenSize.height * 0.018,
                       fontWeight: FontWeight.w500,
                     ),

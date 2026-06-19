@@ -1,7 +1,7 @@
 // lib/features/materials/presentation/pages/student_schedule_view.dart
 
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/assigned_material_model.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
@@ -16,8 +16,8 @@ class StudentScheduleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorGuid.scaffoldBackgroundColor,
-      appBar: buildDarkAppBar('Weekly Schedule'),
+      backgroundColor: context.scaffold,
+      appBar: buildDarkAppBar(context, 'Weekly Schedule'),
       body: BlocBuilder<AssignedMaterialsCubit, AssignedMaterialsState>(
         builder: (context, state) {
           if (state is AssignedMaterialsLoading) {
@@ -26,7 +26,7 @@ class StudentScheduleView extends StatelessWidget {
             return Center(
               child: Text(
                 state.message,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.onSurfaceMuted),
               ),
             );
           } else if (state is! AssignedMaterialsSuccess) {
@@ -103,13 +103,13 @@ class ScheduleGrid extends StatelessWidget {
           SizedBox(height: ScreenSize.height * 0.018),
 
           // ── Grid ─────────────────────────────────────────────
-          _buildGrid(colorMap),
+          _buildGrid(context, colorMap),
         ],
       ),
     );
   }
 
-  Widget _buildGrid(Map<String, Color> colorMap) {
+  Widget _buildGrid(BuildContext context, Map<String, Color> colorMap) {
     final lookup = <String, AssignedMaterialModel>{};
     for (final m in materials) {
       final from = int.tryParse(m.startingPeriod) ?? 0;
@@ -123,7 +123,7 @@ class ScheduleGrid extends StatelessWidget {
       child: SizedBox(
         width: 55 + (6 * 100.0), // عمود الفترات + 6 أيام
         child: Table(
-          border: TableBorder.all(color: Colors.white10, width: 0.8),
+          border: TableBorder.all(color: context.cardBorder, width: 0.8),
           columnWidths: const {
             0: FixedColumnWidth(55),
             1: FixedColumnWidth(100),
@@ -135,9 +135,9 @@ class ScheduleGrid extends StatelessWidget {
           },
           children: [
             TableRow(
-              decoration: const BoxDecoration(color: Color(0xFF1A1A2E)),
+              decoration: BoxDecoration(color: context.surface),
               children: [
-                const _HeaderCell(text: ''),
+                _HeaderCell(text: ''),
                 ..._days.map((d) => _HeaderCell(text: _shortDay(d))),
               ],
             ),
@@ -195,9 +195,9 @@ class _Legend extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ScreenSize.width * 0.04),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.cardBorder),
       ),
       child: Wrap(
         spacing: 10,
@@ -218,8 +218,8 @@ class _Legend extends StatelessWidget {
               const SizedBox(width: 5),
               Text(
                 m.name,
-                style: const TextStyle(
-                  color: Colors.white70,
+                style: TextStyle(
+                  color: context.onSurfaceMuted,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -246,7 +246,7 @@ class _HeaderCell extends StatelessWidget {
         text,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: ColorGuid.amber,
+          color: context.accent,
           fontSize: 16,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
@@ -265,14 +265,14 @@ class _PeriodCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-      color: const Color(0xFF1A1A2E),
+      color: context.surface,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'P$period',
             style: TextStyle(
-              color: ColorGuid.amber,
+              color: context.accent,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -280,7 +280,7 @@ class _PeriodCell extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             time,
-            style: const TextStyle(color: Colors.white38, fontSize: 11),
+            style: TextStyle(color: context.textMuted, fontSize: 11),
           ),
         ],
       ),
@@ -323,12 +323,12 @@ class _CourseCell extends StatelessWidget {
           // الموقع
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.white38, size: 9),
+              Icon(Icons.location_on, color: context.textMuted, size: 9),
               const SizedBox(width: 2),
               Expanded(
                 child: Text(
                   material.lectureLocation,
-                  style: const TextStyle(color: Colors.white54, fontSize: 9),
+                  style: TextStyle(color: context.onSurfaceMuted, fontSize: 9),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

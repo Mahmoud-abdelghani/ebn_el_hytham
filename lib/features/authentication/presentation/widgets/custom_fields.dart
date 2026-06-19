@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -38,46 +38,41 @@ class CustomFields extends StatelessWidget {
         obscureText: isObsecure ?? false,
         keyboardType: textInputType,
         validator: fieldValidator,
-        // Input text in primary white on dark background
-        style: TextStyle(color: ColorGuid.textPrimary),
+        style: TextStyle(color: context.onBackground),
         decoration: InputDecoration(
-          prefixIcon: Icon(iconData, color: ColorGuid.amber), // [amber] icons
+          prefixIcon: Icon(iconData, color: context.accent),
           suffixIcon: isPassword
               ? IconButton(
                   onPressed: onTap,
                   icon: Icon(
                     isObsecure! ? Icons.visibility : Icons.visibility_off,
-                    color: ColorGuid.textSecondary, // muted visibility toggle
+                    color: context.onSurfaceMuted,
                   ),
                 )
               : null,
           filled: true,
-          // [surfaceColor] dark fill — matches the overall card surface
-          fillColor: ColorGuid.surfaceColor,
+          fillColor: context.surface,
           labelText: label,
-          labelStyle: TextStyle(color: ColorGuid.textSecondary),
+          labelStyle: TextStyle(color: context.onSurfaceMuted),
           hintText: hint,
-          hintStyle: TextStyle(color: ColorGuid.textMuted),
-          // Idle border — subtle dark border
+          hintStyle: TextStyle(color: context.textMuted),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ScreenSize.height * 0.012),
-            borderSide: BorderSide(color: ColorGuid.boardersColor),
+            borderSide: BorderSide(color: context.borderColor),
           ),
-          // Focused border — amber accent ring
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ScreenSize.height * 0.012),
-            borderSide: BorderSide(color: ColorGuid.amber, width: 1.6),
+            borderSide: BorderSide(color: context.accent, width: 1.6),
           ),
-          // Error borders — [error] red
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ScreenSize.height * 0.012),
-            borderSide: BorderSide(color: ColorGuid.error),
+            borderSide: BorderSide(color: context.cs.error),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ScreenSize.height * 0.012),
-            borderSide: BorderSide(color: ColorGuid.error),
+            borderSide: BorderSide(color: context.cs.error),
           ),
-          errorStyle: TextStyle(color: ColorGuid.error),
+          errorStyle: TextStyle(color: context.cs.error),
         ),
       ),
     );

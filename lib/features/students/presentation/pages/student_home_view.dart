@@ -1,6 +1,6 @@
 import 'package:ebn_el_hytham/core/cubit/voice_helper_cubit.dart';
 import 'package:ebn_el_hytham/core/services/voice_service.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/cubit/layha_cubit.dart';
@@ -70,7 +70,7 @@ class _StudentHomeViewState extends State<StudentHomeView> {
         }
       },
       child: Scaffold(
-        backgroundColor: ColorGuid.scaffoldBackgroundColor,
+        backgroundColor: context.scaffold,
         body: Column(
           children: [
             const HomeHeading(),
@@ -84,7 +84,7 @@ class _StudentHomeViewState extends State<StudentHomeView> {
                     return Center(
                       child: Text(
                         state.message,
-                        style: const TextStyle(color: Colors.white70),
+                        style: TextStyle(color: context.onSurfaceMuted),
                       ),
                     );
                   }
@@ -127,7 +127,7 @@ class _StudentFeatureGrid extends StatelessWidget {
                 width: 4,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: ColorGuid.amber,
+                  color: context.accent,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -135,7 +135,7 @@ class _StudentFeatureGrid extends StatelessWidget {
               Text(
                 'Quick Access',
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: context.onSurfaceMuted,
                   fontSize: ScreenSize.height * 0.018,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.4,

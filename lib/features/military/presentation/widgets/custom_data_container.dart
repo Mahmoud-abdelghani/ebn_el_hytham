@@ -1,9 +1,8 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
-/// Dark glass data container used in Military, Layha, and detail screens.
-/// [surfaceColor] fill + [boardersColor] border + [textPrimary] text
+/// Themed data container used in Military, Layha, and detail screens.
 class CustomDataContainer extends StatelessWidget {
   const CustomDataContainer({
     super.key,
@@ -26,13 +25,11 @@ class CustomDataContainer extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        // [surfaceColor] — dark card surface replaces old white
-        color: ColorGuid.surfaceColor,
-        // [glassBorder] subtle white haze border
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        color: context.surface,
+        border: Border.all(color: context.glassBorder, width: 1.2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: context.shadowColor,
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -43,7 +40,7 @@ class CustomDataContainer extends StatelessWidget {
         data,
         textDirection: textDirection,
         style: TextStyle(
-          color: ColorGuid.textPrimary, // [textPrimary] white text
+          color: context.onBackground,
           fontWeight: FontWeight.w400,
           fontSize: ScreenSize.height * 0.02,
         ),

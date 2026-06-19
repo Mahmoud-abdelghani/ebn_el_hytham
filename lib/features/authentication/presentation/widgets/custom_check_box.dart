@@ -1,4 +1,4 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -21,20 +21,16 @@ class CustomCheckBox extends StatelessWidget {
         Checkbox(
           value: value,
           onChanged: onChanged,
-          // [amber] replaces the old navy mainColor for checked state
-          activeColor: ColorGuid.amber,
-          // Dark text icon on amber fill
-          checkColor: Color(0xFF161B22),
-          // Unchecked border uses [boardersColor] for dark theme integration
-          side: BorderSide(color: ColorGuid.boardersColor, width: 1.5),
-          focusColor: ColorGuid.amber,
+          activeColor: context.accent,
+          checkColor: context.cs.onSecondary,
+          side: BorderSide(color: context.borderColor, width: 1.5),
+          focusColor: context.accent,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
         Text(
           txt,
           style: TextStyle(
-            // [textSecondary] — readable white-ish on the dark login card
-            color: ColorGuid.textSecondary,
+            color: context.onSurfaceMuted,
             fontSize: ScreenSize.height * 0.022,
           ),
         ),

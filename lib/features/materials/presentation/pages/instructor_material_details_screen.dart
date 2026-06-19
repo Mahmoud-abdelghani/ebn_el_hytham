@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:ebn_el_hytham/core/utils/app_bar_builder.dart';
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/enrolled_material_student_model.dart';
 import 'package:ebn_el_hytham/features/materials/data/models/instructor_material_model.dart';
@@ -127,7 +127,7 @@ class _InstructorMaterialDetailsScreenState
     for (double x = 0; x <= 100; x += 0.5) FlSpot(x, _gaussian(x, mu, sigma)),
   ];
 
-  List<BarChartGroupData> _barGroups(List<double> grades) {
+  List<BarChartGroupData> _barGroups(BuildContext context, List<double> grades) {
     final buckets = List<int>.filled(10, 0);
     for (final g in grades) {
       final idx = (g / 10).floor().clamp(0, 9);
@@ -140,13 +140,13 @@ class _InstructorMaterialDetailsScreenState
         barRods: [
           BarChartRodData(
             toY: buckets[i].toDouble(),
-            color: ColorGuid.amber,
+            color: context.accent,
             width: ScreenSize.width * 0.045,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
             backDrawRodData: BackgroundBarChartRodData(
               show: true,
               toY: grades.isEmpty ? 1 : grades.length.toDouble(),
-              color: ColorGuid.glassBorder,
+              color: context.glassBorder,
             ),
           ),
         ],
@@ -175,8 +175,8 @@ class _InstructorMaterialDetailsScreenState
         // ── Loading ────────────────────────────────────────────────────────
         if (state is InstructorMaterialsLoading) {
           return Scaffold(
-            backgroundColor: ColorGuid.scaffoldBackgroundColor,
-            appBar: buildDarkAppBar(''),
+            backgroundColor: context.scaffold,
+            appBar: buildDarkAppBar(context, ''),
             body: const _DetailsShimmerLoading(),
           );
         }
@@ -184,12 +184,12 @@ class _InstructorMaterialDetailsScreenState
         // ── Failure ────────────────────────────────────────────────────────
         if (state is InstructorMaterialsFailure) {
           return Scaffold(
-            backgroundColor: ColorGuid.scaffoldBackgroundColor,
-            appBar: buildDarkAppBar('Error'),
+            backgroundColor: context.scaffold,
+            appBar: buildDarkAppBar(context, 'Error'),
             body: Center(
               child: Text(
                 state.message,
-                style: TextStyle(color: ColorGuid.textSecondary),
+                style: TextStyle(color: context.onSurfaceMuted),
               ),
             ),
           );
@@ -209,8 +209,8 @@ class _InstructorMaterialDetailsScreenState
         final failCount = _localStudents.length - passCount;
 
         return Scaffold(
-          backgroundColor: ColorGuid.scaffoldBackgroundColor,
-          appBar: buildDarkAppBar(material.name),
+          backgroundColor: context.scaffold,
+          appBar: buildDarkAppBar(context, material.name),
           body: CustomScrollView(
             slivers: [
               // ── Header Info Cards ──────────────────────────────────────
@@ -301,7 +301,7 @@ class _InstructorMaterialDetailsScreenState
                         child: _StatBadge(
                           label: 'Enrolled',
                           value: '${_localStudents.length}',
-                          color: ColorGuid.amber,
+                          color: context.accent,
                           icon: Icons.group_rounded,
                         ),
                       ),
@@ -410,7 +410,7 @@ class _InstructorMaterialDetailsScreenState
                     ScreenSize.width * 0.05,
                     0,
                   ),
-                  child: BarChartWidget(groups: _barGroups(grades)),
+                  child: BarChartWidget(groups: _barGroups(context, grades)),
                 ),
               ),
 
@@ -561,8 +561,8 @@ class _DetailsShimmerLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: ColorGuid.surfaceColor,
-      highlightColor: ColorGuid.glassBorder,
+      baseColor: context.surface,
+      highlightColor: context.accent.withOpacity(0.15),
       child: Padding(
         padding: EdgeInsets.all(ScreenSize.width * 0.05),
         child: Column(
@@ -609,7 +609,7 @@ class _ShimmerBox extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     height: height,
     decoration: BoxDecoration(
-      color: ColorGuid.surfaceColor,
+      color: context.surface,
       borderRadius: BorderRadius.circular(14),
     ),
   );
@@ -635,13 +635,13 @@ class _InfoCard extends StatelessWidget {
         vertical: ScreenSize.height * 0.015,
       ),
       decoration: BoxDecoration(
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1),
+        border: Border.all(color: context.glassBorder, width: 1),
       ),
       child: Row(
         children: [
-          Icon(icon, color: ColorGuid.amber, size: ScreenSize.height * 0.022),
+          Icon(icon, color: context.accent, size: ScreenSize.height * 0.022),
           SizedBox(width: ScreenSize.width * 0.025),
           Expanded(
             child: Column(
@@ -650,14 +650,14 @@ class _InfoCard extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: ColorGuid.textMuted,
+                    color: context.textMuted,
                     fontSize: ScreenSize.height * 0.013,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    color: ColorGuid.textPrimary,
+                    color: context.onBackground,
                     fontSize: ScreenSize.height * 0.016,
                     fontWeight: FontWeight.w600,
                   ),
@@ -710,7 +710,7 @@ class _StatBadge extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: ColorGuid.textMuted,
+              color: context.textMuted,
               fontSize: ScreenSize.height * 0.012,
             ),
           ),

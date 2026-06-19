@@ -1,8 +1,8 @@
-import 'package:ebn_el_hytham/core/utils/color_guid.dart';
+import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:flutter/material.dart';
 
-/// Salary list row — dark [surfaceColor] card with [amber] icon and amount.
+/// Salary list row — themed card with accent icon and amount.
 class SalaryViewer extends StatelessWidget {
   const SalaryViewer({
     super.key,
@@ -22,31 +22,29 @@ class SalaryViewer extends StatelessWidget {
         vertical: ScreenSize.height * 0.004,
       ),
       decoration: BoxDecoration(
-        // [surfaceColor] card replaces white ListTile
-        color: ColorGuid.surfaceColor,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ColorGuid.glassBorder, width: 1.2),
+        border: Border.all(color: context.glassBorder, width: 1.2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: context.shadowColor,
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: ListTile(
-        // [amber] money icon
         leading: Container(
           width: ScreenSize.height * 0.056,
           height: ScreenSize.height * 0.056,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: ColorGuid.amberSubtle, // amber tinted circle bg
-            border: Border.all(color: ColorGuid.amberBorder),
+            color: context.accentSubtle,
+            border: Border.all(color: context.accentBorder),
           ),
           child: Icon(
             Icons.monetization_on,
-            color: ColorGuid.amber, // [amber] icon
+            color: context.accent,
             size: ScreenSize.height * 0.03,
           ),
         ),
@@ -54,7 +52,7 @@ class SalaryViewer extends StatelessWidget {
           month,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: ColorGuid.textPrimary, // [textPrimary] white month
+            color: context.onBackground,
             fontSize: ScreenSize.height * 0.02,
           ),
         ),
@@ -62,7 +60,7 @@ class SalaryViewer extends StatelessWidget {
           date,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            color: ColorGuid.textMuted, // [textMuted] grey date
+            color: context.textMuted,
             fontSize: ScreenSize.height * 0.0165,
           ),
         ),
@@ -70,7 +68,7 @@ class SalaryViewer extends StatelessWidget {
           '\$ $salary',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: ColorGuid.amber, // [amber] salary amount
+            color: context.accent,
             fontSize: ScreenSize.height * 0.02,
           ),
         ),
