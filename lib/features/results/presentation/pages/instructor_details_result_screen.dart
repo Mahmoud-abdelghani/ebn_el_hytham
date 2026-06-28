@@ -102,7 +102,14 @@ class _InstructorDetailsResultScreenState
                   }
                   setState(() {});
                 },
-                txt: 'Apply Bonus',
+                txt:Text(
+       'Apply Bonus',
+        style: TextStyle(
+          color: context.cs.onSecondary,
+          fontWeight: FontWeight.bold,
+          fontSize: ScreenSize.height * 0.022,
+        ),
+      ) 
               ),
             ),
           ),

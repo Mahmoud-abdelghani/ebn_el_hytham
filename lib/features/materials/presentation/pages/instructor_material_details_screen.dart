@@ -127,7 +127,10 @@ class _InstructorMaterialDetailsScreenState
     for (double x = 0; x <= 100; x += 0.5) FlSpot(x, _gaussian(x, mu, sigma)),
   ];
 
-  List<BarChartGroupData> _barGroups(BuildContext context, List<double> grades) {
+  List<BarChartGroupData> _barGroups(
+    BuildContext context,
+    List<double> grades,
+  ) {
     final buckets = List<int>.filled(10, 0);
     for (final g in grades) {
       final idx = (g / 10).floor().clamp(0, 9);
@@ -161,7 +164,8 @@ class _InstructorMaterialDetailsScreenState
     return BlocConsumer<InstructorMaterialsCubit, InstructorMaterialsState>(
       // Re-init local copy whenever a fresh Success comes in after update
       listenWhen: (previous, current) =>
-          previous is InstructorMaterialsUpdatreLoading &&
+          (previous is InstructorMaterialsUpdatreLoading ||
+              previous is InstructorMaterialsAddBonusLoading) &&
           current is InstructorMaterialsSuccess,
       listener: (context, state) {
         if (state is InstructorMaterialsSuccess) {
@@ -349,7 +353,17 @@ class _InstructorMaterialDetailsScreenState
                     bonusApplied: _bonusApplied,
                     onApply: _applyBonus,
                     onSendToServer: () {
-                      // TODO: send bonus to server
+                      BlocProvider.of<InstructorMaterialsCubit>(
+                        context,
+                      ).addBonus(
+                        amount: _bonusApplied,
+                        studentsIds: _localStudents
+                            .map((e) => int.parse(e.id))
+                            .toList(),
+                        courseCode: material.code,
+                        maxMark: 40,
+                      );
+                      _bonusApplied = 0;
                     },
                   ),
                 ),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   const CustomButton({super.key, required this.onTap, required this.txt});
   final VoidCallback onTap;
-  final String txt;
+  final Widget txt;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,7 @@ class CustomButton extends StatelessWidget {
         vertical: ScreenSize.height * 0.014,
         horizontal: ScreenSize.width * 0.2,
       ),
-      child: Text(
-        txt,
-        style: TextStyle(
-          color: context.cs.onSecondary,
-          fontWeight: FontWeight.bold,
-          fontSize: ScreenSize.height * 0.022,
-        ),
-      ),
+      child: txt,
     );
   }
 }

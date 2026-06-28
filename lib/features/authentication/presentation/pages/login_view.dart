@@ -152,15 +152,16 @@ class _LoginViewState extends State<LoginView> {
                         color: context.accentSubtle,
                         border: Border.all(color: context.accent, width: 2),
                       ),
-                      child: Icon(
-                        Icons.school_rounded,
-                        color: context.accent,
-                        size: ScreenSize.width * 0.12,
+                      child: Image.asset(
+                        'assets/logo.png',
+                        width: ScreenSize.width * 0.25,
+                        height: ScreenSize.height * 0.15,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     SizedBox(height: ScreenSize.height * 0.018),
                     Text(
-                      'ابن الهيثم',
+                      'UniVerse',
                       style: TextStyle(
                         color: context.onBackground,
                         fontWeight: FontWeight.w700,

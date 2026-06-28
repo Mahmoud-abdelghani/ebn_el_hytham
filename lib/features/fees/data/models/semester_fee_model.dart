@@ -1,10 +1,17 @@
 class SemesterFeeModel {
-  final String status;
-  final String totalAmount;
-  final String paidAmount;
-  final String date;
-  final String method;
+  String status;
+  String totalAmount;
+  String paidAmount;
+  String date;
+  String method;
+  String transactionId;
 
-  SemesterFeeModel({required this.status, required this.totalAmount, required this.paidAmount, required this.date, required this.method});
-  
+  SemesterFeeModel({
+    required this.status,
+    required this.totalAmount,
+    required this.paidAmount,
+    required this.date,
+    required this.method,
+    required this.transactionId,
+  });
 }

@@ -58,4 +58,26 @@ class InstructorMaterialsCubit extends Cubit<InstructorMaterialsState> {
       fetchInstructorMaterials(instructorId: instructorIdGlobal);
     }
   }
+
+  Future<void> addBonus({
+    required int amount,
+    required List<int> studentsIds,
+    required String courseCode,
+    required double maxMark,
+  }) async {
+    try {
+      emit(InstructorMaterialsLoading());
+
+      await api.post(
+        '${EndPoints.addBonus}$courseCode/$maxMark',
+        body: {"bonus_marks": amount, "student_ids": studentsIds},
+      );
+      emit(InstructorMaterialsAddBonusSuccess());
+      fetchInstructorMaterials(instructorId: instructorIdGlobal);
+    } on ServerException catch (e) {
+      emit(InstructorMaterialsFailure(e.message));
+    } on Exception catch (e) {
+      emit(InstructorMaterialsFailure(e.toString()));
+    }
+  }
 }

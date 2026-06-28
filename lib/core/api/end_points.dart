@@ -8,6 +8,7 @@ class EndPoints {
   static const String teacher = 'teacher/';
   static const String dashboard = 'instructor/dashboard/';
   static const String updateGrades = 'update_grades/';
+  static const String addBonus = '/instructor/add_custom_bonus/';
 }
 /*{
     "year_work": 19.5

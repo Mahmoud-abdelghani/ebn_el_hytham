@@ -3,7 +3,7 @@ import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/fees/data/models/student_fees_model.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/widgets/semester_fee_widget.dart';
-import 'package:ebn_el_hytham/features/profile/presentation/widgets/student_profile_strings_helper.dart';
+import 'package:ebn_el_hytham/features/students/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 
 class StudentFeesView extends StatefulWidget {
@@ -17,6 +17,7 @@ class StudentFeesView extends StatefulWidget {
 class _StudentFeesViewState extends State<StudentFeesView> {
   @override
   Widget build(BuildContext context) {
+    ProfileModel profile = ModalRoute.of(context)!.settings.arguments as ProfileModel;
     return Scaffold(
       backgroundColor: context.scaffold,
       appBar: buildDarkAppBar(context, 'Fees'),
@@ -78,7 +79,7 @@ class _StudentFeesViewState extends State<StudentFeesView> {
               totalAmount: studentFees.semesterFees[index].totalAmount,
               paid: studentFees.semesterFees[index].paidAmount,
               date: studentFees.semesterFees[index].date,
-              method: studentFees.semesterFees[index].method,
+              method: studentFees.semesterFees[index].method, transactionId: studentFees.semesterFees[index].transactionId, profile: profile,
             ),
             separatorBuilder: (context, index) =>
                 SizedBox(height: ScreenSize.height * 0.012),

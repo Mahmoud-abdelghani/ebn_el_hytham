@@ -4,6 +4,14 @@ part of 'instructor_materials_cubit.dart';
 sealed class InstructorMaterialsState {}
 
 final class InstructorMaterialsInitial extends InstructorMaterialsState {}
+final class InstructorMaterialsAddBonusLoading extends InstructorMaterialsState {}
+final class InstructorMaterialsAddBonusSuccess extends InstructorMaterialsState {
+  
+}
+final class InstructorMaterialsAddBonusFailure extends InstructorMaterialsState {
+  final String message;
+  InstructorMaterialsAddBonusFailure(this.message);
+}
 
 final class InstructorMaterialsUpdatreLoading extends InstructorMaterialsState {}
 final class InstructorMaterialsUpdateSuccess extends InstructorMaterialsState {

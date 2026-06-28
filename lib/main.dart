@@ -8,6 +8,7 @@ import 'package:ebn_el_hytham/core/utils/theme_data.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:ebn_el_hytham/features/authentication/presentation/pages/login_view.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
+import 'package:ebn_el_hytham/features/fees/presentation/cubit/payment_cubit.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/instructor_salary_screen.dart';
 import 'package:ebn_el_hytham/features/fees/presentation/pages/student_fees_view.dart';
 import 'package:ebn_el_hytham/features/instructor/presentation/cubit/attendance_cubit.dart';
@@ -105,6 +106,7 @@ class MyApp extends StatelessWidget {
             DioConsumer(dio: Dio(), baseUrl: EndPoints.baseUrl),
           ),
         ),
+        BlocProvider(create: (context) => PaymentCubit()),
       ],
 
       child: MaterialOfApp(),

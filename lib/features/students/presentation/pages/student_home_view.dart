@@ -3,6 +3,7 @@ import 'package:ebn_el_hytham/core/services/voice_service.dart';
 import 'package:ebn_el_hytham/core/utils/app_theme.dart';
 import 'package:ebn_el_hytham/core/utils/screen_size.dart';
 import 'package:ebn_el_hytham/features/exams/presentation/pages/student_exams_table.dart';
+import 'package:ebn_el_hytham/features/fees/presentation/pages/student_fees_view.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/cubit/layha_cubit.dart';
 import 'package:ebn_el_hytham/features/laiha/presentation/pages/layha_view.dart';
 import 'package:ebn_el_hytham/features/materials/presentation/cubit/assigned_materials_cubit.dart';
@@ -241,6 +242,18 @@ class _StudentFeatureGrid extends StatelessWidget {
             children: [
               Expanded(
                 child: StudentSquareCard(
+                  iconPath: 'assets/Salary.png',
+                  title: 'Fees',
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    StudentFeesView.routeName,
+                    arguments: profile.profile,
+                  ),
+                ),
+              ),
+              SizedBox(width: gap),
+              Expanded(
+                child: StudentSquareCard(
                   iconPath: 'assets/Faculties.png',
                   title: 'Profile',
                   onTap: () => Navigator.pushNamed(
@@ -263,9 +276,6 @@ class _StudentFeatureGrid extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(width: gap),
-              // spacer للـ symmetry
-              Expanded(child: const SizedBox.shrink()),
             ],
           ),
         ],
